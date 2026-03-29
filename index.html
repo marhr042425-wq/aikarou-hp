@@ -57,9 +57,7 @@
     color: var(--gold);
     text-decoration: none;
     letter-spacing: 0.1em;
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
+    animation: goldFlash 0.8s ease-in-out 1s 1 both;
   }
 
   .nav-links {
@@ -293,22 +291,9 @@
     margin-bottom: 20px;
     line-height: 1.4;
     color: var(--gold);
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
   }
-  .featured-text h2::after {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -120%;
-    width: 40%;
-    height: 120%;
-    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 60%, transparent 80%);
-    pointer-events: none;
-  }
-  .featured.visible .featured-text h2::after {
-    animation: glintSweep 0.8s ease-in-out 0.5s 1 both;
+  .featured.visible .featured-text h2 {
+    animation: goldFlash 0.8s ease-in-out 0.5s 1 both;
   }
 
   .featured-text p {
@@ -355,22 +340,9 @@
     font-weight: 700;
     margin-bottom: 12px;
     color: var(--gold);
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
   }
-  .section-header h2::after {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -120%;
-    width: 40%;
-    height: 120%;
-    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 60%, transparent 80%);
-    pointer-events: none;
-  }
-  .section-header.visible h2::after {
-    animation: glintSweep 0.8s ease-in-out 0.5s 1 both;
+  .section-header.visible h2 {
+    animation: goldFlash 0.8s ease-in-out 0.3s 1 both;
   }
 
   .section-header .gold-line {
@@ -378,6 +350,9 @@
     height: 2px;
     background: var(--gold);
     margin: 0 auto 16px;
+  }
+  .section-header.visible .gold-line {
+    animation: lineFlash 0.8s ease-in-out 0.5s 1 both;
   }
 
   .section-header p {
@@ -803,70 +778,15 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes glintSweep {
-    0% { left: -120%; }
-    100% { left: 120%; }
+  @keyframes goldFlash {
+    0%   { color: var(--gold); text-shadow: none; }
+    40%  { color: #FFE87C; text-shadow: 0 0 12px rgba(255,215,0,0.6), 0 0 24px rgba(255,215,0,0.3); }
+    100% { color: var(--gold); text-shadow: none; }
   }
-
-  /* キラッと光る共通クラス */
-  .glint {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-  }
-  .glint::after {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -120%;
-    width: 40%;
-    height: 120%;
-    background: linear-gradient(
-      105deg,
-      transparent 20%,
-      rgba(255,255,255,0) 40%,
-      rgba(255,255,255,0.6) 50%,
-      rgba(255,255,255,0) 60%,
-      transparent 80%
-    );
-    pointer-events: none;
-  }
-
-  /* 光り輝く金色ライン共通 */
-  .gold-line {
-    position: relative;
-    overflow: hidden;
-  }
-  .gold-line::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,0.8),
-      transparent
-    );
-    pointer-events: none;
-  }
-  .section-header.visible .gold-line::after {
-    animation: glintSweep 0.6s ease-in-out 0.7s 1 both;
-  }
-
-  /* nav-brand キラッ */
-  .nav-brand::after {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -120%;
-    width: 40%;
-    height: 120%;
-    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 60%, transparent 80%);
-    pointer-events: none;
-    animation: glintSweep 0.8s ease-in-out 1s 1 both;
+  @keyframes lineFlash {
+    0%   { box-shadow: none; opacity: 1; }
+    40%  { box-shadow: 0 0 8px rgba(255,215,0,0.8); opacity: 1; }
+    100% { box-shadow: none; opacity: 1; }
   }
 
   .hero-text {
@@ -880,20 +800,7 @@
   }
   .hero-title .accent {
     color: var(--gold);
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-  }
-  .hero-title .accent::after {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -120%;
-    width: 40%;
-    height: 120%;
-    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 60%, transparent 80%);
-    pointer-events: none;
-    animation: glintSweep 0.8s ease-in-out 1.8s 1 both;
+    animation: goldFlash 0.8s ease-in-out 1.8s 1 both;
   }
   .hero-tagline {
     animation: heroTextSlide 1s ease-out 0.8s both;
