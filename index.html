@@ -745,15 +745,135 @@
     section { padding: 70px 16px; }
   }
 
+  /* ===== HERO ENTRANCE ANIMATIONS ===== */
+  @keyframes heroTextSlide {
+    from { opacity: 0; transform: translateX(-60px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes heroImageSlide {
+    from { opacity: 0; transform: translateX(60px) scale(0.95); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  @keyframes heroSubFade {
+    from { opacity: 0; letter-spacing: 0.8em; }
+    to { opacity: 1; letter-spacing: 0.3em; }
+  }
+  @keyframes heroDividerGrow {
+    from { width: 0; }
+    to { width: 60px; }
+  }
+  @keyframes heroCtaFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes goldShimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .hero-text {
+    animation: heroTextSlide 1s ease-out 0.2s both;
+  }
+  .hero-sub {
+    animation: heroSubFade 1.2s ease-out 0.4s both;
+  }
+  .hero-title {
+    animation: heroTextSlide 1s ease-out 0.6s both;
+  }
+  .hero-title .accent {
+    background: linear-gradient(90deg, var(--gold) 0%, var(--light-gold) 50%, var(--gold) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmer 3s linear 1.5s infinite;
+  }
+  .hero-tagline {
+    animation: heroTextSlide 1s ease-out 0.8s both;
+  }
+  .hero-divider {
+    animation: heroDividerGrow 0.8s ease-out 1s both;
+  }
+  .hero-cta {
+    animation: heroCtaFade 0.8s ease-out 1.2s both;
+  }
+  .hero-image {
+    animation: heroImageSlide 1.2s ease-out 0.5s both;
+  }
+  .hero-image img {
+    transition: transform 0.5s ease;
+  }
+  .hero-image:hover img {
+    transform: scale(1.03);
+  }
+
   /* ===== SCROLL ANIMATIONS ===== */
   .fade-up {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px);
     transition: opacity 0.8s ease, transform 0.8s ease;
   }
   .fade-up.visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .fade-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .fade-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .scale-in {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .scale-in.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* メニューカード順次表示 */
+  .menu-card.fade-up { transition-delay: 0s; }
+  .menu-card.fade-up:nth-child(2) { transition-delay: 0.1s; }
+  .menu-card.fade-up:nth-child(3) { transition-delay: 0.2s; }
+  .menu-card.fade-up:nth-child(4) { transition-delay: 0.3s; }
+  .menu-card.fade-up:nth-child(5) { transition-delay: 0.4s; }
+  .menu-card.fade-up:nth-child(6) { transition-delay: 0.5s; }
+  .menu-card.fade-up:nth-child(7) { transition-delay: 0.6s; }
+  .menu-card.fade-up:nth-child(8) { transition-delay: 0.7s; }
+  .menu-card.fade-up:nth-child(9) { transition-delay: 0.8s; }
+
+  /* バッジアニメーション */
+  .about-badges .badge {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .about-badges.visible .badge { opacity: 1; transform: translateY(0); }
+  .about-badges.visible .badge:nth-child(1) { transition-delay: 0.1s; }
+  .about-badges.visible .badge:nth-child(2) { transition-delay: 0.2s; }
+  .about-badges.visible .badge:nth-child(3) { transition-delay: 0.3s; }
+  .about-badges.visible .badge:nth-child(4) { transition-delay: 0.4s; }
+
+  /* ヘッダースクロール縮小 */
+  header.scrolled {
+    padding: 0;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
   }
 </style>
 </head>
@@ -814,7 +934,7 @@
       催事での販売からデリバリーまで、<br>
       本格的な中華の味わいをご家庭でお楽しみいただけます。
     </p>
-    <div class="about-badges">
+    <div class="about-badges" id="aboutBadges">
       <div class="badge">
         <div class="badge-icon">🥟</div>
         <div class="badge-text">手作りの味</div>
@@ -837,12 +957,12 @@
 
 <!-- FEATURED: 海老焼売 -->
 <section class="featured" id="featured">
-  <div class="featured-inner fade-up">
-    <div class="featured-image">
+  <div class="featured-inner">
+    <div class="featured-image fade-left">
       <div class="featured-badge">店長イチオシ</div>
       <div class="menu-card-img-placeholder" style="width:100%;max-width:500px;height:350px;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.5);font-size:4rem;">🦐</div>
     </div>
-    <div class="featured-text">
+    <div class="featured-text fade-right">
       <div class="label">RECOMMENDED</div>
       <h2>海老焼売</h2>
       <p>
@@ -994,11 +1114,11 @@
   </div>
   <div class="delivery-info fade-up">
     <div class="delivery-cards">
-      <div class="delivery-card">
+      <div class="delivery-card scale-in">
         <div class="amount">¥1,000〜</div>
         <div class="label">配送可</div>
       </div>
-      <div class="delivery-card">
+      <div class="delivery-card scale-in">
         <div class="amount">¥2,000〜</div>
         <div class="label">配送無料</div>
       </div>
@@ -1145,7 +1265,12 @@
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  document.querySelectorAll('.fade-up, .fade-left, .fade-right, .scale-in, .about-badges').forEach(el => observer.observe(el));
+
+  // Header shrink on scroll
+  window.addEventListener('scroll', () => {
+    document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
+  });
 
   // Contact form handler
   function handleSubmit(e) {
