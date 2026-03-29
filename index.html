@@ -916,7 +916,6 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#about">愛華楼について</a></li>
       <li><a href="#menu">メニュー</a></li>
-      <li><a href="#delivery">配送について</a></li>
       <li><a href="#schedule">催事スケジュール</a></li>
       <li><a href="#order">ご注文</a></li>
       <li><a href="#contact">お問い合わせ</a></li>
@@ -960,17 +959,13 @@
     <p>
       一つひとつ手作りにこだわり、焼き小籠包をはじめとする<br>
       自慢の点心をお届けしています。<br>
-      催事での販売からデリバリーまで、<br>
-      本格的な中華の味わいをご家庭でお楽しみいただけます。
+      催事での販売を通じて、<br>
+      本格的な中華の味わいをお届けしています。
     </p>
     <div class="about-badges" id="aboutBadges">
       <div class="badge">
         <div class="badge-icon">🥟</div>
         <div class="badge-text">手作りの味</div>
-      </div>
-      <div class="badge">
-        <div class="badge-icon">🚚</div>
-        <div class="badge-text">デリバリー対応</div>
       </div>
       <div class="badge">
         <div class="badge-icon">❄️</div>
@@ -1130,27 +1125,6 @@
   </div>
 </section>
 
-<!-- DELIVERY -->
-<section class="delivery" id="delivery">
-  <div class="section-header fade-up">
-    <h2>配送について</h2>
-    <div class="gold-line"></div>
-    <p>DELIVERY</p>
-  </div>
-  <div class="delivery-info fade-up">
-    <div class="delivery-cards">
-      <div class="delivery-card scale-in">
-        <div class="amount">¥1,000〜</div>
-        <div class="label">配送可</div>
-      </div>
-      <div class="delivery-card scale-in">
-        <div class="amount">¥2,000〜</div>
-        <div class="label">配送無料</div>
-      </div>
-    </div>
-    <p class="delivery-note">※地域により配送料が異なる場合がございます。<br>冷凍での発送も承っております。</p>
-  </div>
-</section>
 
 <!-- SCHEDULE -->
 <section class="schedule" id="schedule">
@@ -1221,11 +1195,7 @@
         <div class="value">12:00 〜 20:00</div>
       </div>
       <div class="contact-item">
-        <div class="label">電話番号（配送）</div>
-        <div class="value"><a href="tel:090-2096-1896">090-2096-1896</a></div>
-      </div>
-      <div class="contact-item">
-        <div class="label">電話番号（店舗）</div>
+        <div class="label">電話番号</div>
         <div class="value"><a href="tel:0940-43-6496">0940-43-6496</a></div>
       </div>
       <div class="contact-item">
@@ -1248,7 +1218,6 @@
           <label for="subject">お問い合わせ種別</label>
           <select id="subject" name="subject">
             <option value="order">ご注文について</option>
-            <option value="delivery">配送について</option>
             <option value="event">催事出店について</option>
             <option value="other">その他</option>
           </select>
@@ -1306,7 +1275,6 @@
     const message = document.getElementById('message').value;
     const subjectMap = {
       order: 'ご注文について',
-      delivery: '配送について',
       event: '催事出店について',
       other: 'その他'
     };
