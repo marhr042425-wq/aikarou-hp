@@ -59,7 +59,7 @@
     background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 4s linear infinite;
+    animation: goldShimmer 1.5s ease-in-out 0.5s 1 both;
     text-decoration: none;
     letter-spacing: 0.1em;
   }
@@ -286,10 +286,12 @@
     background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 4s linear infinite;
     letter-spacing: 0.3em;
     margin-bottom: 12px;
     font-weight: 500;
+  }
+  .featured.visible .featured-text .label {
+    animation: goldShimmer 1.5s ease-in-out 0.3s 1 both;
   }
 
   .featured-text h2 {
@@ -302,7 +304,9 @@
     background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 4s linear infinite;
+  }
+  .featured.visible .featured-text h2 {
+    animation: goldShimmer 1.5s ease-in-out 0.5s 1 both;
   }
 
   .featured-text p {
@@ -319,9 +323,11 @@
     background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 4s linear infinite;
     font-weight: 700;
     margin-bottom: 28px;
+  }
+  .featured.visible .featured-price {
+    animation: goldShimmer 1.5s ease-in-out 0.7s 1 both;
   }
 
   .featured-price small {
@@ -356,7 +362,9 @@
     background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 4s linear infinite;
+  }
+  .section-header.visible h2 {
+    animation: goldShimmer 1.5s ease-in-out 0.3s 1 both;
   }
 
   .section-header .gold-line {
@@ -790,8 +798,8 @@
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes goldShimmer {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
   }
 
   /* 光り輝く金色テキスト共通 */
@@ -800,14 +808,16 @@
     background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 4s linear infinite;
+    animation: goldShimmer 1.5s ease-in-out 1s 1 both;
   }
 
   /* 光り輝く金色ライン共通 */
   .gold-line {
     background: var(--gold-gradient) !important;
     background-size: 300% auto !important;
-    animation: goldShimmer 4s linear infinite;
+  }
+  .section-header.visible .gold-line {
+    animation: goldShimmer 1.5s ease-in-out 0.5s 1 both;
   }
 
   .hero-text {
@@ -824,7 +834,7 @@
     background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 3s linear 1.5s infinite;
+    animation: goldShimmer 1.5s ease-in-out 1.5s 1 both;
   }
   .hero-tagline {
     animation: heroTextSlide 1s ease-out 0.8s both;
@@ -1304,7 +1314,7 @@
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.fade-up, .fade-left, .fade-right, .scale-in, .about-badges').forEach(el => observer.observe(el));
+  document.querySelectorAll('.fade-up, .fade-left, .fade-right, .scale-in, .about-badges, .section-header, .featured').forEach(el => observer.observe(el));
 
   // Header shrink on scroll
   window.addEventListener('scroll', () => {
