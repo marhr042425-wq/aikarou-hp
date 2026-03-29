@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本格中華 愛華楼 | 横浜中華街仕込みの本格点心</title>
+<meta name="description" content="横浜中華街仕込みの本格中華 愛華楼。焼き小籠包、焼売、肉まん、角煮バーガーなど本格点心をお届けします。LINE・オンラインからもご注文いただけます。">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+  :root {
+    --red: #B22222;
+    --dark-red: #8B0000;
+    --gold: #D4A843;
+    --light-gold: #F0D68A;
+    --black: #1a1a1a;
+    --dark-bg: #0d0d0d;
+    --cream: #FFF8F0;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--dark-bg);
+    color: var(--white);
+    line-height: 1.8;
+  }
+
+  /* ===== HEADER / NAV ===== */
+  header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(13,13,13,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(212,168,67,0.3);
+  }
+
+  nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-brand {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; }
+  .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--gold); margin: 5px 0; transition: 0.3s; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background: var(--dark-bg);
+    overflow: hidden;
+  }
+
+  .hero-split {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+    align-items: center;
+    padding: 80px 40px 40px;
+  }
+
+  .hero-text {
+    flex: 1;
+    padding-right: 40px;
+    z-index: 2;
+  }
+
+  .hero-image {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-image img {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 80px rgba(178,34,34,0.15);
+  }
+
+  .hero-image::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 120px;
+    height: 120px;
+    border: 2px solid var(--gold);
+    border-radius: 4px;
+    opacity: 0.3;
+    z-index: -1;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(178,34,34,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 50%, rgba(212,168,67,0.08) 0%, transparent 50%);
+  }
+
+  @media (max-width: 768px) {
+    .hero-split {
+      flex-direction: column;
+      text-align: center;
+      padding: 100px 20px 40px;
+    }
+    .hero-text { padding-right: 0; margin-bottom: 30px; }
+    .hero-image img { max-width: 90%; }
+    .hero-image::before { display: none; }
+  }
+
+  .hero-sub {
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 8px;
+    text-shadow: 0 0 60px rgba(178,34,34,0.4);
+  }
+
+  .hero-title .accent { color: var(--gold); }
+
+  .hero-tagline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 40px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 40px;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 36px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: var(--white);
+    border: 1px solid var(--red);
+  }
+
+  .btn-primary:hover {
+    background: var(--dark-red);
+    box-shadow: 0 4px 20px rgba(178,34,34,0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+  }
+
+  .btn-outline:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ===== FEATURED PRODUCT ===== */
+  .featured {
+    background: linear-gradient(180deg, #120808 0%, var(--dark-bg) 100%);
+    padding: 100px 20px;
+  }
+
+  .featured-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+  }
+
+  .featured-image {
+    flex: 1;
+    position: relative;
+  }
+
+  .featured-image img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 2px;
+    box-shadow: 0 4px 12px rgba(178,34,34,0.4);
+    letter-spacing: 0.1em;
+  }
+
+  .featured-text {
+    flex: 1;
+  }
+
+  .featured-text .label {
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .featured-text h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .featured-text p {
+    font-size: 1rem;
+    line-height: 2;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 24px;
+  }
+
+  .featured-price {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 2rem;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 28px;
+  }
+
+  .featured-price small {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+  }
+
+  @media (max-width: 768px) {
+    .featured-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+    .featured-image img { max-width: 85%; }
+    .featured-badge { left: 50%; transform: translateX(-50%); }
+  }
+
+  /* ===== SECTION COMMON ===== */
+  section { padding: 100px 20px; }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .section-header h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .section-header .gold-line {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 16px;
+  }
+
+  .section-header p {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== ABOUT ===== */
+  .about {
+    background: linear-gradient(180deg, var(--dark-bg) 0%, #120808 100%);
+  }
+
+  .about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .about-content p {
+    font-size: 1rem;
+    line-height: 2.2;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 20px;
+  }
+
+  .about-badges {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    text-align: center;
+  }
+
+  .badge-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  .badge-text {
+    font-size: 0.8rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== MENU ===== */
+  .menu {
+    background: var(--dark-bg);
+  }
+
+  .menu-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
+  }
+
+  .menu-card {
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .menu-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(178,34,34,0.2);
+  }
+
+  .menu-card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .menu-card-img-placeholder {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    background: linear-gradient(135deg, #2a1515, #1a0a0a);
+  }
+
+  .menu-card-body {
+    padding: 20px 24px 24px;
+  }
+
+  .menu-card-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .menu-card-desc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  .menu-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .menu-card-price {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .menu-card-price small {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border: 1px solid var(--red);
+    color: var(--red);
+    border-radius: 2px;
+    font-weight: 500;
+  }
+
+  .tag.popular {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  /* ===== DELIVERY ===== */
+  .delivery {
+    background: linear-gradient(180deg, var(--dark-bg) 0%, #120808 100%);
+  }
+
+  .delivery-info {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .delivery-cards {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .delivery-card {
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 4px;
+    padding: 28px 36px;
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .delivery-card .amount {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .delivery-card .label {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+  }
+
+  .delivery-note {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 16px;
+  }
+
+  /* ===== SCHEDULE ===== */
+  .schedule {
+    background: var(--dark-bg);
+  }
+
+  .schedule-coming {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 4px;
+  }
+
+  .schedule-coming h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .schedule-coming p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* ===== ORDER ===== */
+  .order {
+    background: linear-gradient(180deg, var(--dark-bg) 0%, #120808 100%);
+  }
+
+  .order-methods {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+  }
+
+  .order-card {
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 4px;
+    padding: 36px 28px;
+    text-align: center;
+    transition: border-color 0.3s;
+  }
+
+  .order-card:hover {
+    border-color: var(--gold);
+  }
+
+  .order-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  .order-card h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--gold);
+  }
+
+  .order-card p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+
+  .order-card .btn { width: 100%; text-align: center; }
+
+  /* ===== CONTACT ===== */
+  .contact {
+    background: var(--dark-bg);
+  }
+
+  .contact-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .contact-info h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .contact-item {
+    margin-bottom: 20px;
+  }
+
+  .contact-item .label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .contact-item .value {
+    font-size: 1rem;
+    color: var(--white);
+  }
+
+  .contact-item a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .contact-item a:hover { text-decoration: underline; }
+
+  .contact-form h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1e1e1e;
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 2px;
+    color: var(--white);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.9rem;
+    transition: border-color 0.3s;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #0a0a0a;
+    border-top: 1px solid rgba(212,168,67,0.15);
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .footer-brand {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  footer p {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ===== FROZEN BADGE ===== */
+  .frozen-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    background: rgba(100,149,237,0.2);
+    border: 1px solid rgba(100,149,237,0.4);
+    color: #93b5f0;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-links.active {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(13,13,13,0.98);
+      padding: 20px;
+      gap: 16px;
+      border-bottom: 1px solid rgba(212,168,67,0.2);
+    }
+    .nav-toggle { display: block; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .menu-grid { grid-template-columns: 1fr; }
+    section { padding: 70px 16px; }
+  }
+
+  /* ===== SCROLL ANIMATIONS ===== */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <nav>
+    <a href="#" class="nav-brand">愛華楼</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">愛華楼について</a></li>
+      <li><a href="#menu">メニュー</a></li>
+      <li><a href="#delivery">配送について</a></li>
+      <li><a href="#schedule">催事スケジュール</a></li>
+      <li><a href="#order">ご注文</a></li>
+      <li><a href="#contact">お問い合わせ</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-split">
+    <div class="hero-text">
+      <p class="hero-sub">横 浜 中 華 街 仕 込 み</p>
+      <h1 class="hero-title">本格中華<br><span class="accent">愛華楼</span></h1>
+      <p class="hero-tagline">横浜中華街の本格的な中華を<br>ご家庭でも</p>
+      <div class="hero-divider" style="margin:0 0 40px;"></div>
+      <div class="hero-cta" style="justify-content:flex-start;">
+        <a href="#menu" class="btn btn-primary">メニューを見る</a>
+        <a href="#order" class="btn btn-outline">ご注文はこちら</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="images/yakishoronpo.jpg" alt="愛華楼の焼き小籠包">
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-header fade-up">
+    <h2>愛華楼について</h2>
+    <div class="gold-line"></div>
+    <p>ABOUT US</p>
+  </div>
+  <div class="about-content fade-up">
+    <p>
+      愛華楼は、横浜中華街で培われた伝統の技と厳選素材を用いた<br>
+      本格中華点心の専門店です。
+    </p>
+    <p>
+      一つひとつ手作りにこだわり、焼き小籠包をはじめとする<br>
+      自慢の点心をお届けしています。<br>
+      催事での販売からデリバリーまで、<br>
+      本格的な中華の味わいをご家庭でお楽しみいただけます。
+    </p>
+    <div class="about-badges">
+      <div class="badge">
+        <div class="badge-icon">🥟</div>
+        <div class="badge-text">手作りの味</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">🏮</div>
+        <div class="badge-text">横浜中華街仕込み</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">🚚</div>
+        <div class="badge-text">デリバリー対応</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">❄️</div>
+        <div class="badge-text">冷凍注文可</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED: 海老焼売 -->
+<section class="featured" id="featured">
+  <div class="featured-inner fade-up">
+    <div class="featured-image">
+      <div class="featured-badge">店長イチオシ</div>
+      <div class="menu-card-img-placeholder" style="width:100%;max-width:500px;height:350px;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.5);font-size:4rem;">🦐</div>
+    </div>
+    <div class="featured-text">
+      <div class="label">RECOMMENDED</div>
+      <h2>海老焼売</h2>
+      <p>
+        海老をふんだんに使った、プリプリ食感がやみつきになる新感覚の焼売。<br>
+        一口噛めば広がる海老の旨みと、ジューシーな肉汁のハーモニー。<br>
+        一度食べたら忘れられない、愛華楼自慢の逸品です。
+      </p>
+      <div class="featured-price">¥650 <small>/ 4個（税込）</small></div>
+      <a href="#order" class="btn btn-primary">注文する</a>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+  <div class="section-header fade-up">
+    <h2>メニュー</h2>
+    <div class="gold-line"></div>
+    <p>MENU</p>
+  </div>
+  <div class="menu-grid">
+
+    <!-- 焼き小籠包 -->
+    <div class="menu-card fade-up">
+      <img src="images/yakishoronpo2.jpg" alt="焼き小籠包" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">焼き小籠包</div>
+        <div class="menu-card-desc">外カリッ！中ジュワ〜！一度は食べてみたい一品。コラーゲンスープが美味しい焼き小籠包。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥650 <small>/ 4個</small></div>
+          <span class="tag popular">人気No.1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 肉焼売 -->
+    <div class="menu-card fade-up">
+      <img src="images/nikushyumai.jpg" alt="肉焼売（大）" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">肉焼売（大）</div>
+        <div class="menu-card-desc">増粘剤を一切使わず国産豚肉をふんだんに使ったタレ要らないくらいジューシーで堪まらない、ごろっと肉焼売。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥500 <small>/ 4個</small></div>
+          <span class="tag">定番</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 海老焼売 -->
+    <div class="menu-card fade-up">
+      <img src="images/ebishumai.jpg" alt="海老焼売（大）" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">海老焼売（大）</div>
+        <div class="menu-card-desc">海老をふんだんに使ったプリプリ感がやみつき新食感！これぞ海老焼売！</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥650 <small>/ 4個</small></div>
+          <span class="tag">おすすめ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 肉にら饅頭 -->
+    <div class="menu-card fade-up">
+      <img src="images/niraniku.jpg" alt="肉にら饅頭" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">肉にら饅頭</div>
+        <div class="menu-card-desc">餃子の一種。お酒の肴、ご飯のお供とニラの相性が堪らない肉たっぷりなニラ饅頭。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥500 <small>/ 5個</small></div>
+          <span class="tag">定番</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ミニちまき -->
+    <div class="menu-card fade-up">
+      <img src="images/chimaki.jpg" alt="ミニちまき" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">ミニちまき</div>
+        <div class="menu-card-desc">豚角煮が入ったモッチモチなちまき！何個でも食べてしまう飽きの来ない一品。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥250 <small>/ 1個</small></div>
+          <span class="tag">人気</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 肉まん -->
+    <div class="menu-card fade-up">
+      <img src="images/nikuman.jpg" alt="肉まん（大）" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">肉まん（大）</div>
+        <div class="menu-card-desc">手作りの皮にこだわったふっくら生地に合う餡が絶妙な肉まん。具がぎっしり入ってジューシー感たっぷり！</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥360 <small>/ 1個</small></div>
+          <span class="tag">定番</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 角煮バーガー -->
+    <div class="menu-card fade-up">
+      <img src="images/kakuniburger.jpg" alt="角煮バーガー" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">角煮バーガー</div>
+        <div class="menu-card-desc">じっくりコトコトに煮込んだ甘だれの角煮を割りパンに挟んだ堪らない一品。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥380 <small>/ 1個</small></div>
+          <span class="tag">おすすめ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- チャーシューまん -->
+    <div class="menu-card fade-up">
+      <img src="images/charshuman.jpg" alt="チャーシューまん" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">チャーシューまん</div>
+        <div class="menu-card-desc">ミルクを練りこんだ生メの甘みが広がる故郷をほうふつとさせる小籠の本場点心。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥200 <small>/ 1個</small></div>
+          <span class="tag">お手頃</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ザーサイ -->
+    <div class="menu-card fade-up">
+      <img src="images/zasai.jpg" alt="ザーサイ" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">ザーサイ</div>
+        <div class="menu-card-desc">中華のお漬物。自慢の食材を原材料にラーメンのトッピング、おつまみにも最高の一品。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥400 <small>/ 100g</small></div>
+          <span class="frozen-badge">冷凍可</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section class="delivery" id="delivery">
+  <div class="section-header fade-up">
+    <h2>配送について</h2>
+    <div class="gold-line"></div>
+    <p>DELIVERY</p>
+  </div>
+  <div class="delivery-info fade-up">
+    <div class="delivery-cards">
+      <div class="delivery-card">
+        <div class="amount">¥1,000〜</div>
+        <div class="label">配送可</div>
+      </div>
+      <div class="delivery-card">
+        <div class="amount">¥2,000〜</div>
+        <div class="label">配送無料</div>
+      </div>
+    </div>
+    <p class="delivery-note">※地域により配送料が異なる場合がございます。<br>冷凍での発送も承っております。</p>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section class="schedule" id="schedule">
+  <div class="section-header fade-up">
+    <h2>催事スケジュール</h2>
+    <div class="gold-line"></div>
+    <p>EVENT SCHEDULE</p>
+  </div>
+  <div class="schedule-coming fade-up">
+    <h3>近日公開</h3>
+    <p>催事の出店スケジュールは準備中です。<br>最新情報はLINEでお知らせいたします。</p>
+  </div>
+</section>
+
+<!-- ORDER -->
+<section class="order" id="order">
+  <div class="section-header fade-up">
+    <h2>ご注文方法</h2>
+    <div class="gold-line"></div>
+    <p>HOW TO ORDER</p>
+  </div>
+  <div class="order-methods fade-up">
+
+    <div class="order-card">
+      <div class="order-card-icon">🛒</div>
+      <h3>オンラインショップ</h3>
+      <p>BASEショップから<br>24時間いつでもご注文いただけます。</p>
+      <a href="https://imazuya.thebase.in/" target="_blank" class="btn btn-primary">ショップへ</a>
+    </div>
+
+    <div class="order-card">
+      <div class="order-card-icon">💬</div>
+      <h3>LINEで注文</h3>
+      <p>LINEのトークから<br>お気軽にご注文ください。</p>
+      <a href="#" class="btn btn-outline">LINEを開く</a>
+    </div>
+
+    <div class="order-card">
+      <div class="order-card-icon">📞</div>
+      <h3>お電話で注文</h3>
+      <p>お電話でもご注文を<br>承っております。</p>
+      <a href="tel:090-2096-1896" class="btn btn-outline">090-2096-1896</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-header fade-up">
+    <h2>お問い合わせ</h2>
+    <div class="gold-line"></div>
+    <p>CONTACT</p>
+  </div>
+  <div class="contact-grid fade-up">
+    <div class="contact-info">
+      <h3>店舗情報</h3>
+      <div class="contact-item">
+        <div class="label">店舗名</div>
+        <div class="value">本格中華 愛華楼</div>
+      </div>
+      <div class="contact-item">
+        <div class="label">所在地</div>
+        <div class="value">〒811-3209<br>福岡県福津市花見ヶ丘3-22-20</div>
+      </div>
+      <div class="contact-item">
+        <div class="label">営業時間</div>
+        <div class="value">12:00 〜 20:00</div>
+      </div>
+      <div class="contact-item">
+        <div class="label">電話番号（配送）</div>
+        <div class="value"><a href="tel:090-2096-1896">090-2096-1896</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="label">電話番号（店舗）</div>
+        <div class="value"><a href="tel:0940-43-6496">0940-43-6496</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="label">オンラインショップ</div>
+        <div class="value"><a href="https://imazuya.thebase.in/" target="_blank">imazuya.thebase.in</a></div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3>お問い合わせフォーム</h3>
+      <form id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">お名前</label>
+          <input type="text" id="name" name="name" required placeholder="山田 太郎">
+        </div>
+        <div class="form-group">
+          <label for="email">メールアドレス</label>
+          <input type="email" id="email" name="email" required placeholder="example@email.com">
+        </div>
+        <div class="form-group">
+          <label for="subject">お問い合わせ種別</label>
+          <select id="subject" name="subject">
+            <option value="order">ご注文について</option>
+            <option value="delivery">配送について</option>
+            <option value="event">催事出店について</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">お問い合わせ内容</label>
+          <textarea id="message" name="message" required placeholder="お気軽にお問い合わせください"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;text-align:center;">送信する</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">本格中華 愛華楼</div>
+  <p>横浜中華街仕込みの本格点心</p>
+  <p style="margin-top:12px;">&copy; 2026 愛華楼 All Rights Reserved.</p>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('active'));
+  });
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Contact form handler
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    const subjectMap = {
+      order: 'ご注文について',
+      delivery: '配送について',
+      event: '催事出店について',
+      other: 'その他'
+    };
+    const mailtoLink = `mailto:marhr042425@gmail.com?subject=${encodeURIComponent('【愛華楼】' + subjectMap[subject])}&body=${encodeURIComponent(`お名前: ${name}\nメール: ${email}\n\n${message}`)}`;
+    window.location.href = mailtoLink;
+    alert('メールアプリが開きます。送信をお願いいたします。');
+  }
+</script>
+
+</body>
+</html>
