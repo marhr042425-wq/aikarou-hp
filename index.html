@@ -168,10 +168,19 @@
     font-weight: 900;
     color: var(--white);
     margin-bottom: 8px;
-    text-shadow: 0 0 60px rgba(178,34,34,0.4);
+    text-shadow:
+      1px 1px 0 rgba(0,0,0,0.5),
+      2px 2px 4px rgba(0,0,0,0.4),
+      0 0 60px rgba(178,34,34,0.4);
   }
 
-  .hero-title .accent { color: var(--gold); }
+  .hero-title .accent {
+    color: var(--gold);
+    text-shadow:
+      1px 1px 0 rgba(120,80,20,0.8),
+      2px 2px 4px rgba(0,0,0,0.5),
+      0 0 20px rgba(201,168,76,0.2);
+  }
 
   .hero-tagline {
     font-family: 'Noto Serif JP', serif;
@@ -291,6 +300,9 @@
     margin-bottom: 20px;
     line-height: 1.4;
     color: var(--gold);
+    text-shadow:
+      1px 1px 0 rgba(120,80,20,0.8),
+      2px 2px 4px rgba(0,0,0,0.5);
   }
   .featured.visible .featured-text h2 {
     animation: goldFlash 0.8s ease-in-out 0.5s 1 both;
@@ -340,6 +352,9 @@
     font-weight: 700;
     margin-bottom: 12px;
     color: var(--gold);
+    text-shadow:
+      1px 1px 0 rgba(120,80,20,0.8),
+      2px 2px 4px rgba(0,0,0,0.5);
   }
   .section-header.visible h2 {
     animation: goldFlash 0.8s ease-in-out 0.3s 1 both;
@@ -779,9 +794,9 @@
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes goldFlash {
-    0%   { color: var(--gold); text-shadow: none; }
-    40%  { color: #F0D060; text-shadow: 0 0 12px rgba(201,168,76,0.6), 0 0 24px rgba(201,168,76,0.3); }
-    100% { color: var(--gold); text-shadow: none; }
+    0%   { color: var(--gold); text-shadow: 1px 1px 0 rgba(120,80,20,0.8), 2px 2px 4px rgba(0,0,0,0.5); }
+    40%  { color: #F0D060; text-shadow: 1px 1px 0 rgba(120,80,20,0.8), 2px 2px 4px rgba(0,0,0,0.5), 0 0 12px rgba(201,168,76,0.6); }
+    100% { color: var(--gold); text-shadow: 1px 1px 0 rgba(120,80,20,0.8), 2px 2px 4px rgba(0,0,0,0.5); }
   }
   @keyframes lineFlash {
     0%   { box-shadow: none; opacity: 1; }
