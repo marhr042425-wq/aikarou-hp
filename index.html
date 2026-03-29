@@ -13,7 +13,6 @@
     --dark-red: #8B0000;
     --gold: #D4A843;
     --light-gold: #F0D68A;
-    --gold-gradient: linear-gradient(90deg, #B8860B, #D4A843, #FFD700, #F0D68A, #FFD700, #D4A843, #B8860B);
     --black: #1a1a1a;
     --dark-bg: #0d0d0d;
     --cream: #FFF8F0;
@@ -55,13 +54,12 @@
     font-family: 'Noto Serif JP', serif;
     font-size: 1.3rem;
     font-weight: 700;
-    background: var(--gold-gradient);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: goldShimmer 1.5s ease-in-out 0.5s 1 both;
+    color: var(--gold);
     text-decoration: none;
     letter-spacing: 0.1em;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
   }
 
   .nav-links {
@@ -282,16 +280,10 @@
 
   .featured-text .label {
     font-size: 0.75rem;
-    background: var(--gold-gradient);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
     letter-spacing: 0.3em;
     margin-bottom: 12px;
     font-weight: 500;
-  }
-  .featured.visible .featured-text .label {
-    animation: goldShimmer 1.5s ease-in-out 0.3s 1 both;
   }
 
   .featured-text h2 {
@@ -300,13 +292,23 @@
     font-weight: 900;
     margin-bottom: 20px;
     line-height: 1.4;
-    background: var(--gold-gradient);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
   }
-  .featured.visible .featured-text h2 {
-    animation: goldShimmer 1.5s ease-in-out 0.5s 1 both;
+  .featured-text h2::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -120%;
+    width: 40%;
+    height: 120%;
+    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 60%, transparent 80%);
+    pointer-events: none;
+  }
+  .featured.visible .featured-text h2::after {
+    animation: glintSweep 0.8s ease-in-out 0.5s 1 both;
   }
 
   .featured-text p {
@@ -319,15 +321,9 @@
   .featured-price {
     font-family: 'Noto Serif JP', serif;
     font-size: 2rem;
-    background: var(--gold-gradient);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
     font-weight: 700;
     margin-bottom: 28px;
-  }
-  .featured.visible .featured-price {
-    animation: goldShimmer 1.5s ease-in-out 0.7s 1 both;
   }
 
   .featured-price small {
@@ -358,13 +354,23 @@
     font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 700;
     margin-bottom: 12px;
-    background: var(--gold-gradient);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
   }
-  .section-header.visible h2 {
-    animation: goldShimmer 1.5s ease-in-out 0.3s 1 both;
+  .section-header h2::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -120%;
+    width: 40%;
+    height: 120%;
+    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 60%, transparent 80%);
+    pointer-events: none;
+  }
+  .section-header.visible h2::after {
+    animation: glintSweep 0.8s ease-in-out 0.5s 1 both;
   }
 
   .section-header .gold-line {
@@ -797,27 +803,70 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes goldShimmer {
-    0% { background-position: 200% center; }
-    100% { background-position: -200% center; }
+  @keyframes glintSweep {
+    0% { left: -120%; }
+    100% { left: 120%; }
   }
 
-  /* 光り輝く金色テキスト共通 */
-  .gold-shimmer-text {
-    background: var(--gold-gradient);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: goldShimmer 1.5s ease-in-out 1s 1 both;
+  /* キラッと光る共通クラス */
+  .glint {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .glint::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -120%;
+    width: 40%;
+    height: 120%;
+    background: linear-gradient(
+      105deg,
+      transparent 20%,
+      rgba(255,255,255,0) 40%,
+      rgba(255,255,255,0.6) 50%,
+      rgba(255,255,255,0) 60%,
+      transparent 80%
+    );
+    pointer-events: none;
   }
 
   /* 光り輝く金色ライン共通 */
   .gold-line {
-    background: var(--gold-gradient) !important;
-    background-size: 300% auto !important;
+    position: relative;
+    overflow: hidden;
   }
-  .section-header.visible .gold-line {
-    animation: goldShimmer 1.5s ease-in-out 0.5s 1 both;
+  .gold-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.8),
+      transparent
+    );
+    pointer-events: none;
+  }
+  .section-header.visible .gold-line::after {
+    animation: glintSweep 0.6s ease-in-out 0.7s 1 both;
+  }
+
+  /* nav-brand キラッ */
+  .nav-brand::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -120%;
+    width: 40%;
+    height: 120%;
+    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 60%, transparent 80%);
+    pointer-events: none;
+    animation: glintSweep 0.8s ease-in-out 1s 1 both;
   }
 
   .hero-text {
@@ -830,11 +879,21 @@
     animation: heroTextSlide 1s ease-out 0.6s both;
   }
   .hero-title .accent {
-    background: var(--gold-gradient);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: goldShimmer 1.5s ease-in-out 1.5s 1 both;
+    color: var(--gold);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .hero-title .accent::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -120%;
+    width: 40%;
+    height: 120%;
+    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 60%, transparent 80%);
+    pointer-events: none;
+    animation: glintSweep 0.8s ease-in-out 1.8s 1 both;
   }
   .hero-tagline {
     animation: heroTextSlide 1s ease-out 0.8s both;
