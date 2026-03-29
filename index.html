@@ -559,6 +559,97 @@
     margin-top: 16px;
   }
 
+  /* ===== COOKING ===== */
+  .cooking {
+    background: linear-gradient(180deg, #120808 0%, var(--dark-bg) 100%);
+  }
+
+  .cooking-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .cooking-card {
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 4px;
+    padding: 32px 28px;
+  }
+
+  .cooking-card h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+  }
+
+  .cooking-card .cooking-target {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+
+  .cooking-card ol {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+  }
+
+  .cooking-card ol li {
+    counter-increment: step;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.8);
+    padding: 6px 0 6px 32px;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .cooking-card ol li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 22px;
+    height: 22px;
+    background: var(--gold);
+    color: var(--black);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cooking-card .cooking-note {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 10px;
+    padding-left: 8px;
+    border-left: 2px solid rgba(212,168,67,0.3);
+  }
+
+  .cooking-simple {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 0;
+  }
+
+  .cooking-simple .cooking-icon {
+    font-size: 1.5rem;
+  }
+
+  .cooking-simple p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.8);
+  }
+
   /* ===== SCHEDULE ===== */
   .schedule {
     background: var(--dark-bg);
@@ -916,6 +1007,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#about">愛華楼について</a></li>
       <li><a href="#menu">メニュー</a></li>
+      <li><a href="#cooking">調理方法</a></li>
       <li><a href="#schedule">催事スケジュール</a></li>
       <li><a href="#order">ご注文</a></li>
       <li><a href="#contact">お問い合わせ</a></li>
@@ -1125,6 +1217,59 @@
   </div>
 </section>
 
+
+<!-- COOKING -->
+<section class="cooking" id="cooking">
+  <div class="section-header fade-up">
+    <h2>調理方法</h2>
+    <div class="gold-line"></div>
+    <p>HOW TO COOK</p>
+  </div>
+
+  <div class="cooking-grid">
+
+    <div class="cooking-card fade-up">
+      <h3>調理済商品の温め方</h3>
+      <div class="cooking-simple">
+        <span class="cooking-icon">📦</span>
+        <p>500Wの電子レンジで<strong>1分</strong>、もしくは<strong>あたため機能</strong>で温めてください。</p>
+      </div>
+    </div>
+
+    <div class="cooking-card fade-up">
+      <h3>肉にら饅頭の焼き方</h3>
+      <div class="cooking-target">冷凍商品</div>
+      <ol>
+        <li>フライパンに油を引き、にら饅頭を<strong>凍ったまま</strong>並べる</li>
+        <li>差し水を少量入れ、<strong>フタをして蒸し焼き</strong>にする</li>
+        <li>皮が<strong>半透明</strong>になったらフタを取る</li>
+        <li>両面を<strong>カリッと焼き上げて</strong>出来上がり</li>
+      </ol>
+    </div>
+
+    <div class="cooking-card fade-up">
+      <h3>肉焼売・海老焼売の蒸し方</h3>
+      <div class="cooking-target">冷凍商品</div>
+      <ol>
+        <li>蒸し器もしくは鍋に水を入れ、<strong>沸騰</strong>させておく</li>
+        <li>沸騰したら焼売を<strong>凍ったまま</strong>並べる</li>
+        <li>フタをして<strong>15分</strong>蒸して出来上がり</li>
+      </ol>
+    </div>
+
+    <div class="cooking-card fade-up">
+      <h3>その他の冷凍商品</h3>
+      <div class="cooking-target">肉まん・チャーシューまん・ちまき・角煮バーガーなど</div>
+      <ol>
+        <li>事前に<strong>解凍</strong>させておく（おすすめ）</li>
+        <li>蒸し器もしくは鍋に水を入れ、<strong>沸騰</strong>させておく</li>
+        <li>沸騰したら並べ、フタをして<strong>10分</strong>蒸して出来上がり</li>
+      </ol>
+      <div class="cooking-note">※ 解凍なしの場合は15分蒸してください</div>
+    </div>
+
+  </div>
+</section>
 
 <!-- SCHEDULE -->
 <section class="schedule" id="schedule">
