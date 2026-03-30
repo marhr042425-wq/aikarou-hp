@@ -725,6 +725,14 @@
     color: rgba(255,255,255,0.5);
   }
 
+  .menu-card-multi-price {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
   .menu-add-btn {
     width: 100%;
     margin-top: 12px;
@@ -1718,6 +1726,21 @@
       </div>
     </div>
 
+    <!-- モンゴル茶 -->
+    <div class="menu-card fade-up">
+      <img src="images/mongol-tea.jpg" alt="モンゴル茶" class="menu-card-img">
+      <div class="menu-card-body">
+        <div class="menu-card-name">モンゴル茶</div>
+        <div class="menu-card-desc">モンゴル伝統のお茶。1袋30個入り。まとめ買いがお得です。</div>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">¥4,000 <small>/ 1袋（税込）</small></div>
+          <span class="tag">新商品</span>
+        </div>
+        <div class="menu-card-multi-price">2袋 ¥7,500 ／ 3袋 ¥10,800</div>
+        <button class="menu-add-btn" onclick="addToOrder('モンゴル茶（1袋）')">＋ カートに追加</button>
+      </div>
+    </div>
+
   </div>
   </div>
   <div class="menu-scroll-hint"><span><span class="arrow-left">←</span> 横にスワイプできます <span class="arrow-right">→</span></span></div>
@@ -1843,6 +1866,45 @@
       <div class="order-product-info">
         <div class="order-product-name">ザーサイ</div>
         <div class="order-product-price">¥800 / 140g（税込）</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="4000" data-unit="1袋30個入">
+      <div class="order-product-info">
+        <div class="order-product-name">モンゴル茶（1袋）</div>
+        <div class="order-product-price">¥4,000 / 1袋30個入（税込）</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="7500" data-unit="2袋セット">
+      <div class="order-product-info">
+        <div class="order-product-name">モンゴル茶（2袋セット）</div>
+        <div class="order-product-price">¥7,500 / 2袋セット（税込）お得</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="10800" data-unit="3袋セット">
+      <div class="order-product-info">
+        <div class="order-product-name">モンゴル茶（3袋セット）</div>
+        <div class="order-product-price">¥10,800 / 3袋セット（税込）最安</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
