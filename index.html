@@ -1945,8 +1945,18 @@
           <input type="text" id="orderZip" required placeholder="000-0000" maxlength="8" inputmode="numeric" autocomplete="postal-code">
         </div>
         <div class="form-group" style="flex:1">
-          <label for="orderAddress">住所 *</label>
-          <input type="text" id="orderAddress" required placeholder="自動入力されます（番地・建物名を追記してください）">
+          <label for="orderAddress">住所（自動入力）*</label>
+          <input type="text" id="orderAddress" required placeholder="郵便番号を入力すると自動入力されます" readonly>
+        </div>
+      </div>
+      <div class="order-form-row">
+        <div class="form-group" style="flex:1">
+          <label for="orderBanchi">番地 *</label>
+          <input type="text" id="orderBanchi" required placeholder="例: 1-2-3">
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="orderBuilding">建物名・部屋番号</label>
+          <input type="text" id="orderBuilding" placeholder="例: ○○マンション 101号室">
         </div>
       </div>
       <div class="order-form-row">
@@ -2312,7 +2322,9 @@
     const phone = document.getElementById('orderPhone').value;
     const email = document.getElementById('orderEmail').value;
     const zip = document.getElementById('orderZip').value;
-    const address = '〒' + zip + ' ' + document.getElementById('orderAddress').value;
+    const banchi = document.getElementById('orderBanchi').value;
+    const building = document.getElementById('orderBuilding').value;
+    const address = '〒' + zip + ' ' + document.getElementById('orderAddress').value + banchi + (building ? ' ' + building : '');
     const deliveryMap = { sagawa: '佐川急便（冷凍便）', yamato: 'クロネコヤマト（冷凍便）' };
     const delivery = deliveryMap[document.getElementById('orderDelivery').value];
     const date = document.getElementById('orderDate').value || '指定なし';
