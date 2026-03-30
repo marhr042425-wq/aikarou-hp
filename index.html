@@ -2017,11 +2017,22 @@
       <div class="order-form-row">
         <div class="form-group">
           <label for="orderDelivery">配送方法</label>
-          <select id="orderDelivery">
+          <select id="orderDelivery" onchange="updatePaymentOptions()">
             <option value="sagawa">佐川急便（冷凍便）</option>
             <option value="yamato">クロネコヤマト（冷凍便）</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="orderPayment">お支払い方法</label>
+          <select id="orderPayment">
+            <option value="bank">銀行振込</option>
+            <option value="credit">クレジットカード</option>
+            <option value="paypay">PayPay</option>
+            <option value="cod" id="codOption" style="display:none">代金引換（クロネコヤマト）</option>
+          </select>
+        </div>
+      </div>
+      <div class="order-form-row">
         <div class="form-group">
           <label for="orderDate">希望日（目安）</label>
           <input type="date" id="orderDate">
@@ -2338,6 +2349,20 @@
     }
   });
 
+  function updatePaymentOptions() {
+    const delivery = document.getElementById('orderDelivery').value;
+    const codOption = document.getElementById('codOption');
+    const paymentSelect = document.getElementById('orderPayment');
+    if (delivery === 'yamato') {
+      codOption.style.display = '';
+    } else {
+      codOption.style.display = 'none';
+      if (paymentSelect.value === 'cod') {
+        paymentSelect.value = 'bank';
+      }
+    }
+  }
+
   function updateTotal() {
     let total = 0;
     document.querySelectorAll('.order-product-row').forEach(row => {
@@ -2383,16 +2408,18 @@
     const address = '〒' + zip + ' ' + document.getElementById('orderAddress').value + banchi + (building ? ' ' + building : '');
     const deliveryMap = { sagawa: '佐川急便（冷凍便）', yamato: 'クロネコヤマト（冷凍便）' };
     const delivery = deliveryMap[document.getElementById('orderDelivery').value];
+    const paymentMap = { bank: '銀行振込', credit: 'クレジットカード', paypay: 'PayPay', cod: '代金引換（クロネコヤマト）' };
+    const payment = paymentMap[document.getElementById('orderPayment').value];
     const date = document.getElementById('orderDate').value || '指定なし';
     const note = document.getElementById('orderNote').value || 'なし';
 
-    const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\n希望日: ' + date + '\n備考: ' + note;
+    const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\nお支払い: ' + payment + '\n希望日: ' + date + '\n備考: ' + note;
 
     // 1. Render（催事管理システム）+ LINE通知
     fetch('https://akira042425-1.onrender.com/orders/api/hp-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items, total, name, phone, email, address, delivery, date, note })
+      body: JSON.stringify({ items, total, name, phone, email, address, delivery, payment, date, note })
     }).then(r => r.json()).then(data => {
       console.log('Render/LINE通知:', data.message || data.error);
     }).catch(err => {
