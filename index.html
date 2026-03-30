@@ -733,6 +733,16 @@
     border-top: 1px solid rgba(255,255,255,0.1);
   }
 
+  .menu-add-btns {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .menu-add-btns .menu-add-btn {
+    margin-top: 0;
+    font-size: 0.75rem;
+    padding: 8px 4px;
+  }
   .menu-add-btn {
     width: 100%;
     margin-top: 12px;
@@ -1624,7 +1634,10 @@
           <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
-        <button class="menu-add-btn" onclick="addToOrder('肉焼売（大）')">＋ カートに追加</button>
+        <div class="menu-add-btns">
+          <button class="menu-add-btn" onclick="addToOrder('肉焼売（大）【生冷凍】')">＋ 生冷凍</button>
+          <button class="menu-add-btn" onclick="addToOrder('肉焼売（大）【調理済み冷凍】')">＋ 調理済み</button>
+        </div>
       </div>
     </div>
 
@@ -1638,7 +1651,10 @@
           <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
           <span class="tag">おすすめ</span>
         </div>
-        <button class="menu-add-btn" onclick="addToOrder('海老焼売（大）')">＋ カートに追加</button>
+        <div class="menu-add-btns">
+          <button class="menu-add-btn" onclick="addToOrder('海老焼売（大）【生冷凍】')">＋ 生冷凍</button>
+          <button class="menu-add-btn" onclick="addToOrder('海老焼売（大）【調理済み冷凍】')">＋ 調理済み</button>
+        </div>
       </div>
     </div>
 
@@ -1652,7 +1668,10 @@
           <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
-        <button class="menu-add-btn" onclick="addToOrder('肉にら饅頭')">＋ カートに追加</button>
+        <div class="menu-add-btns">
+          <button class="menu-add-btn" onclick="addToOrder('肉にら饅頭【生冷凍】')">＋ 生冷凍</button>
+          <button class="menu-add-btn" onclick="addToOrder('肉にら饅頭【調理済み冷凍】')">＋ 調理済み</button>
+        </div>
       </div>
     </div>
 
@@ -1773,7 +1792,19 @@
 
     <div class="order-product-row" data-price="800" data-unit="4個">
       <div class="order-product-info">
-        <div class="order-product-name">肉焼売（大）</div>
+        <div class="order-product-name">肉焼売（大）【生冷凍】</div>
+        <div class="order-product-price">¥800 / 4個（税込）</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+    <div class="order-product-row" data-price="800" data-unit="4個">
+      <div class="order-product-info">
+        <div class="order-product-name">肉焼売（大）【調理済み冷凍】</div>
         <div class="order-product-price">¥800 / 4個（税込）</div>
       </div>
       <div class="order-qty">
@@ -1786,7 +1817,19 @@
 
     <div class="order-product-row" data-price="800" data-unit="4個">
       <div class="order-product-info">
-        <div class="order-product-name">海老焼売（大）</div>
+        <div class="order-product-name">海老焼売（大）【生冷凍】</div>
+        <div class="order-product-price">¥800 / 4個（税込）</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+    <div class="order-product-row" data-price="800" data-unit="4個">
+      <div class="order-product-info">
+        <div class="order-product-name">海老焼売（大）【調理済み冷凍】</div>
         <div class="order-product-price">¥800 / 4個（税込）</div>
       </div>
       <div class="order-qty">
@@ -1799,7 +1842,19 @@
 
     <div class="order-product-row" data-price="800" data-unit="4個">
       <div class="order-product-info">
-        <div class="order-product-name">肉にら饅頭</div>
+        <div class="order-product-name">肉にら饅頭【生冷凍】</div>
+        <div class="order-product-price">¥800 / 4個（税込）</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+    <div class="order-product-row" data-price="800" data-unit="4個">
+      <div class="order-product-info">
+        <div class="order-product-name">肉にら饅頭【調理済み冷凍】</div>
         <div class="order-product-price">¥800 / 4個（税込）</div>
       </div>
       <div class="order-qty">
