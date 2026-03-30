@@ -1939,9 +1939,15 @@
           <input type="email" id="orderEmail" placeholder="example@email.com">
         </div>
       </div>
-      <div class="form-group">
-        <label for="orderAddress">配送先住所 *</label>
-        <input type="text" id="orderAddress" required placeholder="〒000-0000 都道府県 市区町村 番地">
+      <div class="order-form-row">
+        <div class="form-group" style="flex:0 0 180px">
+          <label for="orderZip">郵便番号 *</label>
+          <input type="text" id="orderZip" required placeholder="000-0000" maxlength="8" inputmode="numeric" autocomplete="postal-code">
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="orderAddress">住所 *</label>
+          <input type="text" id="orderAddress" required placeholder="自動入力されます（番地・建物名を追記してください）">
+        </div>
       </div>
       <div class="order-form-row">
         <div class="form-group">
@@ -2244,6 +2250,28 @@
     updateTotal();
   }
 
+  // 郵便番号自動検索
+  const zipInput = document.getElementById('orderZip');
+  const addressInput = document.getElementById('orderAddress');
+  zipInput.addEventListener('input', function() {
+    let zip = this.value.replace(/[^0-9]/g, '');
+    if (zip.length >= 3 && zip.length <= 7 && !this.value.includes('-')) {
+      this.value = zip.slice(0, 3) + (zip.length > 3 ? '-' + zip.slice(3) : '');
+    }
+    if (zip.length === 7) {
+      fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + zip)
+        .then(r => r.json())
+        .then(data => {
+          if (data.results) {
+            const r = data.results[0];
+            addressInput.value = r.address1 + r.address2 + r.address3;
+            addressInput.focus();
+          }
+        })
+        .catch(() => {});
+    }
+  });
+
   function updateTotal() {
     let total = 0;
     document.querySelectorAll('.order-product-row').forEach(row => {
@@ -2283,7 +2311,8 @@
     const name = document.getElementById('orderName').value;
     const phone = document.getElementById('orderPhone').value;
     const email = document.getElementById('orderEmail').value;
-    const address = document.getElementById('orderAddress').value;
+    const zip = document.getElementById('orderZip').value;
+    const address = '〒' + zip + ' ' + document.getElementById('orderAddress').value;
     const deliveryMap = { sagawa: '佐川急便（冷凍便）', yamato: 'クロネコヤマト（冷凍便）' };
     const delivery = deliveryMap[document.getElementById('orderDelivery').value];
     const date = document.getElementById('orderDate').value || '指定なし';
