@@ -1805,8 +1805,8 @@
         <div class="form-group">
           <label for="orderDelivery">配送方法</label>
           <select id="orderDelivery">
-            <option value="shipping">配送（冷凍便）</option>
-            <option value="pickup">店頭受取</option>
+            <option value="sagawa">佐川急便（冷凍便）</option>
+            <option value="yamato">クロネコヤマト（冷凍便）</option>
           </select>
         </div>
         <div class="form-group">
@@ -2105,7 +2105,8 @@
     const phone = document.getElementById('orderPhone').value;
     const email = document.getElementById('orderEmail').value;
     const address = document.getElementById('orderAddress').value;
-    const delivery = document.getElementById('orderDelivery').value === 'shipping' ? '配送（冷凍便）' : '店頭受取';
+    const deliveryMap = { sagawa: '佐川急便（冷凍便）', yamato: 'クロネコヤマト（冷凍便）' };
+    const delivery = deliveryMap[document.getElementById('orderDelivery').value];
     const date = document.getElementById('orderDate').value || '指定なし';
     const note = document.getElementById('orderNote').value || 'なし';
 
