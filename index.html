@@ -1158,6 +1158,204 @@
     padding: 0;
     box-shadow: 0 2px 20px rgba(0,0,0,0.5);
   }
+
+  /* ===== ORDER FORM ===== */
+  .order-form-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 80px 20px;
+  }
+
+  .order-product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .order-product-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 4px;
+    padding: 16px 20px;
+    gap: 12px;
+  }
+
+  .order-product-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .order-product-name {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .order-product-price {
+    font-size: 0.8rem;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .order-qty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .order-qty button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(212,168,67,0.4);
+    background: transparent;
+    color: var(--gold);
+    font-size: 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .order-qty button:hover {
+    background: rgba(212,168,67,0.15);
+  }
+
+  .order-qty-num {
+    width: 32px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .order-subtotal {
+    width: 70px;
+    text-align: right;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    flex-shrink: 0;
+  }
+
+  .order-subtotal.has-value {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .order-total-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--dark-red), #5a1010);
+    border-radius: 4px;
+    margin-bottom: 40px;
+    font-family: 'Noto Serif JP', serif;
+  }
+
+  .order-total-label {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .order-total-price {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+
+  .order-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .order-form-fields label {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .order-form-fields input,
+  .order-form-fields textarea,
+  .order-form-fields select {
+    width: 100%;
+    padding: 12px 16px;
+    background: #1e1e1e;
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 4px;
+    color: var(--white);
+    font-size: 0.95rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: border-color 0.3s;
+  }
+
+  .order-form-fields input:focus,
+  .order-form-fields textarea:focus,
+  .order-form-fields select:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .order-form-fields textarea {
+    height: 80px;
+    resize: vertical;
+  }
+
+  .order-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .order-form-row { grid-template-columns: 1fr; }
+    .order-product-row { padding: 12px 14px; }
+    .order-product-name { font-size: 0.85rem; }
+    .order-subtotal { width: 60px; font-size: 0.8rem; }
+  }
+
+  .order-submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--red), var(--dark-red));
+    border: none;
+    border-radius: 4px;
+    color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: 'Noto Serif JP', serif;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.1em;
+  }
+
+  .order-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(178,34,34,0.4);
+  }
+
+  .order-submit-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .order-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 16px;
+  }
 </style>
 </head>
 <body>
@@ -1169,9 +1367,10 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#about">愛華楼について</a></li>
       <li><a href="#menu">メニュー</a></li>
+      <li><a href="#orderform">注文する</a></li>
       <li><a href="#cooking">調理方法</a></li>
       <li><a href="#schedule">催事スケジュール</a></li>
-      <li><a href="#order">ご注文</a></li>
+      <li><a href="#order">ご注文方法</a></li>
       <li><a href="#contact">お問い合わせ</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="メニュー">
@@ -1387,6 +1586,181 @@
   <div class="menu-scroll-hint"><span>← スワイプしてメニューを見る →</span></div>
 </section>
 
+
+<!-- ORDER FORM -->
+<section class="order-form-section" id="orderform">
+  <div class="section-header fade-up">
+    <h2>ご注文フォーム</h2>
+    <div class="gold-line"></div>
+    <p>ORDER FORM</p>
+  </div>
+
+  <div class="order-product-list fade-up">
+    <div class="order-product-row" data-price="834" data-unit="4個">
+      <div class="order-product-info">
+        <div class="order-product-name">焼き小籠包</div>
+        <div class="order-product-price">¥834 / 4個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="741" data-unit="4個">
+      <div class="order-product-info">
+        <div class="order-product-name">肉焼売（大）</div>
+        <div class="order-product-price">¥741 / 4個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="741" data-unit="4個">
+      <div class="order-product-info">
+        <div class="order-product-name">海老焼売（大）</div>
+        <div class="order-product-price">¥741 / 4個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="741" data-unit="4個">
+      <div class="order-product-info">
+        <div class="order-product-name">肉にら饅頭</div>
+        <div class="order-product-price">¥741 / 4個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="325" data-unit="1個">
+      <div class="order-product-info">
+        <div class="order-product-name">ちまき</div>
+        <div class="order-product-price">¥325 / 1個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="500" data-unit="1個">
+      <div class="order-product-info">
+        <div class="order-product-name">肉まん（大）</div>
+        <div class="order-product-price">¥500 / 1個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="500" data-unit="1個">
+      <div class="order-product-info">
+        <div class="order-product-name">角煮バーガー</div>
+        <div class="order-product-price">¥500 / 1個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="325" data-unit="1個">
+      <div class="order-product-info">
+        <div class="order-product-name">チャーシューまん</div>
+        <div class="order-product-price">¥325 / 1個</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+
+    <div class="order-product-row" data-price="741" data-unit="140g">
+      <div class="order-product-info">
+        <div class="order-product-name">ザーサイ</div>
+        <div class="order-product-price">¥741 / 140g</div>
+      </div>
+      <div class="order-qty">
+        <button type="button" onclick="changeQty(this,-1)">−</button>
+        <span class="order-qty-num">0</span>
+        <button type="button" onclick="changeQty(this,1)">＋</button>
+      </div>
+      <div class="order-subtotal">-</div>
+    </div>
+  </div>
+
+  <div class="order-total-bar fade-up">
+    <span class="order-total-label">合計金額</span>
+    <span class="order-total-price" id="orderTotal">¥0</span>
+  </div>
+
+  <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+    <div class="order-form-fields fade-up">
+      <div class="form-group">
+        <label for="orderName">お名前 *</label>
+        <input type="text" id="orderName" required placeholder="山田 太郎">
+      </div>
+      <div class="order-form-row">
+        <div class="form-group">
+          <label for="orderPhone">電話番号 *</label>
+          <input type="tel" id="orderPhone" required placeholder="090-1234-5678">
+        </div>
+        <div class="form-group">
+          <label for="orderEmail">メールアドレス</label>
+          <input type="email" id="orderEmail" placeholder="example@email.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="orderAddress">配送先住所 *</label>
+        <input type="text" id="orderAddress" required placeholder="〒000-0000 都道府県 市区町村 番地">
+      </div>
+      <div class="order-form-row">
+        <div class="form-group">
+          <label for="orderDelivery">配送方法</label>
+          <select id="orderDelivery">
+            <option value="shipping">配送（冷凍便）</option>
+            <option value="pickup">店頭受取</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="orderDate">希望日</label>
+          <input type="date" id="orderDate">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="orderNote">備考</label>
+        <textarea id="orderNote" placeholder="ご要望がございましたらご記入ください"></textarea>
+      </div>
+    </div>
+    <button type="submit" class="order-submit-btn" id="orderSubmitBtn" disabled>注文内容を送信する</button>
+    <div class="order-note">※ 送信後、確認のご連絡をさせていただきます。お支払い方法は別途ご案内いたします。</div>
+  </form>
+</section>
 
 <!-- COOKING -->
 <section class="cooking" id="cooking">
@@ -1615,6 +1989,64 @@
   window.addEventListener('scroll', () => {
     document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
   });
+
+  // Order form logic
+  function changeQty(btn, delta) {
+    const row = btn.closest('.order-product-row');
+    const numEl = row.querySelector('.order-qty-num');
+    const subEl = row.querySelector('.order-subtotal');
+    const price = parseInt(row.dataset.price);
+    let qty = parseInt(numEl.textContent) + delta;
+    if (qty < 0) qty = 0;
+    numEl.textContent = qty;
+    if (qty > 0) {
+      subEl.textContent = '¥' + (price * qty).toLocaleString();
+      subEl.classList.add('has-value');
+    } else {
+      subEl.textContent = '-';
+      subEl.classList.remove('has-value');
+    }
+    updateTotal();
+  }
+
+  function updateTotal() {
+    let total = 0;
+    document.querySelectorAll('.order-product-row').forEach(row => {
+      const qty = parseInt(row.querySelector('.order-qty-num').textContent);
+      const price = parseInt(row.dataset.price);
+      total += price * qty;
+    });
+    document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
+    document.getElementById('orderSubmitBtn').disabled = total === 0;
+  }
+
+  function handleOrderSubmit(e) {
+    e.preventDefault();
+    const items = [];
+    document.querySelectorAll('.order-product-row').forEach(row => {
+      const qty = parseInt(row.querySelector('.order-qty-num').textContent);
+      if (qty > 0) {
+        const name = row.querySelector('.order-product-name').textContent;
+        const unit = row.dataset.unit;
+        const price = parseInt(row.dataset.price);
+        items.push(name + ' × ' + qty + '（' + unit + '） ¥' + (price * qty).toLocaleString());
+      }
+    });
+    const total = document.getElementById('orderTotal').textContent;
+    const name = document.getElementById('orderName').value;
+    const phone = document.getElementById('orderPhone').value;
+    const email = document.getElementById('orderEmail').value;
+    const address = document.getElementById('orderAddress').value;
+    const delivery = document.getElementById('orderDelivery').value === 'shipping' ? '配送（冷凍便）' : '店頭受取';
+    const date = document.getElementById('orderDate').value || '指定なし';
+    const note = document.getElementById('orderNote').value || 'なし';
+
+    const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\n希望日: ' + date + '\n備考: ' + note;
+
+    const mailtoLink = 'mailto:marhr042425@gmail.com?subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
+    window.location.href = mailtoLink;
+    alert('メールアプリが開きます。内容を確認して送信してください。');
+  }
 
   // Contact form handler
   function handleSubmit(e) {
