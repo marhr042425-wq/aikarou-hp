@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://marhr042425-wq.github.io/aikarou-hp/sitemap.xml
