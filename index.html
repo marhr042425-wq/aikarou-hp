@@ -2026,11 +2026,9 @@
           <label for="orderPayment">お支払い方法</label>
           <select id="orderPayment">
             <option value="bank">銀行振込</option>
-            <option value="credit">クレジットカード</option>
             <option value="paypay">PayPay</option>
             <option value="cod" id="codOption" style="display:none">代金引換（クロネコヤマト）</option>
           </select>
-          <small id="paymentNote" style="color:#aaa;font-size:0.75rem;margin-top:4px;display:none"></small>
         </div>
       </div>
       <div class="order-form-row">
@@ -2047,6 +2045,11 @@
     </div>
     <button type="submit" class="order-submit-btn" id="orderSubmitBtn" disabled>注文内容を送信する</button>
     <div class="order-note">※ 送信後、確認のご連絡をさせていただきます。お支払い方法は別途ご案内いたします。</div>
+    <div style="margin-top:20px;padding:16px 20px;background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.3);border-radius:8px;text-align:center;">
+      <p style="color:var(--gold);font-weight:700;margin-bottom:8px;font-size:0.95rem;">クレジットカード決済をご希望の方</p>
+      <p style="color:#ccc;font-size:0.85rem;margin-bottom:12px;">クレジットカードでのお支払いはBASEショップからご注文ください。</p>
+      <a href="https://imazuya.thebase.in/" target="_blank" rel="noopener" style="display:inline-block;padding:10px 28px;background:linear-gradient(135deg,var(--gold),#c49b30);color:#1a1a1a;font-weight:700;border-radius:4px;text-decoration:none;font-size:0.9rem;">BASEショップで注文する</a>
+    </div>
   </form>
 </section>
 
@@ -2363,20 +2366,7 @@
         paymentSelect.value = 'bank';
       }
     }
-    updatePaymentNote();
   }
-
-  function updatePaymentNote() {
-    const val = document.getElementById('orderPayment').value;
-    const note = document.getElementById('paymentNote');
-    if (val === 'credit') {
-      note.textContent = '※ クレジットカード決済はBASEショップでのお支払いとなります。BASEショップから改めてご注文をお願いいたします。ご注文確認後にBASEショップのリンクをご案内いたします。';
-      note.style.display = 'block';
-    } else {
-      note.style.display = 'none';
-    }
-  }
-  document.getElementById('orderPayment').addEventListener('change', updatePaymentNote);
 
   function updateTotal() {
     let total = 0;
@@ -2441,15 +2431,10 @@
       console.warn('Render通知エラー（メールで送信します）:', err);
     });
 
-    // 2. クレジットカードならBASEへ、それ以外はメール
-    if (document.getElementById('orderPayment').value === 'credit') {
-      alert('ご注文ありがとうございます！BASEショップへ移動します。BASEショップから改めてご注文をお願いいたします。');
-      window.open('https://imazuya.thebase.in/', '_blank');
-    } else {
-      const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com,ryousuke25800@gmail.com,ueda.ryusei.86@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
-      window.location.href = mailtoLink;
-      alert('ご注文ありがとうございます！メールアプリが開きます。内容を確認して送信してください。');
-    }
+    // 2. メール（最後の砦）
+    const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com,ryousuke25800@gmail.com,ueda.ryusei.86@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
+    window.location.href = mailtoLink;
+    alert('ご注文ありがとうございます！メールアプリが開きます。内容を確認して送信してください。');
   }
 
   // Contact form handler
