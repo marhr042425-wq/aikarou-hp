@@ -1374,6 +1374,18 @@
     color: var(--gold);
   }
 
+  .order-shipping-info {
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .order-shipping-info.free {
+    color: #06C755;
+    font-weight: 700;
+  }
+
   .order-form-fields {
     display: flex;
     flex-direction: column;
@@ -1842,7 +1854,10 @@
   </div>
 
   <div class="order-total-bar fade-up">
-    <span class="order-total-label">合計金額</span>
+    <div>
+      <span class="order-total-label">合計金額</span>
+      <div class="order-shipping-info" id="orderShipping">※ 税込¥5,000以上で送料無料</div>
+    </div>
     <span class="order-total-price" id="orderTotal">¥0</span>
   </div>
 
@@ -2187,6 +2202,18 @@
     });
     document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
     document.getElementById('orderSubmitBtn').disabled = total === 0;
+    const shippingEl = document.getElementById('orderShipping');
+    if (total >= 5000) {
+      shippingEl.textContent = '🎉 送料無料';
+      shippingEl.classList.add('free');
+    } else if (total > 0) {
+      const remain = 5000 - total;
+      shippingEl.textContent = 'あと¥' + remain.toLocaleString() + 'で送料無料';
+      shippingEl.classList.remove('free');
+    } else {
+      shippingEl.textContent = '※ 税込¥5,000以上で送料無料';
+      shippingEl.classList.remove('free');
+    }
   }
 
   function handleOrderSubmit(e) {
