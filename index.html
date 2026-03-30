@@ -589,20 +589,47 @@
 
   .menu-scroll-hint {
     text-align: center;
-    margin-top: 20px;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.35);
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: var(--gold);
     letter-spacing: 0.1em;
+    font-weight: 500;
   }
 
   .menu-scroll-hint span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 8px 20px;
+    animation: swipeHint 2.5s ease-in-out infinite;
+  }
+
+  .menu-scroll-hint .arrow-left {
     display: inline-block;
-    animation: swipeHint 2s ease-in-out infinite;
+    animation: arrowLeft 1.5s ease-in-out infinite;
+  }
+
+  .menu-scroll-hint .arrow-right {
+    display: inline-block;
+    animation: arrowRight 1.5s ease-in-out infinite;
   }
 
   @keyframes swipeHint {
+    0%, 100% { transform: translateX(0); opacity: 1; }
+    50% { transform: translateX(6px); opacity: 0.7; }
+  }
+
+  @keyframes arrowLeft {
     0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(8px); }
+    50% { transform: translateX(-6px); }
+  }
+
+  @keyframes arrowRight {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6px); }
   }
 
   /* Desktop: grid layout */
@@ -1643,7 +1670,7 @@
 
   </div>
   </div>
-  <div class="menu-scroll-hint"><span>← スワイプしてメニューを見る →</span></div>
+  <div class="menu-scroll-hint"><span><span class="arrow-left">←</span> 横にスワイプできます <span class="arrow-right">→</span></span></div>
 </section>
 
 
