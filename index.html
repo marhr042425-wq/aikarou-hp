@@ -725,6 +725,35 @@
     color: rgba(255,255,255,0.5);
   }
 
+  .menu-add-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    background: linear-gradient(135deg, var(--red), var(--dark-red));
+    border: none;
+    border-radius: 4px;
+    color: var(--white);
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .menu-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(178,34,34,0.4);
+  }
+
+  .menu-add-btn:active {
+    transform: scale(0.96);
+  }
+
+  .menu-add-btn.added {
+    background: linear-gradient(135deg, #06C755, #05a648);
+  }
+
   .tag {
     font-size: 0.7rem;
     padding: 3px 10px;
@@ -1561,6 +1590,7 @@
           <div class="menu-card-price">¥900 <small>/ 4個（税込）</small></div>
           <span class="tag popular">人気No.1</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('焼き小籠包')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1574,6 +1604,7 @@
           <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('肉焼売（大）')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1587,6 +1618,7 @@
           <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
           <span class="tag">おすすめ</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('海老焼売（大）')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1600,6 +1632,7 @@
           <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('肉にら饅頭')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1613,6 +1646,7 @@
           <div class="menu-card-price">¥351 <small>/ 1個（税込）</small></div>
           <span class="tag">人気</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('ちまき')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1626,6 +1660,7 @@
           <div class="menu-card-price">¥540 <small>/ 1個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('肉まん（大）')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1639,6 +1674,7 @@
           <div class="menu-card-price">¥540 <small>/ 1個（税込）</small></div>
           <span class="tag">おすすめ</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('角煮バーガー')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1652,6 +1688,7 @@
           <div class="menu-card-price">¥351 <small>/ 1個（税込）</small></div>
           <span class="tag">お手頃</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('チャーシューまん')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -1665,6 +1702,7 @@
           <div class="menu-card-price">¥800 <small>/ 140g（税込）</small></div>
           <span class="frozen-badge">冷凍可</span>
         </div>
+        <button class="menu-add-btn" onclick="addToOrder('ザーサイ')">＋ カートに追加</button>
       </div>
     </div>
 
@@ -2084,6 +2122,42 @@
   window.addEventListener('scroll', () => {
     document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
   });
+
+  // Add to order from menu card
+  function addToOrder(productName) {
+    const rows = document.querySelectorAll('.order-product-row');
+    for (const row of rows) {
+      const name = row.querySelector('.order-product-name').textContent;
+      if (name === productName) {
+        const numEl = row.querySelector('.order-qty-num');
+        const subEl = row.querySelector('.order-subtotal');
+        const price = parseInt(row.dataset.price);
+        let qty = parseInt(numEl.textContent) + 1;
+        numEl.textContent = qty;
+        subEl.textContent = '¥' + (price * qty).toLocaleString();
+        subEl.classList.add('has-value');
+        updateTotal();
+        // Flash the button green
+        const btns = document.querySelectorAll('.menu-add-btn');
+        btns.forEach(btn => {
+          if (btn.onclick.toString().includes(productName)) {
+            btn.textContent = '✓ 追加しました';
+            btn.classList.add('added');
+            setTimeout(() => {
+              btn.textContent = '＋ カートに追加';
+              btn.classList.remove('added');
+            }, 1500);
+          }
+        });
+        // Highlight the row briefly
+        row.style.boxShadow = '0 0 16px rgba(201,168,76,0.5)';
+        setTimeout(() => { row.style.boxShadow = ''; }, 1500);
+        // Scroll to order form
+        document.getElementById('orderform').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        break;
+      }
+    }
+  }
 
   // Order form logic
   function changeQty(btn, delta) {
