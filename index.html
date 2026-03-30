@@ -2441,10 +2441,15 @@
       console.warn('Render通知エラー（メールで送信します）:', err);
     });
 
-    // 2. メール（最後の砦）
-    const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com,ryousuke25800@gmail.com,ueda.ryusei.86@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
-    window.location.href = mailtoLink;
-    alert('ご注文ありがとうございます！メールアプリが開きます。内容を確認して送信してください。');
+    // 2. クレジットカードならBASEへ、それ以外はメール
+    if (document.getElementById('orderPayment').value === 'credit') {
+      alert('ご注文ありがとうございます！BASEショップへ移動します。BASEショップから改めてご注文をお願いいたします。');
+      window.open('https://imazuya.thebase.in/', '_blank');
+    } else {
+      const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com,ryousuke25800@gmail.com,ueda.ryusei.86@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
+      window.location.href = mailtoLink;
+      alert('ご注文ありがとうございます！メールアプリが開きます。内容を確認して送信してください。');
+    }
   }
 
   // Contact form handler
