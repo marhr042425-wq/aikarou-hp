@@ -2388,9 +2388,21 @@
 
     const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\n希望日: ' + date + '\n備考: ' + note;
 
+    // 1. Render（催事管理システム）+ LINE通知
+    fetch('https://akira042425-1.onrender.com/orders/api/hp-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items, total, name, phone, email, address, delivery, date, note })
+    }).then(r => r.json()).then(data => {
+      console.log('Render/LINE通知:', data.message || data.error);
+    }).catch(err => {
+      console.warn('Render通知エラー（メールで送信します）:', err);
+    });
+
+    // 2. メール（最後の砦）
     const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com,ryousuke25800@gmail.com,ueda.ryusei.86@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
     window.location.href = mailtoLink;
-    alert('メールアプリが開きます。内容を確認して送信してください。');
+    alert('ご注文ありがとうございます！メールアプリが開きます。内容を確認して送信してください。');
   }
 
   // Contact form handler
