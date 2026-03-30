@@ -2388,7 +2388,7 @@
 
     const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\n希望日: ' + date + '\n備考: ' + note;
 
-    const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
+    const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com,ryousuke25800@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
     window.location.href = mailtoLink;
     alert('メールアプリが開きます。内容を確認して送信してください。');
   }
