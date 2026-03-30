@@ -2030,6 +2030,7 @@
             <option value="paypay">PayPay</option>
             <option value="cod" id="codOption" style="display:none">代金引換（クロネコヤマト）</option>
           </select>
+          <small id="paymentNote" style="color:#aaa;font-size:0.75rem;margin-top:4px;display:none"></small>
         </div>
       </div>
       <div class="order-form-row">
@@ -2353,6 +2354,7 @@
     const delivery = document.getElementById('orderDelivery').value;
     const codOption = document.getElementById('codOption');
     const paymentSelect = document.getElementById('orderPayment');
+    const paymentNote = document.getElementById('paymentNote');
     if (delivery === 'yamato') {
       codOption.style.display = '';
     } else {
@@ -2361,7 +2363,20 @@
         paymentSelect.value = 'bank';
       }
     }
+    updatePaymentNote();
   }
+
+  function updatePaymentNote() {
+    const val = document.getElementById('orderPayment').value;
+    const note = document.getElementById('paymentNote');
+    if (val === 'credit') {
+      note.textContent = '※ クレジットカード決済はBASEショップでのお支払いとなります。ご注文確認後にBASEショップのリンクをご案内いたします。';
+      note.style.display = 'block';
+    } else {
+      note.style.display = 'none';
+    }
+  }
+  document.getElementById('orderPayment').addEventListener('change', updatePaymentNote);
 
   function updateTotal() {
     let total = 0;
