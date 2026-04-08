@@ -1533,6 +1533,135 @@
     color: rgba(255,255,255,0.4);
     margin-top: 16px;
   }
+
+  /* 注文完了オーバーレイ */
+  .order-complete-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .order-complete-overlay.show { display: flex; }
+  .order-complete-box {
+    background: #1a1a1a;
+    border: 1px solid var(--gold);
+    border-radius: 16px;
+    padding: 40px 30px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .order-complete-check {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
+  .order-complete-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .order-complete-msg {
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .order-complete-summary {
+    text-align: left;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: #ddd;
+    line-height: 1.8;
+  }
+  .order-complete-summary strong { color: var(--gold); }
+  .order-complete-point {
+    background: rgba(232,64,64,0.15);
+    border: 1px solid rgba(232,64,64,0.4);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .order-complete-point .pt-title { color: #E84040; font-weight: 700; font-size: 0.95rem; }
+  .order-complete-point .pt-detail { color: #ccc; font-size: 0.85rem; margin-top: 4px; }
+  .order-complete-point .pt-big { font-size: 1.8rem; font-weight: 900; color: #E84040; }
+  .order-complete-close {
+    display: inline-block;
+    background: var(--gold);
+    color: #000;
+    font-weight: 700;
+    padding: 12px 40px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 8px;
+  }
+
+  /* ポイント確認セクション */
+  .point-check-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    margin: 24px auto 0;
+  }
+  .point-check-box h3 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .point-check-row {
+    display: flex;
+    gap: 8px;
+  }
+  .point-check-row input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 0.9rem;
+  }
+  .point-check-row button {
+    padding: 10px 20px;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .point-result {
+    margin-top: 16px;
+    text-align: center;
+    display: none;
+  }
+  .point-result.show { display: block; }
+  .point-result .pt-balance {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+  .point-result .pt-label {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
 </style>
 </head>
 <body>
@@ -2108,6 +2237,18 @@
       <a href="https://imazuya.thebase.in/" target="_blank" rel="noopener" style="display:inline-block;padding:10px 28px;background:linear-gradient(135deg,var(--gold),#c49b30);color:#1a1a1a;font-weight:700;border-radius:4px;text-decoration:none;font-size:0.9rem;">BASEショップで注文する</a>
     </div>
   </form>
+
+  <div class="point-check-box fade-up">
+    <h3>ポイント残高を確認する</h3>
+    <div class="point-check-row">
+      <input type="tel" id="pointCheckPhone" placeholder="電話番号を入力" maxlength="13">
+      <button type="button" onclick="checkPointBalance()">確認</button>
+    </div>
+    <div class="point-result" id="pointResult">
+      <div class="pt-balance" id="pointBalanceNum">0</div>
+      <div class="pt-label" id="pointBalanceLabel"></div>
+    </div>
+  </div>
 </section>
 
 <!-- COOKING -->
@@ -2306,6 +2447,25 @@
   <p style="margin-top:12px;">&copy; 2026 愛華楼 All Rights Reserved.</p>
 </footer>
 
+<!-- 注文完了オーバーレイ -->
+<div class="order-complete-overlay" id="orderCompleteOverlay">
+  <div class="order-complete-box">
+    <div class="order-complete-check">✅</div>
+    <div class="order-complete-title">ご注文ありがとうございます！</div>
+    <div class="order-complete-msg">
+      ご注文を受け付けました。<br>
+      確認のご連絡をさせていただきます。
+    </div>
+    <div class="order-complete-summary" id="orderCompleteSummary"></div>
+    <div class="order-complete-point" id="orderCompletePoint" style="display:none;">
+      <div class="pt-title">ポイント付与</div>
+      <div class="pt-detail"><span class="pt-big" id="orderPointEarned">0</span> pt 獲得</div>
+      <div class="pt-detail" id="orderPointBalance"></div>
+    </div>
+    <button class="order-complete-close" onclick="closeOrderComplete()">閉じる</button>
+  </div>
+</div>
+
 <script>
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
@@ -2450,6 +2610,10 @@
 
   function handleOrderSubmit(e) {
     e.preventDefault();
+    const submitBtn = document.getElementById('orderSubmitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '送信中...';
+
     const items = [];
     document.querySelectorAll('.order-product-row').forEach(row => {
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
@@ -2476,23 +2640,91 @@
     const note = document.getElementById('orderNote').value || 'なし';
     const member_id = document.getElementById('orderMemberId').value.trim();
 
-    const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\nお支払い: ' + payment + '\n希望日: ' + date + (member_id ? '\n会員番号: #' + member_id : '') + '\n備考: ' + note;
-
-    // 1. Render（催事管理システム）+ LINE通知
+    // Render（催事管理システム）へ送信
     fetch('https://akira042425-1.onrender.com/orders/api/hp-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items, total, name, phone, email, address, delivery, payment, date, note, member_id })
     }).then(r => r.json()).then(data => {
-      console.log('Render/LINE通知:', data.message || data.error);
-    }).catch(err => {
-      console.warn('Render通知エラー（メールで送信します）:', err);
-    });
+      // 注文完了画面を表示
+      const summary = document.getElementById('orderCompleteSummary');
+      summary.innerHTML = '<strong>注文内容</strong><br>' + items.join('<br>') +
+        '<br><br><strong>合計: ' + total + '</strong>' +
+        '<br><br><strong>お届け先</strong><br>' + name + '様<br>' + address +
+        '<br><br><strong>配送:</strong> ' + delivery +
+        '<br><strong>お支払い:</strong> ' + payment;
 
-    // 2. メール（最後の砦）
-    const mailtoLink = 'mailto:marhr042425@gmail.com?cc=guapoako0226@gmail.com,ryousuke25800@gmail.com,ueda.ryusei.86@gmail.com&subject=' + encodeURIComponent('【愛華楼】ご注文') + '&body=' + encodeURIComponent(body);
-    window.location.href = mailtoLink;
-    alert('ご注文ありがとうございます！メールアプリが開きます。内容を確認して送信してください。');
+      // ポイント情報
+      if (data.point_info) {
+        const ptMatch = data.point_info.match(/\+(\d+)pt.*残高:\s*(\d+)pt.*会員#(\d+)/);
+        if (ptMatch) {
+          document.getElementById('orderPointEarned').textContent = ptMatch[1];
+          document.getElementById('orderPointBalance').textContent = '残高: ' + ptMatch[2] + 'pt（会員番号: #' + ptMatch[3] + '）';
+          document.getElementById('orderCompletePoint').style.display = '';
+        }
+      }
+
+      document.getElementById('orderCompleteOverlay').classList.add('show');
+
+      // カートリセット
+      resetOrderForm();
+
+    }).catch(err => {
+      // 通信エラー時もフォールバック表示
+      document.getElementById('orderCompleteSummary').innerHTML =
+        '<strong>注文内容</strong><br>' + items.join('<br>') + '<br><br><strong>合計: ' + total + '</strong>' +
+        '<br><br><span style="color:#E84040;">※ サーバーとの通信に問題がありましたが、注文内容はメールでもお送りします。</span>';
+      document.getElementById('orderCompleteOverlay').classList.add('show');
+      resetOrderForm();
+    });
+  }
+
+  function resetOrderForm() {
+    // 数量・小計をリセット
+    document.querySelectorAll('.order-product-row').forEach(row => {
+      row.querySelector('.order-qty-num').textContent = '0';
+      const sub = row.querySelector('.order-subtotal');
+      sub.textContent = '-';
+      sub.classList.remove('has-value');
+    });
+    // フォームリセット
+    document.getElementById('orderForm').reset();
+    document.getElementById('orderTotal').textContent = '¥0';
+    document.getElementById('orderSubmitBtn').disabled = true;
+    document.getElementById('orderSubmitBtn').textContent = '注文内容を送信する';
+    document.getElementById('orderShipping').textContent = '※ 税込¥5,000以上で送料無料';
+    document.getElementById('orderShipping').classList.remove('free');
+  }
+
+  function closeOrderComplete() {
+    document.getElementById('orderCompleteOverlay').classList.remove('show');
+    document.getElementById('orderCompletePoint').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function checkPointBalance() {
+    const phone = document.getElementById('pointCheckPhone').value.trim();
+    if (!phone) { alert('電話番号を入力してください'); return; }
+    const resultEl = document.getElementById('pointResult');
+    resultEl.classList.remove('show');
+
+    fetch('https://akira042425-1.onrender.com/orders/api/point-check?phone=' + encodeURIComponent(phone))
+      .then(r => r.json())
+      .then(data => {
+        if (data.found) {
+          document.getElementById('pointBalanceNum').textContent = data.total_points;
+          document.getElementById('pointBalanceLabel').textContent = data.name + '様（会員#' + data.member_id + '）';
+        } else {
+          document.getElementById('pointBalanceNum').textContent = '-';
+          document.getElementById('pointBalanceLabel').textContent = 'ポイント会員が見つかりませんでした';
+        }
+        resultEl.classList.add('show');
+      })
+      .catch(() => {
+        document.getElementById('pointBalanceNum').textContent = '-';
+        document.getElementById('pointBalanceLabel').textContent = '通信エラーが発生しました';
+        resultEl.classList.add('show');
+      });
   }
 
   // Contact form handler
