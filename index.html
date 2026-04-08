@@ -2087,6 +2087,15 @@
         </div>
       </div>
       <div class="form-group">
+        <label for="orderMemberId">ポイント会員番号（お持ちの方）</label>
+        <input type="text" id="orderMemberId" placeholder="例: 0001" maxlength="6" inputmode="numeric" style="max-width:180px;">
+        <small style="color:#aaa;font-size:0.75rem;margin-top:4px;display:block;">会員番号がなくてもお電話番号でポイントが自動付与されます</small>
+      </div>
+      <div style="margin:12px 0 16px;padding:12px 16px;background:rgba(232,64,64,0.1);border:1px solid rgba(232,64,64,0.3);border-radius:8px;">
+        <p style="color:#E84040;font-weight:700;font-size:0.9rem;">ポイントが貯まります！</p>
+        <p style="color:#ccc;font-size:0.8rem;margin-top:4px;">HPからのご注文でも ¥200ごとに1ポイント付与。催事会場でもご利用いただけます（50pt＝¥50割引）。</p>
+      </div>
+      <div class="form-group">
         <label for="orderNote">備考</label>
         <textarea id="orderNote" placeholder="ご要望がございましたらご記入ください"></textarea>
       </div>
@@ -2465,14 +2474,15 @@
     const payment = paymentMap[document.getElementById('orderPayment').value];
     const date = document.getElementById('orderDate').value || '指定なし';
     const note = document.getElementById('orderNote').value || 'なし';
+    const member_id = document.getElementById('orderMemberId').value.trim();
 
-    const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\nお支払い: ' + payment + '\n希望日: ' + date + '\n備考: ' + note;
+    const body = '【ご注文内容】\n' + items.join('\n') + '\n\n合計: ' + total + '\n\n【お客様情報】\nお名前: ' + name + '\n電話番号: ' + phone + '\nメール: ' + (email || '未入力') + '\n住所: ' + address + '\n配送方法: ' + delivery + '\nお支払い: ' + payment + '\n希望日: ' + date + (member_id ? '\n会員番号: #' + member_id : '') + '\n備考: ' + note;
 
     // 1. Render（催事管理システム）+ LINE通知
     fetch('https://akira042425-1.onrender.com/orders/api/hp-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items, total, name, phone, email, address, delivery, payment, date, note })
+      body: JSON.stringify({ items, total, name, phone, email, address, delivery, payment, date, note, member_id })
     }).then(r => r.json()).then(data => {
       console.log('Render/LINE通知:', data.message || data.error);
     }).catch(err => {
