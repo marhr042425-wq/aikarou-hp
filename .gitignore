@@ -1,0 +1,5 @@
+.DS_Store
+*.HEIC
+*.pdf
+*.png
+!aikaro_ura_page1.png

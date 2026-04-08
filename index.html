@@ -725,6 +725,37 @@
     color: rgba(255,255,255,0.5);
   }
 
+  .original-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 0.85em;
+    margin-right: 4px;
+  }
+
+  .hp-price {
+    color: #E84040;
+    font-weight: 700;
+  }
+
+  .hp-discount-banner {
+    text-align: center;
+    background: linear-gradient(135deg, #8B0000, #E84040);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    letter-spacing: 0.05em;
+  }
+
+  .order-original-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 0.85em;
+    margin-right: 2px;
+  }
+
   .menu-card-multi-price {
     font-size: 0.75rem;
     color: rgba(255,255,255,0.5);
@@ -1589,7 +1620,7 @@
         一口噛めば広がる海老の旨みと、ジューシーな肉汁のハーモニー。<br>
         一度食べたら忘れられない、愛華楼自慢の逸品です。
       </p>
-      <div class="featured-price">¥800 <small>/ 4個（税込）</small></div>
+      <div class="featured-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 4個（税込）</small></div>
       <a href="#order" class="btn btn-primary">注文する</a>
     </div>
   </div>
@@ -1607,6 +1638,7 @@
     <div class="gold-line"></div>
     <p>MENU</p>
   </div>
+  <div class="hp-discount-banner fade-up">HP限定！全点心商品 <strong>5%OFF</strong></div>
   <div class="menu-scroll-wrapper">
   <div class="menu-scroll">
 
@@ -1617,7 +1649,7 @@
         <div class="menu-card-name">焼き小籠包</div>
         <div class="menu-card-desc">外カリッ！中ジュワ〜！1度は食べてみたい一品！コラーゲンスープが美味しい焼き小籠包。</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥900 <small>/ 4個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥900</span> <span class="hp-price">¥855</span> <small>/ 4個（税込）</small></div>
           <span class="tag popular">人気No.1</span>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('焼き小籠包')">＋ カートに追加</button>
@@ -1631,7 +1663,7 @@
         <div class="menu-card-name">肉焼売</div>
         <div class="menu-card-desc">増量剤を一切使わず国産豚肉をふんだんに使ったタレの要らないにくにくジューシーで箸が止まらない一品。</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
         <div class="menu-add-btns">
@@ -1648,7 +1680,7 @@
         <div class="menu-card-name">海老焼売</div>
         <div class="menu-card-desc">海老をふんだんに使ったプリプリ感がやみつき新食感！これぞ海老焼売！</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 4個（税込）</small></div>
           <span class="tag">おすすめ</span>
         </div>
         <div class="menu-add-btns">
@@ -1665,7 +1697,7 @@
         <div class="menu-card-name">肉にら饅頭</div>
         <div class="menu-card-desc">餃子の一種、お酒の肴、ご飯のお供！肉とニラの相性が堪らない肉たっぷりなニラ饅頭。</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥800 <small>/ 4個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
         <div class="menu-add-btns">
@@ -1682,7 +1714,7 @@
         <div class="menu-card-name">ちまき</div>
         <div class="menu-card-desc">豚肉角煮が入ったモッチモチなちまき！何個でも食べてしまう飽きの来ない一品。</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥351 <small>/ 1個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥351</span> <span class="hp-price">¥333</span> <small>/ 1個（税込）</small></div>
           <span class="tag">人気</span>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('ちまき')">＋ カートに追加</button>
@@ -1696,7 +1728,7 @@
         <div class="menu-card-name">肉まん</div>
         <div class="menu-card-desc">手作りの皮にこだわったふっくら生地に合う餡が絶妙な肉まん。具がぎっしり入ってボリューム感たっぷり！1度食べると味が忘れられない一品。</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥540 <small>/ 1個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥540</span> <span class="hp-price">¥513</span> <small>/ 1個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('肉まん')">＋ カートに追加</button>
@@ -1710,7 +1742,7 @@
         <div class="menu-card-name">角煮バーガー</div>
         <div class="menu-card-desc">じっくりコトコトに煮込んだ甘だれの角煮を割りパンに挟んだ堪らない一品。</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥540 <small>/ 1個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥540</span> <span class="hp-price">¥513</span> <small>/ 1個（税込）</small></div>
           <span class="tag">おすすめ</span>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('角煮バーガー')">＋ カートに追加</button>
@@ -1724,7 +1756,7 @@
         <div class="menu-card-name">チャーシューまん</div>
         <div class="menu-card-desc">ミルクを練りこんだキメの細かい生地！チャーシュー餡を包んだ飲茶！おやつなど小腹の空いた時にぴったり！</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥351 <small>/ 1個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥351</span> <span class="hp-price">¥333</span> <small>/ 1個（税込）</small></div>
           <span class="tag">お手頃</span>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('チャーシューまん')">＋ カートに追加</button>
@@ -1738,7 +1770,7 @@
         <div class="menu-card-name">ザーサイ</div>
         <div class="menu-card-desc">中華のお漬物、食物繊維が豊富でお酒の肴に！ご飯のお供！1度食べるとやみつきになる事間違いなし！ラーメンにも相性抜群！</div>
         <div class="menu-card-footer">
-          <div class="menu-card-price">¥800 <small>/ 140g（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 140g（税込）</small></div>
           <span class="frozen-badge">冷凍可</span>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('ザーサイ')">＋ カートに追加</button>
@@ -1777,10 +1809,10 @@
   <p class="order-form-lead fade-up">LINEやInstagramをお使いでない方も、<br>こちらのフォームからそのままご注文いただけます。<br>商品と数量を選んで、お客様情報をご入力ください。</p>
 
   <div class="order-product-list fade-up">
-    <div class="order-product-row" data-price="900" data-unit="4個">
+    <div class="order-product-row" data-price="855" data-unit="4個">
       <div class="order-product-info">
         <div class="order-product-name">焼き小籠包</div>
-        <div class="order-product-price">¥900 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥900</span> → ¥855 / 4個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1790,10 +1822,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="800" data-unit="4個">
+    <div class="order-product-row" data-price="760" data-unit="4個">
       <div class="order-product-info">
         <div class="order-product-name">肉焼売【生冷凍】</div>
-        <div class="order-product-price">¥800 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1802,10 +1834,10 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row" data-price="800" data-unit="4個">
+    <div class="order-product-row" data-price="760" data-unit="4個">
       <div class="order-product-info">
         <div class="order-product-name">肉焼売【調理済み冷凍】</div>
-        <div class="order-product-price">¥800 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1815,10 +1847,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="800" data-unit="4個">
+    <div class="order-product-row" data-price="760" data-unit="4個">
       <div class="order-product-info">
         <div class="order-product-name">海老焼売【生冷凍】</div>
-        <div class="order-product-price">¥800 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1827,10 +1859,10 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row" data-price="800" data-unit="4個">
+    <div class="order-product-row" data-price="760" data-unit="4個">
       <div class="order-product-info">
         <div class="order-product-name">海老焼売【調理済み冷凍】</div>
-        <div class="order-product-price">¥800 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1840,10 +1872,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="800" data-unit="4個">
+    <div class="order-product-row" data-price="760" data-unit="4個">
       <div class="order-product-info">
         <div class="order-product-name">肉にら饅頭【生冷凍】</div>
-        <div class="order-product-price">¥800 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1852,10 +1884,10 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row" data-price="800" data-unit="4個">
+    <div class="order-product-row" data-price="760" data-unit="4個">
       <div class="order-product-info">
         <div class="order-product-name">肉にら饅頭【調理済み冷凍】</div>
-        <div class="order-product-price">¥800 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1865,10 +1897,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="351" data-unit="1個">
+    <div class="order-product-row" data-price="333" data-unit="1個">
       <div class="order-product-info">
         <div class="order-product-name">ちまき</div>
-        <div class="order-product-price">¥351 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥351</span> → ¥333 / 1個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1878,10 +1910,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="540" data-unit="1個">
+    <div class="order-product-row" data-price="513" data-unit="1個">
       <div class="order-product-info">
         <div class="order-product-name">肉まん</div>
-        <div class="order-product-price">¥540 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1891,10 +1923,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="540" data-unit="1個">
+    <div class="order-product-row" data-price="513" data-unit="1個">
       <div class="order-product-info">
         <div class="order-product-name">角煮バーガー</div>
-        <div class="order-product-price">¥540 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1904,10 +1936,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="351" data-unit="1個">
+    <div class="order-product-row" data-price="333" data-unit="1個">
       <div class="order-product-info">
         <div class="order-product-name">チャーシューまん</div>
-        <div class="order-product-price">¥351 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥351</span> → ¥333 / 1個（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -1917,10 +1949,10 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="800" data-unit="140g">
+    <div class="order-product-row" data-price="760" data-unit="140g">
       <div class="order-product-info">
         <div class="order-product-name">ザーサイ</div>
-        <div class="order-product-price">¥800 / 140g（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 140g（税込）</div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
