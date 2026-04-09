@@ -2515,7 +2515,7 @@
 </section>
 
 <!-- FLOATING CART BAR -->
-<div class="floating-cart" id="floatingCart" onclick="document.getElementById('orderform').scrollIntoView({behavior:'smooth',block:'start'})">
+<div class="floating-cart" id="floatingCart" onclick="document.getElementById('orderform').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>document.getElementById('orderName').focus(),600)">
   <div class="floating-cart-inner">
     <span class="floating-cart-icon">🛒</span>
     <span class="floating-cart-info">
