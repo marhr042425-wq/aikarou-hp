@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .dragon { fill: none; stroke: #C9A84C; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <!-- Left Dragon -->
+  <g class="dragon">
+    <!-- Body -->
+    <path d="M80,300 C70,260 90,220 110,200 C130,180 150,175 160,190 C170,205 155,220 140,230
+             C125,240 115,255 120,270 C125,285 145,280 160,265 C175,250 195,235 210,225
+             C225,215 245,210 255,220 C265,230 255,250 240,260 C225,270 210,285 215,300
+             C220,315 240,310 260,295 C280,280 300,265 320,260 C340,255 350,265 345,280
+             C340,295 320,305 310,315 C300,325 305,340 320,335 C335,330 350,315 365,310
+             C375,306 380,315 375,325" stroke-width="3"/>
+    <!-- Head -->
+    <path d="M80,300 C65,305 50,295 55,280 C60,265 75,260 85,265 C95,270 90,285 80,300" stroke-width="2.5"/>
+    <!-- Eye -->
+    <circle cx="72" cy="282" r="4" fill="#C9A84C"/>
+    <circle cx="72" cy="282" r="2" fill="#0d0d0d"/>
+    <!-- Horns -->
+    <path d="M75,268 C65,248 80,235 88,245" stroke-width="2"/>
+    <path d="M85,265 C80,246 92,236 97,248" stroke-width="2"/>
+    <!-- Whiskers -->
+    <path d="M55,290 C35,285 20,295 15,310" stroke-width="1.5"/>
+    <path d="M58,295 C40,298 28,310 25,325" stroke-width="1.5"/>
+    <!-- Mane -->
+    <path d="M110,200 C100,188 108,175 118,180" stroke-width="1.5"/>
+    <path d="M125,192 C118,178 128,168 135,175" stroke-width="1.5"/>
+    <path d="M145,185 C140,172 152,165 155,175" stroke-width="1.5"/>
+    <!-- Claws (front) -->
+    <path d="M140,230 C130,240 122,250 115,255" stroke-width="1.5"/>
+    <path d="M115,255 C108,248 105,240 110,235" stroke-width="1"/>
+    <path d="M115,255 C112,245 115,238 120,238" stroke-width="1"/>
+    <path d="M115,255 C118,248 122,244 125,245" stroke-width="1"/>
+    <!-- Claws (rear) -->
+    <path d="M240,260 C230,270 222,278 218,285" stroke-width="1.5"/>
+    <path d="M218,285 C212,278 210,270 215,268" stroke-width="1"/>
+    <path d="M218,285 C215,275 218,270 222,270" stroke-width="1"/>
+    <!-- Scales suggestion -->
+    <path d="M160,195 C165,200 160,208 155,205" stroke-width="1" opacity="0.6"/>
+    <path d="M175,250 C180,255 175,262 170,258" stroke-width="1" opacity="0.6"/>
+    <path d="M210,228 C215,233 210,240 205,236" stroke-width="1" opacity="0.6"/>
+    <path d="M255,225 C260,230 255,238 250,234" stroke-width="1" opacity="0.6"/>
+    <path d="M260,298 C265,303 260,310 255,306" stroke-width="1" opacity="0.6"/>
+    <path d="M320,265 C325,270 320,278 315,274" stroke-width="1" opacity="0.6"/>
+    <!-- Tail flames -->
+    <path d="M375,325 C380,335 370,345 365,338" stroke-width="1.5"/>
+    <path d="M375,325 C385,330 390,342 382,345" stroke-width="1.5"/>
+    <path d="M375,325 C382,320 392,325 388,335" stroke-width="1.5"/>
+  </g>
+
+  <!-- Right Dragon (mirrored) -->
+  <g class="dragon" transform="translate(800,0) scale(-1,1)">
+    <!-- Body -->
+    <path d="M80,300 C70,260 90,220 110,200 C130,180 150,175 160,190 C170,205 155,220 140,230
+             C125,240 115,255 120,270 C125,285 145,280 160,265 C175,250 195,235 210,225
+             C225,215 245,210 255,220 C265,230 255,250 240,260 C225,270 210,285 215,300
+             C220,315 240,310 260,295 C280,280 300,265 320,260 C340,255 350,265 345,280
+             C340,295 320,305 310,315 C300,325 305,340 320,335 C335,330 350,315 365,310
+             C375,306 380,315 375,325" stroke-width="3"/>
+    <!-- Head -->
+    <path d="M80,300 C65,305 50,295 55,280 C60,265 75,260 85,265 C95,270 90,285 80,300" stroke-width="2.5"/>
+    <!-- Eye -->
+    <circle cx="72" cy="282" r="4" fill="#C9A84C"/>
+    <circle cx="72" cy="282" r="2" fill="#0d0d0d"/>
+    <!-- Horns -->
+    <path d="M75,268 C65,248 80,235 88,245" stroke-width="2"/>
+    <path d="M85,265 C80,246 92,236 97,248" stroke-width="2"/>
+    <!-- Whiskers -->
+    <path d="M55,290 C35,285 20,295 15,310" stroke-width="1.5"/>
+    <path d="M58,295 C40,298 28,310 25,325" stroke-width="1.5"/>
+    <!-- Mane -->
+    <path d="M110,200 C100,188 108,175 118,180" stroke-width="1.5"/>
+    <path d="M125,192 C118,178 128,168 135,175" stroke-width="1.5"/>
+    <path d="M145,185 C140,172 152,165 155,175" stroke-width="1.5"/>
+    <!-- Claws (front) -->
+    <path d="M140,230 C130,240 122,250 115,255" stroke-width="1.5"/>
+    <path d="M115,255 C108,248 105,240 110,235" stroke-width="1"/>
+    <path d="M115,255 C112,245 115,238 120,238" stroke-width="1"/>
+    <path d="M115,255 C118,248 122,244 125,245" stroke-width="1"/>
+    <!-- Claws (rear) -->
+    <path d="M240,260 C230,270 222,278 218,285" stroke-width="1.5"/>
+    <path d="M218,285 C212,278 210,270 215,268" stroke-width="1"/>
+    <path d="M218,285 C215,275 218,270 222,270" stroke-width="1"/>
+    <!-- Scales suggestion -->
+    <path d="M160,195 C165,200 160,208 155,205" stroke-width="1" opacity="0.6"/>
+    <path d="M175,250 C180,255 175,262 170,258" stroke-width="1" opacity="0.6"/>
+    <path d="M210,228 C215,233 210,240 205,236" stroke-width="1" opacity="0.6"/>
+    <path d="M255,225 C260,230 255,238 250,234" stroke-width="1" opacity="0.6"/>
+    <path d="M260,298 C265,303 260,310 255,306" stroke-width="1" opacity="0.6"/>
+    <path d="M320,265 C325,270 320,278 315,274" stroke-width="1" opacity="0.6"/>
+    <!-- Tail flames -->
+    <path d="M375,325 C380,335 370,345 365,338" stroke-width="1.5"/>
+    <path d="M375,325 C385,330 390,342 382,345" stroke-width="1.5"/>
+    <path d="M375,325 C382,320 392,325 388,335" stroke-width="1.5"/>
+  </g>
+
+  <!-- Center pearl/orb -->
+  <circle cx="400" cy="300" r="22" stroke="#C9A84C" stroke-width="2" fill="none"/>
+  <circle cx="400" cy="300" r="14" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="6" fill="#C9A84C" opacity="0.8"/>
+  <!-- Pearl glow lines -->
+  <path d="M378,300 C375,290 380,280 390,278" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M422,300 C425,310 420,320 410,322" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M400,278 C410,276 420,282 422,290" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M400,322 C390,324 380,318 378,310" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.4"/>
+</svg>

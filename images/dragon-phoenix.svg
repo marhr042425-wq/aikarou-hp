@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Left: Dragon (龍) silhouette -->
+  <g fill="#C9A84C" opacity="0.9">
+    <!-- Dragon body - flowing S-curve -->
+    <path d="M50,280 C45,260 55,240 70,225 C85,210 100,200 108,195
+             C116,190 125,188 130,195 C135,202 128,212 118,218
+             C108,224 98,235 100,248 C102,261 115,258 128,248
+             C141,238 158,225 175,218 C192,211 210,208 218,215
+             C226,222 220,238 208,248 C196,258 182,268 180,282
+             C178,296 192,295 208,285 C224,275 242,262 260,258
+             C278,254 290,262 288,278 C286,294 270,302 258,310
+             C246,318 248,332 262,330 C276,328 292,315 308,310
+             C320,306 328,312 325,322 C322,332 312,338 305,345
+             C298,352 300,362 312,358 C324,354 338,342 352,338
+             C362,335 368,342 365,352 C362,360 352,365 348,372"
+             fill="none" stroke="#C9A84C" stroke-width="8" stroke-linecap="round"/>
+    <!-- Dragon head -->
+    <ellipse cx="58" cy="275" rx="22" ry="18" fill="#C9A84C"/>
+    <ellipse cx="52" cy="268" rx="5" ry="4" fill="#0d0d0d"/>
+    <!-- Dragon jaw -->
+    <path d="M38,282 C30,290 25,285 30,275 C35,265 42,268 38,282" fill="#C9A84C"/>
+    <!-- Horns -->
+    <path d="M62,258 C55,238 68,228 72,242" fill="none" stroke="#C9A84C" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M72,256 C68,238 80,230 82,245" fill="none" stroke="#C9A84C" stroke-width="3" stroke-linecap="round"/>
+    <!-- Whiskers -->
+    <path d="M36,278 C18,272 8,280 5,295" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+    <path d="M38,285 C22,284 12,295 10,310" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+    <!-- Mane flames -->
+    <path d="M85,210 C78,195 88,185 94,195" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M100,202 C95,188 105,180 108,192" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M115,195 C112,182 122,176 124,188" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+    <!-- Front claws -->
+    <path d="M118,220 C108,232 100,240 95,248" fill="none" stroke="#C9A84C" stroke-width="2"/>
+    <path d="M95,248 C88,242 88,234 93,234" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M95,248 C92,240 95,234 99,236" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M95,248 C97,241 101,238 104,240" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <!-- Rear claws -->
+    <path d="M208,250 C198,262 192,272 188,280" fill="none" stroke="#C9A84C" stroke-width="2"/>
+    <path d="M188,280 C182,274 182,266 186,266" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M188,280 C185,272 188,266 192,268" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <!-- Tail fire -->
+    <path d="M348,372 C355,378 348,388 342,382" fill="none" stroke="#C9A84C" stroke-width="2.5"/>
+    <path d="M348,372 C358,374 362,386 355,388" fill="none" stroke="#C9A84C" stroke-width="2.5"/>
+    <path d="M348,372 C356,368 365,374 360,382" fill="none" stroke="#C9A84C" stroke-width="2"/>
+  </g>
+
+  <!-- Right: Phoenix (鳳凰) silhouette -->
+  <g fill="#C9A84C" opacity="0.9">
+    <!-- Phoenix body -->
+    <path d="M750,260 C755,242 745,225 730,215 C715,205 698,202 688,210
+             C678,218 685,232 698,238 C711,244 722,255 718,268
+             C714,281 698,276 685,265 C672,254 655,242 638,238
+             C621,234 608,240 612,255 C616,270 632,278 642,288
+             C652,298 648,312 632,308 C616,304 600,290 585,285
+             C572,281 565,288 570,300"
+             fill="none" stroke="#C9A84C" stroke-width="7" stroke-linecap="round"/>
+    <!-- Phoenix head with crest -->
+    <ellipse cx="745" cy="258" rx="18" ry="15" fill="#C9A84C"/>
+    <ellipse cx="750" cy="252" rx="4" ry="3.5" fill="#0d0d0d"/>
+    <!-- Beak -->
+    <path d="M762,260 C772,255 775,260 768,265 C761,270 758,265 762,260" fill="#C9A84C"/>
+    <!-- Crown feathers -->
+    <path d="M738,244 C735,225 745,215 748,230" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M745,242 C745,222 755,214 755,232" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M752,245 C756,226 765,222 760,238" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+    <!-- Crown tips -->
+    <circle cx="735" cy="222" r="3" fill="#C9A84C"/>
+    <circle cx="746" cy="218" r="3" fill="#C9A84C"/>
+    <circle cx="757" cy="220" r="2.5" fill="#C9A84C"/>
+    <!-- Wing (upper) -->
+    <path d="M718,235 C730,218 748,210 760,215" fill="none" stroke="#C9A84C" stroke-width="2"/>
+    <path d="M712,242 C725,228 742,222 752,225" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <!-- Tail feathers (flowing) -->
+    <path d="M570,300 C560,310 555,325 560,340 C565,355 575,360 580,348
+             C585,336 578,322 570,315" fill="none" stroke="#C9A84C" stroke-width="3" stroke-linecap="round"/>
+    <path d="M570,300 C555,315 548,335 555,352 C562,369 575,372 578,358
+             C581,344 572,328 562,318" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M570,300 C550,320 540,345 548,365 C556,385 572,385 575,370
+             C578,355 568,335 558,322" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+    <!-- Tail feather eyes -->
+    <circle cx="565" cy="342" r="4" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <circle cx="560" cy="355" r="4" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <circle cx="553" cy="368" r="3.5" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <!-- Body feather details -->
+    <path d="M698,215 C705,208 712,212 708,220" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M685,238 C690,232 698,235 694,242" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M638,242 C643,236 650,240 646,246" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <!-- Legs -->
+    <path d="M680,268 C675,280 670,290 665,295" fill="none" stroke="#C9A84C" stroke-width="2"/>
+    <path d="M665,295 C660,290 660,284 664,284" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M665,295 C663,288 666,283 669,286" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+  </g>
+
+  <!-- Center pearl/orb between dragon and phoenix -->
+  <circle cx="400" cy="300" r="20" stroke="#C9A84C" stroke-width="2" fill="none"/>
+  <circle cx="400" cy="300" r="12" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="5" fill="#C9A84C" opacity="0.7"/>
+  <!-- Energy wisps -->
+  <path d="M380,300 C376,288 382,276 394,274" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M420,300 C424,312 418,324 406,326" stroke="#C9A84C" stroke-width="1" fill="none" opacity="0.4"/>
+</svg>
