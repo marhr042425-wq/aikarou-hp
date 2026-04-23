@@ -5,15 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>本格中華 愛華楼 | 本格点心をご家庭でも</title>
 <meta name="description" content="本格中華 愛華楼。焼き小籠包、焼売、肉まん、角煮バーガーなど本格点心をお届けします。LINE・オンラインからもご注文いただけます。">
-<link rel="canonical" href="https://aikaro.jp/">
+<link rel="canonical" href="https://aikaro.online/">
 <meta property="og:title" content="本格中華 愛華楼 | 本格点心をご家庭でも">
 <meta property="og:description" content="焼き小籠包、焼売、肉まん、角煮バーガーなど本格点心をお届けします。催事リピーターの方はHP注文で5%OFF！">
-<meta property="og:url" content="https://aikaro.jp/">
+<meta property="og:url" content="https://aikaro.online/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://aikaro.online/images/yakishoronpo.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://aikaro.online/images/yakishoronpo.jpg">
 <meta name="twitter:title" content="本格中華 愛華楼">
 <meta name="twitter:description" content="焼き小籠包、焼売、肉まんなど本格点心をお届け。HP注文で5%OFF！">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "本格中華 愛華楼",
+  "url": "https://aikaro.online/",
+  "image": "https://aikaro.online/images/yakishoronpo.jpg",
+  "description": "焼き小籠包・焼売・肉まん・角煮バーガーなど本格点心を提供する中華料理店。催事出店と通販・配送にも対応。",
+  "servesCuisine": "中華料理",
+  "priceRange": "¥¥",
+  "telephone": "+81-90-2096-1896",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "花見ヶ丘3-22-20",
+    "addressLocality": "福津市",
+    "addressRegion": "福岡県",
+    "postalCode": "811-3209",
+    "addressCountry": "JP"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "opens": "12:00",
+    "closes": "17:00"
+  }],
+  "sameAs": [
+    "https://www.instagram.com/aika_rou/",
+    "https://imazuya.thebase.in/"
+  ]
+}
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 
@@ -1023,7 +1058,82 @@
     background: var(--dark-bg);
   }
 
-  .schedule-coming {
+  .schedule-list {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .schedule-card {
+    display: flex;
+    align-items: stretch;
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .schedule-card:hover {
+    border-color: rgba(212,168,67,0.4);
+  }
+
+  .schedule-card-date {
+    min-width: 90px;
+    padding: 16px 12px;
+    background: rgba(212,168,67,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(212,168,67,0.15);
+  }
+
+  .schedule-card-month {
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .schedule-card-day {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.2;
+  }
+
+  .schedule-card-range {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+  }
+
+  .schedule-card-body {
+    flex: 1;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .schedule-card-venue {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .schedule-card-area {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .schedule-empty {
     max-width: 600px;
     margin: 0 auto;
     text-align: center;
@@ -1033,16 +1143,23 @@
     border-radius: 4px;
   }
 
-  .schedule-coming h3 {
+  .schedule-empty h3 {
     font-family: 'Noto Serif JP', serif;
     font-size: 1.3rem;
     color: var(--gold);
     margin-bottom: 12px;
   }
 
-  .schedule-coming p {
+  .schedule-empty p {
     font-size: 0.9rem;
     color: rgba(255,255,255,0.6);
+  }
+
+  .schedule-loading {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.9rem;
   }
 
   /* ===== ORDER ===== */
@@ -2302,7 +2419,7 @@
           <p style="color:#06C755;font-weight:700;font-size:0.85rem;">LINE友達のお客様へ</p>
           <p style="color:#ccc;font-size:0.78rem;margin-top:4px;line-height:1.5;">
             LINEで貯めたポイントもこちらで使えます。<br>
-            LINEで「<strong style="color:#fff;">電話 090-xxxx-xxxx</strong>」と送信して電話番号を登録すると、ポイントが統合されHPでもご利用いただけます。
+            LINEで「<strong style="color:#fff;">電話 090-2096-1896</strong>」と送信して電話番号を登録すると、ポイントが統合されHPでもご利用いただけます。
           </p>
         </div>
       </div>
@@ -2332,7 +2449,7 @@
       <div class="pt-label" id="pointBalanceLabel"></div>
     </div>
     <p style="color:#aaa;font-size:0.75rem;margin-top:12px;line-height:1.5;">
-      ※ LINE友達登録のみでポイントをお持ちの方は、LINEで「電話 090-xxxx-xxxx」と送信して電話番号を登録すると、こちらからも確認・ご利用いただけます。
+      ※ LINE友達登録のみでポイントをお持ちの方は、LINEで「電話 090-2096-1896」と送信して電話番号を登録すると、こちらからも確認・ご利用いただけます。
     </p>
   </div>
 </section>
@@ -2419,9 +2536,8 @@
     <div class="gold-line"></div>
     <p>EVENT SCHEDULE</p>
   </div>
-  <div class="schedule-coming fade-up">
-    <h3>近日公開</h3>
-    <p>催事の出店スケジュールは準備中です。<br>最新情報はLINEでお知らせいたします。</p>
+  <div id="scheduleContainer" class="fade-up">
+    <div class="schedule-loading">読み込み中...</div>
   </div>
 </section>
 
@@ -2941,6 +3057,54 @@
       });
   }
 
+  // Schedule loader
+  (function loadSchedule() {
+    var container = document.getElementById('scheduleContainer');
+    if (!container) return;
+    fetch('https://akira042425-1.onrender.com/events/api/public/schedule')
+      .then(function(r) { return r.json(); })
+      .then(function(events) {
+        if (!events || events.length === 0) {
+          container.innerHTML =
+            '<div class="schedule-empty">' +
+            '<h3>現在予定されている催事はありません</h3>' +
+            '<p>最新情報はLINEでお知らせいたします。</p>' +
+            '</div>';
+          return;
+        }
+        var html = '<div class="schedule-list">';
+        events.forEach(function(ev) {
+          var s = ev.start || '';
+          var e = ev.end || '';
+          var sp = s.split('-');
+          var ep = e.split('-');
+          var month = sp[1] ? parseInt(sp[1]) + '月' : '';
+          var startDay = sp[2] ? parseInt(sp[2]) : '';
+          var endDay = ep[2] ? parseInt(ep[2]) : '';
+          var range = startDay === endDay ? '' : '〜' + (ep[1] !== sp[1] ? parseInt(ep[1]) + '/' : '') + endDay + '日';
+          html += '<div class="schedule-card">' +
+            '<div class="schedule-card-date">' +
+            '<span class="schedule-card-month">' + month + '</span>' +
+            '<span class="schedule-card-day">' + startDay + '</span>' +
+            (range ? '<span class="schedule-card-range">' + range + '</span>' : '') +
+            '</div>' +
+            '<div class="schedule-card-body">' +
+            '<div class="schedule-card-venue">' + (ev.venue || ev.name || '') + '</div>' +
+            (ev.area ? '<div class="schedule-card-area">' + ev.area + '</div>' : '') +
+            '</div></div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+      })
+      .catch(function() {
+        container.innerHTML =
+          '<div class="schedule-empty">' +
+          '<h3>催事スケジュール</h3>' +
+          '<p>スケジュール情報を取得できませんでした。<br>最新情報はLINEでお知らせいたします。</p>' +
+          '</div>';
+      });
+  })();
+
   // Contact form handler
   function handleSubmit(e) {
     e.preventDefault();
@@ -2958,6 +3122,17 @@
     alert('メールアプリが開きます。送信をお願いいたします。');
   }
 </script>
+
+<!-- Google Analytics (GA4) - トラッキングIDを設定する際は以下のGA_MEASUREMENT_IDを置き換え -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
+-->
 
 </body>
 </html>
