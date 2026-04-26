@@ -667,6 +667,11 @@
     <div class="point-result" id="pointResult">
       <div class="pt-balance" id="pointBalanceNum">0</div>
       <div class="pt-label" id="pointBalanceLabel"></div>
+      <div id="pointLineLinkBox" style="display:none;margin-top:14px;padding:12px;background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.4);border-radius:6px;">
+        <p style="color:#06C755;font-weight:700;font-size:0.85rem;margin-bottom:8px;">📱 LINEでも残高確認できます</p>
+        <p style="color:#ccc;font-size:0.8rem;margin-bottom:10px;line-height:1.5;">LINE友だち追加後、トークに貼り付けて送るだけでポイントが統合されます。</p>
+        <button type="button" id="pointLineLinkBtn" onclick="linkLineWithPhone()" style="display:block;width:100%;padding:10px 16px;background:#06C755;color:#fff;border:none;border-radius:4px;font-weight:700;font-size:0.9rem;cursor:pointer;">LINEで連携する</button>
+      </div>
     </div>
     <p style="color:#aaa;font-size:0.75rem;margin-top:12px;line-height:1.5;">
       ※ LINE友達登録のみでポイントをお持ちの方は、LINEで「電話 090-2096-1896」と送信して電話番号を登録すると、こちらからも確認・ご利用いただけます。
@@ -894,6 +899,11 @@
       <div class="pt-title">ポイント付与</div>
       <div class="pt-detail"><span class="pt-big" id="orderPointEarned">0</span> pt 獲得</div>
       <div class="pt-detail" id="orderPointBalance"></div>
+    </div>
+    <div id="orderCompleteLineLink" style="display:none;margin:16px auto 0;max-width:360px;padding:14px;background:rgba(6,199,85,0.12);border:1px solid rgba(6,199,85,0.5);border-radius:8px;text-align:center;">
+      <div style="color:#06C755;font-weight:700;font-size:0.95rem;margin-bottom:6px;">📱 LINEでもポイント残高を確認できます</div>
+      <div style="color:#ccc;font-size:0.8rem;margin-bottom:10px;line-height:1.5;">追加後、トークに貼り付けて送るだけで連携完了します。<br>後からでも連携できます。</div>
+      <button type="button" onclick="linkLineFromOrder()" style="display:block;width:100%;padding:10px 16px;background:#06C755;color:#fff;border:none;border-radius:4px;font-weight:700;font-size:0.9rem;cursor:pointer;">LINEで連携する</button>
     </div>
     <button class="order-complete-close" onclick="closeOrderComplete()">閉じる</button>
   </div>

@@ -311,6 +311,15 @@
         }
       }
 
+      // LINE未連携なら連携ボタンを表示
+      const orderLineBox = document.getElementById('orderCompleteLineLink');
+      if (orderLineBox && data.line_linked === false) {
+        orderLinkPhone = data.phone || phone.replace(/[\s\-\(\)]+/g, '');
+        orderLineBox.style.display = '';
+      } else if (orderLineBox) {
+        orderLineBox.style.display = 'none';
+      }
+
       document.getElementById('orderCompleteOverlay').classList.add('show');
 
       // カートリセット
@@ -347,14 +356,22 @@
   function closeOrderComplete() {
     document.getElementById('orderCompleteOverlay').classList.remove('show');
     document.getElementById('orderCompletePoint').style.display = 'none';
+    const orderLineBox = document.getElementById('orderCompleteLineLink');
+    if (orderLineBox) orderLineBox.style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // LINE連携用の電話番号を保持（残高確認エリアと注文完了画面で使用）
+  let lineLinkPhone = '';
+  let orderLinkPhone = '';
 
   function checkPointBalance() {
     const phone = document.getElementById('pointCheckPhone').value.trim();
     if (!phone) { alert('電話番号を入力してください'); return; }
     const resultEl = document.getElementById('pointResult');
+    const lineBox = document.getElementById('pointLineLinkBox');
     resultEl.classList.remove('show');
+    if (lineBox) lineBox.style.display = 'none';
 
     fetch('https://akira042425-1.onrender.com/orders/api/point-check?phone=' + encodeURIComponent(phone))
       .then(r => r.json())
@@ -362,6 +379,11 @@
         if (data.found) {
           document.getElementById('pointBalanceNum').textContent = data.total_points;
           document.getElementById('pointBalanceLabel').textContent = data.name + '様（会員#' + data.member_id + '）';
+          // LINE未連携なら連携ボタンを表示
+          if (lineBox && data.line_linked === false) {
+            lineLinkPhone = data.phone || phone.replace(/[\s\-\(\)]+/g, '');
+            lineBox.style.display = '';
+          }
         } else {
           document.getElementById('pointBalanceNum').textContent = '-';
           document.getElementById('pointBalanceLabel').textContent = 'ポイント会員が見つかりませんでした';
@@ -373,6 +395,42 @@
         document.getElementById('pointBalanceLabel').textContent = '通信エラーが発生しました';
         resultEl.classList.add('show');
       });
+  }
+
+  // クリップボードにLINE連携メッセージをコピーしてLINE友だち追加ページを開く
+  function _copyAndOpenLine(phone, btn) {
+    const message = '電話 ' + phone;
+    const lineUrl = 'https://lin.ee/wbAZif6';
+    const showFallback = () => {
+      window.prompt('このメッセージをコピーしてLINEで送信してください：', message);
+    };
+    const openLine = () => {
+      // クリップボードコピー成功時のみ案内ダイアログを出す（LINEはユーザー操作で別途開く）
+      const original = btn ? btn.textContent : '';
+      if (btn) {
+        btn.textContent = '✓ コピーしました';
+        btn.disabled = true;
+        setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 3000);
+      }
+      // 少し遅延してLINEを開く（コピー完了を見せるため）
+      setTimeout(() => { window.open(lineUrl, '_blank', 'noopener'); }, 400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(message).then(openLine).catch(showFallback);
+    } else {
+      showFallback();
+      window.open(lineUrl, '_blank', 'noopener');
+    }
+  }
+
+  function linkLineWithPhone() {
+    if (!lineLinkPhone) return;
+    _copyAndOpenLine(lineLinkPhone, document.getElementById('pointLineLinkBtn'));
+  }
+
+  function linkLineFromOrder() {
+    if (!orderLinkPhone) return;
+    _copyAndOpenLine(orderLinkPhone, null);
   }
 
   // Schedule loader
