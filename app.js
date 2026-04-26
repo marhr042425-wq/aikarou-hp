@@ -433,6 +433,29 @@
     _copyAndOpenLine(orderLinkPhone, null);
   }
 
+  // URLパラメータ ?link_phone=09012345678 で「ポイント残高確認」を自動展開
+  // 催事場のスタッフ画面が表示するQRから飛んできたお客様用
+  (function autoLinkFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const phone = params.get('link_phone');
+    if (!phone) return;
+    const cleaned = phone.replace(/[\s\-\(\)]+/g, '');
+    if (!cleaned) return;
+    // DOM準備後に実行
+    const run = () => {
+      const input = document.getElementById('pointCheckPhone');
+      if (!input) return;
+      input.value = cleaned;
+      input.scrollIntoView({behavior: 'smooth', block: 'center'});
+      checkPointBalance();
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run);
+    } else {
+      setTimeout(run, 100);
+    }
+  })();
+
   // Schedule loader
   (function loadSchedule() {
     var container = document.getElementById('scheduleContainer');
