@@ -739,6 +739,49 @@
     line-height: 1.6;
   }
 
+  .menu-card-allergens {
+    margin: 8px 0 12px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.03);
+    border-left: 2px solid rgba(212,168,67,0.4);
+    border-radius: 2px;
+  }
+
+  .allergen-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .allergen-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(212,168,67,0.12);
+    border: 1px solid rgba(212,168,67,0.45);
+    border-radius: 3px;
+    letter-spacing: 0;
+  }
+
+  .allergen-text {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.45;
+  }
+
+  .allergen-text strong {
+    color: rgba(255,255,255,0.7);
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
   .menu-card-footer {
     display: flex;
     justify-content: space-between;
