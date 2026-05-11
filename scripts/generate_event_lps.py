@@ -126,15 +126,15 @@ body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans 
 .event-hero {{
   background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%);
   color: #fff;
-  padding: 4rem 1.5rem 3rem;
+  padding: 1.5rem 1.5rem 1.75rem;
   text-align: center;
 }}
-.event-hero .breadcrumb {{ font-size: 0.85rem; opacity: 0.85; margin-bottom: 1rem; color: #fff; }}
+.event-hero .breadcrumb {{ font-size: 0.8rem; opacity: 0.85; margin-bottom: 0.75rem; color: #fff; }}
 .event-hero .breadcrumb a {{ color: #ffd700; text-decoration: none; }}
-.event-hero h1 {{ font-size: 2rem; margin: 0 0 1rem; line-height: 1.3; color: #fff; }}
-.event-hero .event-period {{ font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #ffd700; }}
-.event-hero .event-area {{ display: inline-block; padding: 0.25rem 0.85rem; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: 0.875rem; color: #fff; }}
-.event-body {{ max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem; color: #f5f5f5; }}
+.event-hero h1 {{ font-size: 1.5rem; margin: 0 0 0.6rem; line-height: 1.3; color: #fff; }}
+.event-hero .event-period {{ font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: #ffd700; }}
+.event-hero .event-area {{ display: inline-block; padding: 0.2rem 0.7rem; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: 0.8rem; color: #fff; }}
+.event-body {{ max-width: 720px; margin: 0 auto; padding: 1.75rem 1.5rem; color: #f5f5f5; }}
 .event-section {{ margin-bottom: 2.5rem; }}
 .event-section h2 {{ font-size: 1.25rem; border-bottom: 2px solid #ffd700; padding-bottom: 0.5rem; margin-bottom: 1rem; color: #ffd700; }}
 .event-info-table {{ width: 100%; border-collapse: collapse; }}
@@ -258,11 +258,11 @@ def render_events_index(events):
 <style>
 body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif; }}
 .events-index {{ min-height: 100vh; }}
-.events-hero {{ background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%); color: #fff; padding: 3rem 1.5rem; text-align: center; }}
-.events-hero .breadcrumb {{ font-size: 0.85rem; opacity: 0.85; margin-bottom: 1rem; color: #fff; }}
+.events-hero {{ background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%); color: #fff; padding: 1.75rem 1.5rem; text-align: center; }}
+.events-hero .breadcrumb {{ font-size: 0.8rem; opacity: 0.85; margin-bottom: 0.75rem; color: #fff; }}
 .events-hero .breadcrumb a {{ color: #ffd700; text-decoration: none; }}
-.events-hero h1 {{ margin: 0; font-size: 2rem; color: #fff; }}
-.events-hero p {{ margin: 0.5rem 0 0; opacity: 0.9; color: #fff; }}
+.events-hero h1 {{ margin: 0; font-size: 1.6rem; color: #fff; }}
+.events-hero p {{ margin: 0.4rem 0 0; opacity: 0.9; color: #fff; font-size: 0.9rem; }}
 .events-list {{ max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; display: grid; gap: 1rem; }}
 .ev-card {{ display: block; padding: 1.25rem; background: #1a1a1a; border: 1px solid #2a2a2a; border-left: 4px solid #c41e3a; border-radius: 8px; text-decoration: none; color: #f5f5f5; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; }}
 .ev-card:hover {{ transform: translateY(-2px); box-shadow: 0 8px 20px rgba(196,30,58,0.2); border-left-color: #ffd700; }}
