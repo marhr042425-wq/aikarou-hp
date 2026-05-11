@@ -481,7 +481,9 @@
           var startDay = sp[2] ? parseInt(sp[2]) : '';
           var endDay = ep[2] ? parseInt(ep[2]) : '';
           var range = startDay === endDay ? '' : '〜' + (ep[1] !== sp[1] ? parseInt(ep[1]) + '/' : '') + endDay + '日';
-          html += '<div class="schedule-card">' +
+          var lpHref = ev.id ? '/events/' + ev.id + '/' : '#';
+          var tag = ev.id ? 'a' : 'div';
+          html += '<' + tag + ' class="schedule-card"' + (ev.id ? ' href="' + lpHref + '"' : '') + '>' +
             '<div class="schedule-card-date">' +
             '<span class="schedule-card-month">' + month + '</span>' +
             '<span class="schedule-card-day">' + startDay + '</span>' +
@@ -490,9 +492,10 @@
             '<div class="schedule-card-body">' +
             '<div class="schedule-card-venue">' + (ev.venue || ev.name || '') + '</div>' +
             (ev.area ? '<div class="schedule-card-area">' + ev.area + '</div>' : '') +
-            '</div></div>';
+            '</div></' + tag + '>';
         });
         html += '</div>';
+        html += '<div style="text-align:center; margin-top:1.5rem;"><a href="/events/" style="display:inline-block; padding:0.6rem 1.4rem; border:1px solid #ffd700; color:#ffd700; border-radius:999px; text-decoration:none; font-size:0.9rem;">催事一覧を見る →</a></div>';
         container.innerHTML = html;
       })
       .catch(function() {

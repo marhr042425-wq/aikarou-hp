@@ -1064,12 +1064,17 @@
     border: 1px solid rgba(212,168,67,0.15);
     border-radius: 4px;
     overflow: hidden;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, transform 0.15s;
+    text-decoration: none;
+    color: inherit;
   }
 
   .schedule-card:hover {
     border-color: rgba(212,168,67,0.4);
+    transform: translateY(-2px);
   }
+
+  a.schedule-card { cursor: pointer; }
 
   .schedule-card-date {
     min-width: 90px;
