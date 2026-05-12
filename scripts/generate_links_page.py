@@ -20,7 +20,7 @@ LINKS_DIR.mkdir(exist_ok=True)
 
 sys.path.insert(0, str(ROOT / "scripts"))
 from generate_product_lps import PRODUCTS  # noqa: E402
-from generate_event_lps import clean_display_name  # noqa: E402
+from generate_event_lps import clean_display_name, is_venue_decided  # noqa: E402
 
 API_URL = "https://akira042425-1.onrender.com/events/api/public/schedule"
 
@@ -43,7 +43,7 @@ def fetch_next_event():
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         today = date.today().isoformat()
-        upcoming = [e for e in data if e.get("end", "") >= today]
+        upcoming = [e for e in data if e.get("end", "") >= today and is_venue_decided(e)]
         upcoming.sort(key=lambda e: e.get("start", ""))
         return upcoming[0] if upcoming else None
     except Exception as exc:

@@ -46,6 +46,17 @@ def clean_display_name(s):
     return s.strip()
 
 
+TBD_MARKERS = ("調整中", "未定", "TBD", "tbd", "未確定")
+
+
+def is_venue_decided(event):
+    """店舗が確定済みかどうか。venueやnameに「調整中/未定」等が含まれていれば未確定扱い。
+    確定したら次回ルーチンで自動的に掲載される（手動更新不要）。
+    """
+    raw = (event.get("venue") or "") + " " + (event.get("name") or "")
+    return not any(m in raw for m in TBD_MARKERS)
+
+
 def fetch_events():
     """公開APIから催事一覧を取得"""
     with urllib.request.urlopen(API_URL, timeout=30) as r:
@@ -313,10 +324,16 @@ body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans 
 
 
 def generate(events):
-    """催事LPと一覧ページを生成。古いディレクトリは削除。"""
+    """催事LPと一覧ページを生成。古いディレクトリは削除。
+    「店舗調整中」等の未確定催事は除外し、店舗が確定した次回実行で自動公開される。
+    """
     EVENTS_DIR.mkdir(exist_ok=True)
-    active_events = [e for e in events if is_active(e)]
+    skipped_tbd = [e for e in events if is_active(e) and not is_venue_decided(e)]
+    active_events = [e for e in events if is_active(e) and is_venue_decided(e)]
     active_ids = {str(e.get("id")) for e in active_events if e.get("id")}
+    if skipped_tbd:
+        print(f"  - 店舗未確定のためスキップ: {len(skipped_tbd)}件 "
+              f"({', '.join(e.get('name', '?') for e in skipped_tbd)})")
 
     # 既存ディレクトリのうち、APIに無いものは削除（過去催事の片付け）
     if EVENTS_DIR.exists():
