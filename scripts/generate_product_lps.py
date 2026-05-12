@@ -326,12 +326,12 @@ def render_product_lp(p):
 <style>
 body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif; }}
 .pp-page {{ min-height: 100vh; }}
-.pp-hero {{ background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%); color: #fff; padding: 1.5rem 1.5rem 1.75rem; text-align: center; }}
-.pp-hero .breadcrumb {{ font-size: 0.8rem; opacity: 0.85; margin-bottom: 0.75rem; color: #fff; }}
+.pp-hero {{ background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%); color: #fff; padding: 0.85rem 1.25rem 1rem; text-align: center; }}
+.pp-hero .breadcrumb {{ font-size: 0.72rem; opacity: 0.85; margin-bottom: 0.35rem; color: #fff; }}
 .pp-hero .breadcrumb a {{ color: #ffd700; text-decoration: none; }}
-.pp-hero h1 {{ margin: 0; font-size: 1.5rem; color: #fff; }}
-.pp-hero .en {{ font-size: 0.8rem; opacity: 0.85; margin-top: 0.2rem; letter-spacing: 0.1em; }}
-.pp-hero .tagline {{ margin-top: 0.6rem; color: #ffd700; font-size: 0.95rem; }}
+.pp-hero h1 {{ margin: 0; font-size: 1.25rem; color: #fff; line-height: 1.2; }}
+.pp-hero .en {{ font-size: 0.7rem; opacity: 0.8; margin-top: 0.1rem; letter-spacing: 0.1em; }}
+.pp-hero .tagline {{ margin-top: 0.3rem; color: #ffd700; font-size: 0.82rem; line-height: 1.3; }}
 .pp-image-wrap {{ max-width: 480px; margin: 0 auto; padding: 0 1.5rem; }}
 .pp-image {{ width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); margin-top: -1rem; position: relative; z-index: 2; }}
 .pp-body {{ max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }}
@@ -483,11 +483,11 @@ def render_products_index():
 <style>
 body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif; }}
 .pi-page {{ min-height: 100vh; }}
-.pi-hero {{ background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%); color: #fff; padding: 1.75rem 1.5rem; text-align: center; }}
-.pi-hero .breadcrumb {{ font-size: 0.8rem; opacity: 0.85; margin-bottom: 0.75rem; color: #fff; }}
+.pi-hero {{ background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%); color: #fff; padding: 0.85rem 1.25rem 1rem; text-align: center; }}
+.pi-hero .breadcrumb {{ font-size: 0.72rem; opacity: 0.85; margin-bottom: 0.35rem; color: #fff; }}
 .pi-hero .breadcrumb a {{ color: #ffd700; text-decoration: none; }}
-.pi-hero h1 {{ margin: 0; font-size: 1.6rem; color: #fff; }}
-.pi-hero p {{ margin: 0.4rem 0 0; opacity: 0.9; color: #fff; font-size: 0.9rem; }}
+.pi-hero h1 {{ margin: 0; font-size: 1.2rem; color: #fff; line-height: 1.2; }}
+.pi-hero p {{ margin: 0.2rem 0 0; opacity: 0.9; color: #fff; font-size: 0.78rem; }}
 .pi-list {{ max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; display: grid; gap: 1.25rem; }}
 .pi-card {{ display: flex; gap: 1rem; padding: 1rem; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; text-decoration: none; color: #f5f5f5; transition: transform 0.15s, box-shadow 0.15s; }}
 .pi-card:hover {{ transform: translateY(-2px); box-shadow: 0 8px 20px rgba(196,30,58,0.2); }}
