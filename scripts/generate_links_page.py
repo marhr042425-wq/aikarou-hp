@@ -20,6 +20,7 @@ LINKS_DIR.mkdir(exist_ok=True)
 
 sys.path.insert(0, str(ROOT / "scripts"))
 from generate_product_lps import PRODUCTS  # noqa: E402
+from generate_event_lps import clean_display_name  # noqa: E402
 
 API_URL = "https://akira042425-1.onrender.com/events/api/public/schedule"
 
@@ -78,7 +79,7 @@ def render_event_button(next_ev):
         today = date.today().isoformat()
         is_active = next_ev.get("start", "") <= today <= next_ev.get("end", "")
         prefix = "🔥 出店中" if is_active else "📅 次回催事"
-        name = next_ev.get("venue") or next_ev.get("name") or ""
+        name = clean_display_name(next_ev.get("venue") or next_ev.get("name") or "")
         period = f"{next_ev.get('start','')} 〜 {next_ev.get('end','')}"
         href = f"/events/{next_ev['id']}/" if next_ev.get("id") else "/events/"
         sub = f"{prefix} ・ {period}"

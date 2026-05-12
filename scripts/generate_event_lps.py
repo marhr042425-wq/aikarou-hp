@@ -12,6 +12,7 @@
 
 import json
 import os
+import re
 import shutil
 import sys
 import urllib.request
@@ -24,6 +25,25 @@ ROOT = Path(__file__).resolve().parent.parent
 EVENTS_DIR = ROOT / "events"
 
 WEEKDAY_JA = ["月", "火", "水", "木", "金", "土", "日"]
+
+
+def clean_display_name(s):
+    """顧客向け表示用に店舗名をクレンジング。
+    社内運用上の担当者プレフィックスや付帯情報を除去する。
+    例:
+      '(高)イオン東浦'        → 'イオン東浦'
+      '(浦)イオン徳島(楽市)'  → 'イオン徳島'
+      '(高)MEGAドン・キホーテ浜松可美' → 'MEGAドン・キホーテ浜松可美'
+    全角カッコ（）にも対応。
+    """
+    if not s:
+        return s
+    prev = None
+    while prev != s:
+        prev = s
+        s = re.sub(r'^\s*[\(（][^)）]*[\)）]\s*', '', s)
+        s = re.sub(r'\s*[\(（][^)）]*[\)）]\s*$', '', s)
+    return s.strip()
 
 
 def fetch_events():
@@ -61,8 +81,10 @@ def is_active(event):
 def render_event_lp(event):
     """1催事のLP HTML を生成"""
     eid = event.get("id", "")
-    name = event.get("name", "")
-    venue = event.get("venue", "") or name
+    raw_name = event.get("name", "")
+    raw_venue = event.get("venue", "") or raw_name
+    name = clean_display_name(raw_name)
+    venue = clean_display_name(raw_venue)
     address = event.get("address", "")
     area = event.get("area", "")
     start = event.get("start", "")
@@ -227,7 +249,7 @@ def render_events_index(events):
     cards_html = []
     for ev in events:
         eid = ev.get("id", "")
-        venue = ev.get("venue", "") or ev.get("name", "")
+        venue = clean_display_name(ev.get("venue", "") or ev.get("name", ""))
         area = ev.get("area", "")
         period = fmt_date_range(ev.get("start", ""), ev.get("end", ""))
         cards_html.append(f"""
