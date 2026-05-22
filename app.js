@@ -1,3 +1,86 @@
+  // ============================================================
+  // 商品価格の自動同期（催事システムDBから fetch）
+  // 催事システムで価格を変更すると aikaro.jp が次回読込時に自動反映。
+  // 失敗時は HTML ハードコード値をそのまま表示する（フォールバック）。
+  // ============================================================
+  (function syncHpPrices() {
+    const API = 'https://akira042425-1.onrender.com/orders/api/products';
+    fetch(API, { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(data => {
+        if (!data || !Array.isArray(data.products)) return;
+        const map = {};
+        data.products.forEach(p => {
+          const key = (p.hp_display_name || p.name || '').trim();
+          if (key) map[key] = p;
+        });
+        applyHpPrices(map);
+      })
+      .catch(err => {
+        console.warn('価格同期スキップ（HTMLハードコード値を表示）:', err);
+      });
+
+    function fmt(n) {
+      return '¥' + Number(n || 0).toLocaleString();
+    }
+
+    function applyHpPrices(map) {
+      // 1. メニューカード（.menu-card / .featured セクション）
+      document.querySelectorAll('.menu-card').forEach(card => {
+        const nameEl = card.querySelector('.menu-card-name');
+        if (!nameEl) return;
+        const p = map[nameEl.textContent.trim()];
+        if (!p) return;
+        const origEl = card.querySelector('.original-price');
+        const hpEl = card.querySelector('.hp-price');
+        if (origEl) origEl.textContent = fmt(p.hp_original_price);
+        if (hpEl) hpEl.textContent = fmt(p.hp_price);
+        // 単位の <small> も更新（hp_unit があれば）
+        if (p.hp_unit) {
+          const smallEl = card.querySelector('.menu-card-price small, .featured-price small');
+          if (smallEl) smallEl.textContent = '/ ' + p.hp_unit + '（税込）';
+        }
+      });
+      // featured セクションは .featured-text 配下に .original-price / .hp-price
+      // 「海老焼売」のみ対応（HTML上ハードコード）
+      const featuredTitle = document.querySelector('.featured-text h2');
+      if (featuredTitle) {
+        const p = map[featuredTitle.textContent.trim()];
+        if (p) {
+          const origEl = document.querySelector('.featured-price .original-price');
+          const hpEl = document.querySelector('.featured-price .hp-price');
+          if (origEl) origEl.textContent = fmt(p.hp_original_price);
+          if (hpEl) hpEl.textContent = fmt(p.hp_price);
+          if (p.hp_unit) {
+            const smallEl = document.querySelector('.featured-price small');
+            if (smallEl) smallEl.textContent = '/ ' + p.hp_unit + '（税込）';
+          }
+        }
+      }
+
+      // 2. 注文セクション（.order-product-row）
+      document.querySelectorAll('.order-product-row').forEach(row => {
+        const nameEl = row.querySelector('.order-product-name');
+        if (!nameEl) return;
+        // 「肉焼売【生冷凍】」「肉焼売【調理済み冷凍】」も「肉焼売」にマッチ
+        const rawName = nameEl.textContent.trim();
+        const baseName = rawName.replace(/【[^】]+】/g, '').trim();
+        const p = map[rawName] || map[baseName];
+        if (!p) return;
+        const priceEl = row.querySelector('.order-product-price');
+        if (priceEl) {
+          // 「<span class="order-original-price">¥351</span> → ¥333 / 1個（税込）」を再構築
+          priceEl.innerHTML =
+            '<span class="order-original-price">' + fmt(p.hp_original_price) + '</span>'
+            + ' → ' + fmt(p.hp_price) + ' / ' + (p.hp_unit || '') + '（税込）';
+        }
+        // data-price と data-unit を更新（カート計算用）
+        row.dataset.price = String(p.hp_price);
+        if (p.hp_unit) row.dataset.unit = p.hp_unit;
+      });
+    }
+  })();
+
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
