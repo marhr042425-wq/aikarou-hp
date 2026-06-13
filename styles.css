@@ -947,6 +947,18 @@
     color: #1a1a1a;
   }
 
+  /* サイズの人数目安（注文フォームの行内・小さく薄く・常時表示） */
+  .order-size-hint {
+    margin-top: 5px;
+    font-size: 0.66rem;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.5);
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .order-size-hint span {
+    display: block;
+  }
+
   .tag {
     font-size: 0.7rem;
     padding: 3px 10px;
