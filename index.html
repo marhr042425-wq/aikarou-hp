@@ -301,8 +301,13 @@
           <div class="allergen-text"><strong>アレルゲン</strong>小麦・えび・かに・豚肉・大豆・鶏肉・りんご・ゼラチン・ごま</div>
         </div>
         <div class="menu-card-footer">
-          <div class="menu-card-price"><span class="original-price">¥351</span> <span class="hp-price">¥333</span> <small>/ 1個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥784</span> <span class="hp-price">¥744</span> <small>/ 2個（税込）</small></div>
           <span class="tag">人気</span>
+        </div>
+        <div class="menu-size-select" data-product="ちまき" data-base-price="744" data-base-pieces="2">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">2個 ¥744</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">4個 ¥1,488</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">6個 ¥2,232</button>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('ちまき')">＋ カートに追加</button>
       </div>
@@ -365,8 +370,13 @@
           <div class="allergen-text"><strong>アレルゲン</strong>小麦・卵・豚肉・大豆・ごま</div>
         </div>
         <div class="menu-card-footer">
-          <div class="menu-card-price"><span class="original-price">¥351</span> <span class="hp-price">¥333</span> <small>/ 1個（税込）</small></div>
+          <div class="menu-card-price"><span class="original-price">¥784</span> <span class="hp-price">¥744</span> <small>/ 2個（税込）</small></div>
           <span class="tag">お手頃</span>
+        </div>
+        <div class="menu-size-select" data-product="チャーシューまん" data-base-price="744" data-base-pieces="2">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">2個 ¥744</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">4個 ¥1,488</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">6個 ¥2,232</button>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('チャーシューまん')">＋ カートに追加</button>
       </div>
@@ -544,10 +554,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="333" data-unit="1個">
+    <div class="order-product-row has-size" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784">
       <div class="order-product-info">
         <div class="order-product-name">ちまき</div>
-        <div class="order-product-price"><span class="order-original-price">¥351</span> → ¥333 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥784</span> → ¥744 / 2個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">2個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">6個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -583,10 +598,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="333" data-unit="1個">
+    <div class="order-product-row has-size" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784">
       <div class="order-product-info">
         <div class="order-product-name">チャーシューまん</div>
-        <div class="order-product-price"><span class="order-original-price">¥351</span> → ¥333 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥784</span> → ¥744 / 2個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">2個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">6個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
