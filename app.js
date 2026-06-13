@@ -60,6 +60,8 @@
 
       // 2. 注文セクション（.order-product-row）
       document.querySelectorAll('.order-product-row').forEach(row => {
+        // モンゴル茶はボタンごとに割引済みの実額を持つため、DB単価での上書き対象外
+        if (row.classList.contains('has-tea-size')) return;
         const nameEl = row.querySelector('.order-product-name');
         if (!nameEl) return;
         // 「肉焼売【生冷凍】」「肉焼売【調理済み冷凍】」も「肉焼売」にマッチ
@@ -177,6 +179,113 @@
     }
     html += '¥' + price.toLocaleString() + ' / ' + pieces + '個入（税込）';
     priceEl.innerHTML = html;
+  }
+
+  // ============================================================
+  // モンゴル茶 専用サイズ選択（1袋/2袋/3袋）
+  // 焼売の倍率方式とは別物。各ボタンに「割引済みの実額」を直接持たせる。
+  // 注文行は data-multiplier を持たないので getRowPrice() は data-price×1＝実額。
+  // 1袋30個入なので 2袋=計60個・3袋=計90個。
+  // ============================================================
+  const TEA_PIECES_PER_BAG = 30;   // 1袋の個数
+  const TEA_BASE_PRICE = 4000;     // 1袋あたりの基準価格（割引率計算の分母）
+
+  // メニューカードのサイズボタン（見た目だけ切替）
+  function selectTeaSize(btn) {
+    const wrap = btn.closest('.menu-size-select');
+    if (!wrap) return;
+    wrap.querySelectorAll('.menu-size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // 注文行のサイズボタン（実額を直接 data-price に入れて再計算）
+  function selectOrderTeaSize(btn) {
+    const row = btn.closest('.order-product-row');
+    if (!row) return;
+    row.querySelectorAll('.order-size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    row.dataset.price = btn.dataset.teaPrice;   // 割引済みの実額
+    row.dataset.teaBags = btn.dataset.teaBags;
+    renderTeaRowPrice(row);
+    const numEl = row.querySelector('.order-qty-num');
+    const subEl = row.querySelector('.order-subtotal');
+    const qty = parseInt(numEl.textContent);
+    if (qty > 0) {
+      subEl.textContent = '¥' + (getRowPrice(row) * qty).toLocaleString();
+      subEl.classList.add('has-value');
+    }
+    updateTotal();
+    updateFloatingCart();
+  }
+
+  // モンゴル茶 注文行の価格テキスト＋「1袋あたり¥○○（○%お得）」を再描画
+  function renderTeaRowPrice(row) {
+    const priceEl = row.querySelector('.order-product-price');
+    const bags = parseInt(row.dataset.teaBags) || 1;
+    const price = parseInt(row.dataset.price);
+    const totalPieces = bags * TEA_PIECES_PER_BAG;
+    if (priceEl) {
+      const unitText = bags > 1
+        ? bags + '袋（計' + totalPieces + '個）'
+        : '1袋30個入';
+      priceEl.innerHTML = '¥' + price.toLocaleString() + ' / ' + unitText + '（税込）';
+    }
+    const hintEl = row.querySelector('.order-size-hint');
+    if (hintEl) {
+      if (bags > 1) {
+        const perBag = price / bags;                       // 1袋あたりの実額
+        const offPct = Math.round((1 - perBag / TEA_BASE_PRICE) * 100);
+        hintEl.innerHTML = '<span>1袋あたり¥' + perBag.toLocaleString()
+          + '（' + offPct + '%お得）</span>';
+        hintEl.style.display = '';
+      } else {
+        hintEl.innerHTML = '';
+        hintEl.style.display = 'none';
+      }
+    }
+  }
+
+  // メニューカードからモンゴル茶をカートに追加（選択中の袋数を注文行へ反映）
+  function addTeaToOrder() {
+    const wrap = document.querySelector('.menu-size-select[data-product="モンゴル茶"]');
+    let bags = '1';
+    if (wrap) {
+      const active = wrap.querySelector('.menu-size-btn.active');
+      if (active) bags = active.dataset.teaBags;
+    }
+    const row = document.querySelector('.order-product-row.has-tea-size');
+    if (!row) return;
+    // 選んだ袋数に対応する注文行ボタンを active に切り替えて価格を合わせる
+    const sizeBtn = row.querySelector('.order-size-btn[data-tea-bags="' + bags + '"]');
+    if (sizeBtn) {
+      row.querySelectorAll('.order-size-btn').forEach(b => b.classList.remove('active'));
+      sizeBtn.classList.add('active');
+      row.dataset.price = sizeBtn.dataset.teaPrice;
+      row.dataset.teaBags = bags;
+      renderTeaRowPrice(row);
+    }
+    const numEl = row.querySelector('.order-qty-num');
+    const subEl = row.querySelector('.order-subtotal');
+    const price = getRowPrice(row);
+    const qty = parseInt(numEl.textContent) + 1;
+    numEl.textContent = qty;
+    subEl.textContent = '¥' + (price * qty).toLocaleString();
+    subEl.classList.add('has-value');
+    updateTotal();
+    // 追加ボタンを緑にフラッシュ
+    document.querySelectorAll('.menu-add-btn').forEach(btn => {
+      if (btn.onclick && btn.onclick.toString().includes('addTeaToOrder')) {
+        btn.textContent = '✓ 追加しました';
+        btn.classList.add('added');
+        setTimeout(() => {
+          btn.textContent = '＋ カートに追加';
+          btn.classList.remove('added');
+        }, 1500);
+      }
+    });
+    row.style.boxShadow = '0 0 16px rgba(201,168,76,0.5)';
+    setTimeout(() => { row.style.boxShadow = ''; }, 1500);
+    updateFloatingCart();
   }
 
   // Add to order from menu card
@@ -438,7 +547,18 @@
         const name = row.querySelector('.order-product-name').textContent;
         const price = getRowPrice(row);
         const subtotal = '¥' + (price * qty).toLocaleString();
-        if (row.classList.contains('has-size')) {
+        if (row.classList.contains('has-tea-size')) {
+          // モンゴル茶：「○袋セット（計○個）」。1袋30個入なので 2袋=計60個・3袋=計90個。
+          const bags = parseInt(row.dataset.teaBags) || 1;
+          const pieces = bags * TEA_PIECES_PER_BAG;
+          // 数量2以上は「2袋セット × 2」のように袋セット単位で表記
+          const setLabel = name + ' ' + bags + '袋セット（計' + pieces + '個）';
+          if (qty > 1) {
+            items.push(setLabel + ' × ' + qty + ' ' + subtotal);
+          } else {
+            items.push(setLabel + ' ' + subtotal);
+          }
+        } else if (row.classList.contains('has-size')) {
           // サイズ選択商品：「◯個入 × ◯袋（計◯個）」で梱包取り違えを防ぐ
           const pieces = getRowPieces(row);   // 1袋の中身（4/8/12）
           const total = pieces * qty;          // 総個数
@@ -537,11 +657,22 @@
         btns.forEach(b => b.classList.toggle('active', b.dataset.multiplier === '1'));
         renderSizeRowPrice(row);
       }
+      // モンゴル茶は1袋に戻す
+      if (row.classList.contains('has-tea-size')) {
+        row.dataset.teaBags = '1';
+        row.dataset.price = '4000';
+        const btns = row.querySelectorAll('.order-size-btn');
+        btns.forEach(b => b.classList.toggle('active', b.dataset.teaBags === '1'));
+        renderTeaRowPrice(row);
+      }
     });
     // メニューカードのサイズ選択も基準サイズに戻す
     document.querySelectorAll('.menu-size-select').forEach(wrap => {
       const btns = wrap.querySelectorAll('.menu-size-btn');
-      btns.forEach(b => b.classList.toggle('active', b.dataset.multiplier === '1'));
+      // モンゴル茶カードは data-tea-bags、それ以外は data-multiplier が「1」のボタンを基準に
+      const isTea = wrap.dataset.product === 'モンゴル茶';
+      btns.forEach(b => b.classList.toggle('active',
+        isTea ? b.dataset.teaBags === '1' : b.dataset.multiplier === '1'));
     });
     // フォームリセット
     document.getElementById('orderForm').reset();

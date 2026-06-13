@@ -920,6 +920,25 @@
     color: #1a1a1a;
   }
 
+  /* 「お得」「最安」ラベル（モンゴル茶のサイズボタン内） */
+  .tea-badge {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: var(--red);
+    color: var(--white);
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.4;
+    vertical-align: middle;
+  }
+  .menu-size-btn.active .tea-badge,
+  .order-size-btn.active .tea-badge {
+    background: var(--dark-red);
+    color: var(--white);
+  }
+
   /* サイズ選択ボタン（注文フォームの行内・小さめ） */
   .order-size-select {
     display: flex;
