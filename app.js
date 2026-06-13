@@ -67,16 +67,23 @@
         const baseName = rawName.replace(/【[^】]+】/g, '').trim();
         const p = map[rawName] || map[baseName];
         if (!p) return;
+        // data-price と data-unit を更新（カート計算用）
+        // ※ サイズ選択つきの行（焼き小籠包）では data-price は「基準パック価格」。
+        //   8個・12個は基準×倍率でJS側が計算するので、ここでは基準価格だけ更新する。
+        row.dataset.price = String(p.hp_price);
+        if (p.hp_unit) row.dataset.unit = p.hp_unit;
+        const hasSize = row.classList.contains('has-size');
         const priceEl = row.querySelector('.order-product-price');
-        if (priceEl) {
+        if (priceEl && !hasSize) {
           // 「<span class="order-original-price">¥351</span> → ¥333 / 1個（税込）」を再構築
           priceEl.innerHTML =
             '<span class="order-original-price">' + fmt(p.hp_original_price) + '</span>'
             + ' → ' + fmt(p.hp_price) + ' / ' + (p.hp_unit || '') + '（税込）';
+        } else if (priceEl && hasSize) {
+          // サイズ選択行：選択中サイズに合わせて再描画（基準価格×倍率）
+          row.dataset.origPrice = String(p.hp_original_price || '');
+          if (typeof renderSizeRowPrice === 'function') renderSizeRowPrice(row);
         }
-        // data-price と data-unit を更新（カート計算用）
-        row.dataset.price = String(p.hp_price);
-        if (p.hp_unit) row.dataset.unit = p.hp_unit;
       });
     }
   })();
@@ -107,15 +114,97 @@
     document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
   });
 
+  // ============================================================
+  // サイズ選択ヘルパー（焼き小籠包など「◯個入」を選べる商品用）
+  // data-price は基準パック価格（例 4個¥855）。8個=×2、12個=×3 をJSで計算。
+  // サイズ選択が無い商品は multiplier=1 として従来どおり動く。
+  // ============================================================
+  function getRowMultiplier(row) {
+    const m = parseInt(row.dataset.multiplier);
+    return (m && m > 0) ? m : 1;
+  }
+  // その行の「1袋あたりの価格」（基準価格×倍率）
+  function getRowPrice(row) {
+    return parseInt(row.dataset.price) * getRowMultiplier(row);
+  }
+  // その行の「1袋あたりの個数」（基準個数×倍率）。サイズ非対応行は0を返す。
+  function getRowPieces(row) {
+    const base = parseInt(row.dataset.basePieces);
+    if (!base) return 0;
+    return base * getRowMultiplier(row);
+  }
+
+  // メニューカードのサイズボタンを押したとき（カードの見た目だけ切替）
+  function selectSize(btn) {
+    const wrap = btn.closest('.menu-size-select');
+    if (!wrap) return;
+    wrap.querySelectorAll('.menu-size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // 注文フォーム行のサイズボタンを押したとき（価格・「◯個入」表示・小計を再計算）
+  function selectOrderSize(btn) {
+    const row = btn.closest('.order-product-row');
+    if (!row) return;
+    row.querySelectorAll('.order-size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    row.dataset.multiplier = btn.dataset.multiplier;
+    renderSizeRowPrice(row);
+    // 数量が入っていれば小計を更新
+    const numEl = row.querySelector('.order-qty-num');
+    const subEl = row.querySelector('.order-subtotal');
+    const qty = parseInt(numEl.textContent);
+    if (qty > 0) {
+      subEl.textContent = '¥' + (getRowPrice(row) * qty).toLocaleString();
+      subEl.classList.add('has-value');
+    }
+    updateTotal();
+    updateFloatingCart();
+  }
+
+  // サイズ選択行の価格テキスト（「¥1,710 / 8個入（税込）」）を選択中サイズに合わせて再描画
+  function renderSizeRowPrice(row) {
+    const priceEl = row.querySelector('.order-product-price');
+    if (!priceEl) return;
+    const pieces = getRowPieces(row);
+    const price = getRowPrice(row);
+    const origAttr = row.dataset.origPrice;
+    let html = '';
+    if (origAttr) {
+      // 元値も倍率に合わせて表示（基準元値×倍率）
+      const orig = parseInt(origAttr) * getRowMultiplier(row);
+      html += '<span class="order-original-price">¥' + orig.toLocaleString() + '</span> → ';
+    }
+    html += '¥' + price.toLocaleString() + ' / ' + pieces + '個入（税込）';
+    priceEl.innerHTML = html;
+  }
+
   // Add to order from menu card
   function addToOrder(productName) {
+    // メニューカードでサイズが選ばれていれば、対応する注文行のサイズも合わせる
+    const sizeWrap = document.querySelector('.menu-size-select[data-product="' + productName + '"]');
+    let selectedMultiplier = null;
+    if (sizeWrap) {
+      const active = sizeWrap.querySelector('.menu-size-btn.active');
+      if (active) selectedMultiplier = active.dataset.multiplier;
+    }
     const rows = document.querySelectorAll('.order-product-row');
     for (const row of rows) {
       const name = row.querySelector('.order-product-name').textContent;
       if (name === productName) {
+        // サイズ選択商品なら、カードで選んだサイズを注文行に反映
+        if (selectedMultiplier && row.classList.contains('has-size')) {
+          const sizeBtn = row.querySelector('.order-size-btn[data-multiplier="' + selectedMultiplier + '"]');
+          if (sizeBtn) {
+            row.querySelectorAll('.order-size-btn').forEach(b => b.classList.remove('active'));
+            sizeBtn.classList.add('active');
+            row.dataset.multiplier = selectedMultiplier;
+            renderSizeRowPrice(row);
+          }
+        }
         const numEl = row.querySelector('.order-qty-num');
         const subEl = row.querySelector('.order-subtotal');
-        const price = parseInt(row.dataset.price);
+        const price = getRowPrice(row);
         let qty = parseInt(numEl.textContent) + 1;
         numEl.textContent = qty;
         subEl.textContent = '¥' + (price * qty).toLocaleString();
@@ -148,7 +237,7 @@
     let totalPrice = 0;
     document.querySelectorAll('.order-product-row').forEach(row => {
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
-      const price = parseInt(row.dataset.price);
+      const price = getRowPrice(row);
       totalQty += qty;
       totalPrice += price * qty;
     });
@@ -172,7 +261,7 @@
     const row = btn.closest('.order-product-row');
     const numEl = row.querySelector('.order-qty-num');
     const subEl = row.querySelector('.order-subtotal');
-    const price = parseInt(row.dataset.price);
+    const price = getRowPrice(row);
     let qty = parseInt(numEl.textContent) + delta;
     if (qty < 0) qty = 0;
     numEl.textContent = qty;
@@ -310,7 +399,7 @@
     let total = 0;
     document.querySelectorAll('.order-product-row').forEach(row => {
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
-      const price = parseInt(row.dataset.price);
+      const price = getRowPrice(row);
       total += price * qty;
     });
     document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
@@ -340,9 +429,18 @@
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
       if (qty > 0) {
         const name = row.querySelector('.order-product-name').textContent;
-        const unit = row.dataset.unit;
-        const price = parseInt(row.dataset.price);
-        items.push(name + ' × ' + qty + '（' + unit + '） ¥' + (price * qty).toLocaleString());
+        const price = getRowPrice(row);
+        const subtotal = '¥' + (price * qty).toLocaleString();
+        if (row.classList.contains('has-size')) {
+          // サイズ選択商品：「◯個入 × ◯袋（計◯個）」で梱包取り違えを防ぐ
+          const pieces = getRowPieces(row);   // 1袋の中身（4/8/12）
+          const total = pieces * qty;          // 総個数
+          items.push(name + ' ' + pieces + '個入 × ' + qty + '袋（計' + total + '個）' + subtotal);
+        } else {
+          // 従来商品：現状フォーマット維持
+          const unit = row.dataset.unit;
+          items.push(name + ' × ' + qty + '（' + unit + '） ' + subtotal);
+        }
       }
     });
     const total = document.getElementById('orderTotal').textContent;
@@ -425,6 +523,18 @@
       const sub = row.querySelector('.order-subtotal');
       sub.textContent = '-';
       sub.classList.remove('has-value');
+      // サイズ選択行は基準サイズ（×1）に戻す
+      if (row.classList.contains('has-size')) {
+        row.dataset.multiplier = '1';
+        const btns = row.querySelectorAll('.order-size-btn');
+        btns.forEach(b => b.classList.toggle('active', b.dataset.multiplier === '1'));
+        renderSizeRowPrice(row);
+      }
+    });
+    // メニューカードのサイズ選択も基準サイズに戻す
+    document.querySelectorAll('.menu-size-select').forEach(wrap => {
+      const btns = wrap.querySelectorAll('.menu-size-btn');
+      btns.forEach(b => b.classList.toggle('active', b.dataset.multiplier === '1'));
     });
     // フォームリセット
     document.getElementById('orderForm').reset();

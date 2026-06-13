@@ -189,6 +189,11 @@
           <div class="menu-card-price"><span class="original-price">¥900</span> <span class="hp-price">¥855</span> <small>/ 4個（税込）</small></div>
           <span class="tag popular">人気No.1</span>
         </div>
+        <div class="menu-size-select" data-product="焼き小籠包" data-base-price="855" data-base-pieces="4">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">4個 ¥855</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">8個 ¥1,710</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">12個 ¥2,565</button>
+        </div>
         <button class="menu-add-btn" onclick="addToOrder('焼き小籠包')">＋ カートに追加</button>
       </div>
     </div>
@@ -401,10 +406,15 @@
   <p class="order-form-lead fade-up">催事会場で気に入った商品をご自宅でもう一度。<br>HPからのご注文は全点心商品 <strong style="color:#E84040;">5%OFF</strong> でお届けします。<br>商品と数量を選んで、お客様情報をご入力ください。</p>
 
   <div class="order-product-list fade-up">
-    <div class="order-product-row" data-price="855" data-unit="4個">
+    <div class="order-product-row has-size" data-price="855" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="900">
       <div class="order-product-info">
         <div class="order-product-name">焼き小籠包</div>
-        <div class="order-product-price"><span class="order-original-price">¥900</span> → ¥855 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥900</span> → ¥855 / 4個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">8個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">12個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
