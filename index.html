@@ -330,6 +330,11 @@
           <div class="menu-card-price"><span class="original-price">¥540</span> <span class="hp-price">¥513</span> <small>/ 1個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
+        <div class="menu-size-select" data-product="肉まん" data-base-price="513" data-base-pieces="1">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">1個 ¥513</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">2個 ¥1,026</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">3個 ¥1,539</button>
+        </div>
         <button class="menu-add-btn" onclick="addToOrder('肉まん')">＋ カートに追加</button>
       </div>
     </div>
@@ -351,6 +356,11 @@
         <div class="menu-card-footer">
           <div class="menu-card-price"><span class="original-price">¥540</span> <span class="hp-price">¥513</span> <small>/ 1個（税込）</small></div>
           <span class="tag">おすすめ</span>
+        </div>
+        <div class="menu-size-select" data-product="角煮バーガー" data-base-price="513" data-base-pieces="1">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">1個 ¥513</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">2個 ¥1,026</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">3個 ¥1,539</button>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('角煮バーガー')">＋ カートに追加</button>
       </div>
@@ -572,10 +582,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="513" data-unit="1個">
+    <div class="order-product-row has-size" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540">
       <div class="order-product-info">
         <div class="order-product-name">肉まん</div>
-        <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">1個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">2個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">3個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -585,10 +600,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="513" data-unit="1個">
+    <div class="order-product-row has-size" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540">
       <div class="order-product-info">
         <div class="order-product-name">角煮バーガー</div>
-        <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">1個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">2個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">3個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
