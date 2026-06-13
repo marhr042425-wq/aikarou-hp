@@ -182,7 +182,14 @@
   // Add to order from menu card
   function addToOrder(productName) {
     // メニューカードでサイズが選ばれていれば、対応する注文行のサイズも合わせる
-    const sizeWrap = document.querySelector('.menu-size-select[data-product="' + productName + '"]');
+    // 焼き小籠包は data-product がフル名で一致。焼売系は「肉焼売【生冷凍】」など
+    // 種類付きなので、フル名で見つからなければ種類を外した基準名でも探す（カード1つに
+    // サイズ選択1つ・追加ボタン2つの2段構成に対応）。
+    let sizeWrap = document.querySelector('.menu-size-select[data-product="' + productName + '"]');
+    if (!sizeWrap) {
+      const baseProduct = productName.replace(/【[^】]+】/g, '').trim();
+      sizeWrap = document.querySelector('.menu-size-select[data-product="' + baseProduct + '"]');
+    }
     let selectedMultiplier = null;
     if (sizeWrap) {
       const active = sizeWrap.querySelector('.menu-size-btn.active');

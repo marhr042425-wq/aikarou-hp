@@ -215,6 +215,11 @@
           <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
         </div>
+        <div class="menu-size-select" data-product="肉焼売" data-base-price="760" data-base-pieces="4">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">4個 ¥760</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">8個 ¥1,520</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">12個 ¥2,280</button>
+        </div>
         <div class="menu-add-btns">
           <button class="menu-add-btn" onclick="addToOrder('肉焼売【生冷凍】')">＋ 生冷凍</button>
           <button class="menu-add-btn" onclick="addToOrder('肉焼売【調理済み冷凍】')">＋ 調理済み</button>
@@ -240,6 +245,11 @@
           <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 4個（税込）</small></div>
           <span class="tag">おすすめ</span>
         </div>
+        <div class="menu-size-select" data-product="海老焼売" data-base-price="760" data-base-pieces="4">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">4個 ¥760</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">8個 ¥1,520</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">12個 ¥2,280</button>
+        </div>
         <div class="menu-add-btns">
           <button class="menu-add-btn" onclick="addToOrder('海老焼売【生冷凍】')">＋ 生冷凍</button>
           <button class="menu-add-btn" onclick="addToOrder('海老焼売【調理済み冷凍】')">＋ 調理済み</button>
@@ -263,6 +273,11 @@
         <div class="menu-card-footer">
           <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 4個（税込）</small></div>
           <span class="tag">定番</span>
+        </div>
+        <div class="menu-size-select" data-product="肉にら饅頭" data-base-price="760" data-base-pieces="4">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-multiplier="1">4個 ¥760</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="2">8個 ¥1,520</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-multiplier="3">12個 ¥2,280</button>
         </div>
         <div class="menu-add-btns">
           <button class="menu-add-btn" onclick="addToOrder('肉にら饅頭【生冷凍】')">＋ 生冷凍</button>
@@ -424,10 +439,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="760" data-unit="4個">
+    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉焼売【生冷凍】</div>
-        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">8個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">12個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -436,10 +456,15 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row" data-price="760" data-unit="4個">
+    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉焼売【調理済み冷凍】</div>
-        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">8個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">12個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -449,10 +474,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="760" data-unit="4個">
+    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">海老焼売【生冷凍】</div>
-        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">8個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">12個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -461,10 +491,15 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row" data-price="760" data-unit="4個">
+    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">海老焼売【調理済み冷凍】</div>
-        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">8個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">12個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -474,10 +509,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="760" data-unit="4個">
+    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉にら饅頭【生冷凍】</div>
-        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">8個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">12個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
@@ -486,10 +526,15 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row" data-price="760" data-unit="4個">
+    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉にら饅頭【調理済み冷凍】</div>
-        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個（税込）</div>
+        <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderSize(this)" data-multiplier="1">4個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="2">8個</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderSize(this)" data-multiplier="3">12個</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
