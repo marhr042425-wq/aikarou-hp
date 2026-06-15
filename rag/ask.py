@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent
 DB_DIR = ROOT / "chroma_db"
 COLLECTION_NAME = "venue_notes"
 EMBED_MODEL = "paraphrase-multilingual-MiniLM-L12-v2"
-MODEL = "claude-sonnet-4-6"
+MODEL = "claude-opus-4-8"
 TOP_K = 4
 
 SYSTEM_PROMPT = """あなたは催事会場の運用ノウハウに答えるアシスタントです。

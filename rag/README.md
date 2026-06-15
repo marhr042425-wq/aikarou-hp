@@ -13,7 +13,7 @@
 | 知識ベース | `knowledge/` 内の Markdown（1会場1ファイル） |
 | 埋め込み（ベクトル化） | ローカル多言語モデル `paraphrase-multilingual-MiniLM-L12-v2`（追加APIキー不要・日本語対応） |
 | ベクトルDB | Chroma（ローカル・永続化、`chroma_db/`） |
-| 生成 | Claude API `claude-sonnet-4-6` |
+| 生成 | Claude API `claude-opus-4-8` |
 | インターフェース | CLI（`ingest.py` / `ask.py`） |
 
 ## セットアップ
