@@ -1,0 +1,61 @@
+# 催事LP・リンク集の自動更新（🔴-2 恒久対策）
+#
+# 以前は Mac のローカルルーチン（lp-generator）で毎朝更新していたが、
+# Mac の起動状態に依存し「静かに止まる」事故（6/23〜26のAPI 403、
+# その後のタスク未登録）が起きたため、GitHub Actions に移設。
+#
+# - 毎日 21:30 UTC（= 朝 6:30 JST）に実行
+# - スクリプトは催事システムの公開APIから取得（DBには接続しない＝秘密情報不要）
+# - 差分があるときだけ commit & push → GitHub Pages が自動公開
+# - 失敗すると GitHub がリポジトリオーナーへ自動メール通知する
+#   （Actions の既定動作。これ自体が「止まったら気づける」仕組み）
+
+name: 催事LP自動更新
+
+on:
+  schedule:
+    - cron: '30 21 * * *'   # 21:30 UTC = 6:30 JST
+  workflow_dispatch: {}      # 手動実行（動作確認用）
+
+permissions:
+  contents: write            # 生成物の commit & push に必要
+
+concurrency:
+  group: update-event-lps
+  cancel-in-progress: false
+
+env:
+  TZ: Asia/Tokyo             # date.today() を JST 基準にする（Mac実行時代と同じ挙動）
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+        # スクリプトは標準ライブラリのみ（urllib で公開APIを取得）。
+        # pip install は不要。
+
+      - name: 催事LP生成
+        run: python3 scripts/generate_event_lps.py
+
+      - name: リンク集生成
+        run: python3 scripts/generate_links_page.py
+
+      - name: 差分があれば commit & push
+        run: |
+          # 生成物のディレクトリだけを名指しで stage（git add -A は使わない）
+          git add events links
+          if git diff --cached --quiet; then
+            echo "差分なし。コミットしません。"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "催事LP自動更新 ($(date +%Y-%m-%d))"
+          git push
