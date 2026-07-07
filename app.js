@@ -540,6 +540,10 @@
     submitBtn.disabled = true;
     submitBtn.textContent = '送信中...';
 
+    // 前回のエラー表示が残っていたら消す
+    const orderErrorBox = document.getElementById('orderErrorBox');
+    if (orderErrorBox) orderErrorBox.style.display = 'none';
+
     const items = [];
     document.querySelectorAll('.order-product-row').forEach(row => {
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
@@ -593,7 +597,11 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items, total, name, phone, email, address, delivery, payment, date, note, member_id, use_points: validUsePoints })
-    }).then(r => r.json()).then(data => {
+    }).then(r => {
+      // サーバーがエラーを返した場合（500等）も「失敗」として扱う
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(data => {
       // 注文完了画面を表示
       const summary = document.getElementById('orderCompleteSummary');
       let pointLine = '';
@@ -634,12 +642,16 @@
       resetOrderForm();
 
     }).catch(err => {
-      // 通信エラー時もフォールバック表示
-      document.getElementById('orderCompleteSummary').innerHTML =
-        '<strong>注文内容</strong><br>' + items.join('<br>') + '<br><br><strong>合計: ' + total + '</strong>' +
-        '<br><br><span style="color:#E84040;">※ サーバーとの通信に問題がありましたが、注文内容はメールでもお送りします。</span>';
-      document.getElementById('orderCompleteOverlay').classList.add('show');
-      resetOrderForm();
+      // 送信失敗：成功画面は出さず、正直に伝える。
+      // 入力内容は消さずに残し、そのまま再送信できるようにする。
+      submitBtn.disabled = false;
+      submitBtn.textContent = '注文内容を送信する';
+      if (orderErrorBox) {
+        orderErrorBox.style.display = '';
+        orderErrorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        alert('送信できませんでした。お手数ですが、時間をおいて再度お試しいただくか、LINEでご注文ください。');
+      }
     });
   }
 
