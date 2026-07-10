@@ -706,7 +706,7 @@
   <div class="order-total-bar fade-up">
     <div>
       <span class="order-total-label">合計金額</span>
-      <div class="order-shipping-info" id="orderShipping">※ 税込¥5,000以上で送料無料</div>
+      <div class="order-shipping-info" id="orderShipping">※ 税込¥8,000以上で送料無料</div>
     </div>
     <span class="order-total-price" id="orderTotal">¥0</span>
   </div>
@@ -758,8 +758,9 @@
         </div>
         <div class="form-group">
           <label for="orderPayment">お支払い方法</label>
-          <select id="orderPayment">
+          <select id="orderPayment" onchange="updateCardPaymentUI()">
             <option value="bank">銀行振込</option>
+            <option value="credit">クレジットカード</option>
             <option value="paypay">PayPay</option>
             <option value="cod" id="codOption" style="display:none">代金引換（クロネコヤマト）</option>
           </select>
@@ -817,6 +818,14 @@
       <div class="form-group">
         <label for="orderNote">備考</label>
         <textarea id="orderNote" placeholder="ご要望がございましたらご記入ください"></textarea>
+      </div>
+      <!-- カード情報入力（クレジットカード選択時のみ表示）
+           注文内容の入力がすべて済んだ後にカード情報を入れていただくため、送信ボタン直前に置く -->
+      <div id="cardPaymentBox" style="display:none;margin:12px 0 16px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(212,168,67,0.3);border-radius:8px;">
+        <p style="color:var(--gold);font-weight:700;font-size:0.9rem;margin-bottom:10px;">💳 カード情報入力</p>
+        <div id="payment-element" style="margin-bottom:10px;"></div>
+        <div id="cardPaymentError" style="display:none;color:#E84040;font-size:0.85rem;margin-top:8px;"></div>
+        <small style="color:#aaa;font-size:0.75rem;display:block;margin-top:8px;">※ カード情報はStripe（決済代行会社）に直接送信され、当店のサーバーには保存されません。</small>
       </div>
     </div>
     <button type="submit" class="order-submit-btn" id="orderSubmitBtn" disabled>注文内容を送信する</button>
@@ -1084,7 +1093,8 @@
   </div>
 </div>
 
-<script src="app.js" defer></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="app.js?v=20260710c" defer></script>
 
 <!-- Google Analytics (GA4) - トラッキングIDを設定する際は以下のGA_MEASUREMENT_IDを置き換え -->
 <!--

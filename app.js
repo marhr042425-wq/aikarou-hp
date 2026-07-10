@@ -511,39 +511,108 @@
     }
   }
 
-  function updateTotal() {
-    let total = 0;
-    document.querySelectorAll('.order-product-row').forEach(row => {
-      const qty = parseInt(row.querySelector('.order-qty-num').textContent);
-      const price = getRowPrice(row);
-      total += price * qty;
-    });
-    document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
-    document.getElementById('orderSubmitBtn').disabled = total === 0;
-    const shippingEl = document.getElementById('orderShipping');
-    if (total >= 5000) {
-      shippingEl.textContent = '🎉 送料無料';
-      shippingEl.classList.add('free');
-    } else if (total > 0) {
-      const remain = 5000 - total;
-      shippingEl.textContent = 'あと¥' + remain.toLocaleString() + 'で送料無料';
-      shippingEl.classList.remove('free');
-    } else {
-      shippingEl.textContent = '※ 税込¥5,000以上で送料無料';
-      shippingEl.classList.remove('free');
+  // ============================================================
+  // クレジットカード決済（Stripe Payment Element）
+  // 画面遷移せず、このページの中でカード入力〜決済完了まで完結させる。
+  // ============================================================
+  const STRIPE_PUBLISHABLE_KEY = 'pk_test_51Tr9DtKYZC3tcH3jRCklU7JCLQAtzjzpfga9Me8PQceHpIS7u7ImDPOYZshewIx276X4WfGctHjExKiqtki6nLeK00Q8wRardO';
+  const PAYMENT_API_BASE = 'https://akira042425-1.onrender.com/payment';
+  let stripeInstance = null;
+  let stripeElements = null;
+  let stripePaymentElement = null;
+  let currentClientSecret = null;
+  let mountedPayloadJson = ''; // いま表示中のカード入力欄（PaymentIntent）が対応している注文内容
+  let cardRemountTimer = null; // 注文内容変更時の再マウント用（連打・入力中対策のデバウンス）
+
+  function getStripe() {
+    if (!stripeInstance && window.Stripe) {
+      stripeInstance = window.Stripe(STRIPE_PUBLISHABLE_KEY);
+    }
+    return stripeInstance;
+  }
+
+  function showCardError(msg) {
+    const cardError = document.getElementById('cardPaymentError');
+    if (cardError) {
+      cardError.style.display = '';
+      cardError.textContent = msg;
     }
   }
 
-  function handleOrderSubmit(e) {
-    e.preventDefault();
-    const submitBtn = document.getElementById('orderSubmitBtn');
-    submitBtn.disabled = true;
-    submitBtn.textContent = '送信中...';
+  function clearCardError() {
+    const cardError = document.getElementById('cardPaymentError');
+    if (cardError) { cardError.style.display = 'none'; cardError.textContent = ''; }
+  }
 
-    // 前回のエラー表示が残っていたら消す
-    const orderErrorBox = document.getElementById('orderErrorBox');
-    if (orderErrorBox) orderErrorBox.style.display = 'none';
+  function unmountCardPaymentElement() {
+    if (stripePaymentElement) {
+      stripePaymentElement.unmount();
+      stripePaymentElement = null;
+    }
+    stripeElements = null;
+    currentClientSecret = null;
+    mountedPayloadJson = '';
+  }
 
+  function updateCardPaymentUI() {
+    const paymentSelect = document.getElementById('orderPayment');
+    const cardBox = document.getElementById('cardPaymentBox');
+    if (!paymentSelect || !cardBox) return;
+    if (paymentSelect.value !== 'credit') {
+      cardBox.style.display = 'none';
+      // カード決済をやめて別の支払い方法に切り替えた場合、Payment Elementを破棄
+      unmountCardPaymentElement();
+      return;
+    }
+    cardBox.style.display = '';
+    // カード選択時点でPaymentIntentを作りPayment Elementを表示する
+    // （お客様が「送信する」を押す前にカード番号を入力できるようにするため）。
+    // buildOrderPayload() が同期的に例外を投げても必ず画面に表示する
+    // （引数の評価は同期なので、.catch だけではサイレントに死ぬ）。
+    let payload;
+    try {
+      payload = buildOrderPayload();
+    } catch (err) {
+      showCardError('カード入力欄の準備に失敗しました。ページを再読み込みしてお試しください。（' + (err.message || err) + '）');
+      return;
+    }
+    // サーバー側の必須条件（商品・お名前・電話番号）が揃うまでは案内だけ表示する
+    // （揃わないままPaymentIntentを作りに行くと400エラーになるため）
+    if (!payload.items.length || !String(payload.name).trim() || !String(payload.phone).trim()) {
+      unmountCardPaymentElement();
+      showCardError('商品の選択と、お名前・電話番号のご入力が済むと、ここにカード入力欄が表示されます。');
+      return;
+    }
+    // すでに同じ注文内容でマウント済みなら何もしない（入力中のカード番号を消さない）
+    const payloadJson = JSON.stringify(payload);
+    if (stripePaymentElement && mountedPayloadJson === payloadJson) return;
+    clearCardError();
+    mountCardPaymentElement(payload).catch(err => {
+      showCardError(err.message || 'カード入力欄の読み込みに失敗しました。');
+    });
+  }
+
+  // 商品数量や入力内容が変わったときにカード入力欄を作り直す（カード決済選択中のみ）。
+  // サーバーに記録される注文内容はPaymentIntent作成時の内容なので、
+  // 入力欄表示後の変更を必ず反映させる。連打・入力中はデバウンスでまとめる。
+  function scheduleCardRemount() {
+    const paymentSelect = document.getElementById('orderPayment');
+    if (!paymentSelect || paymentSelect.value !== 'credit') return;
+    clearTimeout(cardRemountTimer);
+    cardRemountTimer = setTimeout(updateCardPaymentUI, 1000);
+  }
+
+  // 注文フォーム内のどの項目が変わっても再マウント判定にかける
+  // （updateCardPaymentUI 側で内容が同じなら何もしないので安全）。
+  // ※ Stripeのカード入力はiframe内なので、カード番号入力ではこのイベントは発生しない。
+  const orderFormEl = document.getElementById('orderForm');
+  if (orderFormEl) {
+    orderFormEl.addEventListener('input', scheduleCardRemount);
+    orderFormEl.addEventListener('change', scheduleCardRemount);
+    orderFormEl.addEventListener('click', scheduleCardRemount);
+  }
+
+  function buildOrderPayload() {
     const items = [];
     document.querySelectorAll('.order-product-row').forEach(row => {
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
@@ -552,10 +621,8 @@
         const price = getRowPrice(row);
         const subtotal = '¥' + (price * qty).toLocaleString();
         if (row.classList.contains('has-tea-size')) {
-          // モンゴル茶：「○袋セット（計○個）」。1袋30個入なので 2袋=計60個・3袋=計90個。
           const bags = parseInt(row.dataset.teaBags) || 1;
           const pieces = bags * TEA_PIECES_PER_BAG;
-          // 数量2以上は「2袋セット × 2」のように袋セット単位で表記
           const setLabel = name + ' ' + bags + '袋セット（計' + pieces + '個）';
           if (qty > 1) {
             items.push(setLabel + ' × ' + qty + ' ' + subtotal);
@@ -563,12 +630,10 @@
             items.push(setLabel + ' ' + subtotal);
           }
         } else if (row.classList.contains('has-size')) {
-          // サイズ選択商品：「◯個入 × ◯袋（計◯個）」で梱包取り違えを防ぐ
-          const pieces = getRowPieces(row);   // 1袋の中身（4/8/12）
-          const total = pieces * qty;          // 総個数
-          items.push(name + ' ' + pieces + '個入 × ' + qty + '袋（計' + total + '個）' + subtotal);
+          const pieces = getRowPieces(row);
+          const totalPieces = pieces * qty;
+          items.push(name + ' ' + pieces + '個入 × ' + qty + '袋（計' + totalPieces + '個）' + subtotal);
         } else {
-          // 従来商品：現状フォーマット維持
           const unit = row.dataset.unit;
           items.push(name + ' × ' + qty + '（' + unit + '） ' + subtotal);
         }
@@ -591,56 +656,243 @@
     const member_id = document.getElementById('orderMemberId').value.trim();
     const usePoints = parseInt(document.getElementById('pointUseAmount').value) || 0;
     const validUsePoints = (usePoints >= 50 && usePoints <= customerPoints) ? usePoints : 0;
+    return { items, total, name, phone, email, address, delivery, payment, date, note, member_id, use_points: validUsePoints };
+  }
 
-    // Render（催事管理システム）へ送信
+  function showOrderCompleteScreen(orderData, respData) {
+    const summary = document.getElementById('orderCompleteSummary');
+    let pointLine = '';
+    if (orderData.use_points > 0) {
+      pointLine = '<br><span style="color:#E84040;font-weight:700;">ポイント利用: −¥' + orderData.use_points.toLocaleString() + '</span>';
+      const totalNum = parseInt(orderData.total.replace(/[^\d]/g, '')) || 0;
+      const afterPoint = totalNum - orderData.use_points;
+      pointLine += '<br><strong>お支払い金額: ¥' + afterPoint.toLocaleString() + '</strong>';
+    }
+    summary.innerHTML = '<strong>注文内容</strong><br>' + orderData.items.join('<br>') +
+      '<br><br><strong>合計: ' + orderData.total + '</strong>' + pointLine +
+      '<br><br><strong>お届け先</strong><br>' + orderData.name + '様<br>' + orderData.address +
+      '<br><br><strong>配送:</strong> ' + orderData.delivery +
+      '<br><strong>お支払い:</strong> ' + orderData.payment;
+
+    if (respData && respData.point_info) {
+      const ptMatch = respData.point_info.match(/\+(\d+)pt.*残高:\s*(\d+)pt.*会員#(\d+)/);
+      if (ptMatch) {
+        document.getElementById('orderPointEarned').textContent = ptMatch[1];
+        document.getElementById('orderPointBalance').textContent = '残高: ' + ptMatch[2] + 'pt（会員番号: #' + ptMatch[3] + '）';
+        document.getElementById('orderCompletePoint').style.display = '';
+      }
+    }
+
+    const orderLineBox = document.getElementById('orderCompleteLineLink');
+    if (orderLineBox && respData && respData.line_linked === false) {
+      orderLinkPhone = respData.phone || orderData.phone.replace(/[\s\-\(\)]+/g, '');
+      orderLineBox.style.display = '';
+    } else if (orderLineBox) {
+      orderLineBox.style.display = 'none';
+    }
+
+    document.getElementById('orderCompleteOverlay').classList.add('show');
+    resetOrderForm();
+  }
+
+  function showOrderCompletePending(orderData) {
+    // カード決済はWebhook確定を待つため、断定的な完了ではなく
+    // 「確認中」の趣旨で表示する（実際の入金確定はサーバー側Webhookで行う）。
+    const summary = document.getElementById('orderCompleteSummary');
+    summary.innerHTML = '<strong>ご注文内容</strong><br>' + orderData.items.join('<br>') +
+      '<br><br><strong>合計: ' + orderData.total + '</strong>' +
+      '<br><br><strong>お届け先</strong><br>' + orderData.name + '様<br>' + orderData.address +
+      '<br><br><strong>配送:</strong> ' + orderData.delivery +
+      '<br><strong>お支払い:</strong> ' + orderData.payment +
+      '<br><br><span style="color:#aaa;font-size:0.85rem;">決済を確認しています。確認が取れ次第、メールでご連絡いたします。</span>';
+    document.getElementById('orderCompleteOverlay').classList.add('show');
+    resetOrderForm();
+  }
+
+  const CARD_INCOMPLETE_MSG = 'カード決済が完了していません。カード情報を入力してお支払いを完了してください'
+    + '（カード入力欄が表示されない場合は、お手数ですが別の支払い方法をお選びください）';
+
+  async function handleCardPaymentSubmit(orderData, submitBtn, orderErrorBox) {
+    const cardError = document.getElementById('cardPaymentError');
+    if (cardError) { cardError.style.display = 'none'; cardError.textContent = ''; }
+
+    // 決済を止めてエラーを表示する共通処理。
+    // カード決済では、どんな失敗でも通常注文（/orders/api/hp-order）への
+    // フォールバック送信は絶対に行わない。
+    function stopWithCardError(msg) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '注文内容を送信する';
+      if (cardError) {
+        cardError.style.display = '';
+        cardError.textContent = msg;
+        cardError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (orderErrorBox) {
+        orderErrorBox.style.display = '';
+        orderErrorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        alert(msg);
+      }
+    }
+
+    // Payment Elementがまだ描画されていない＝カード情報を入力できていない状態。
+    // ここで決済準備をやり直し、成功しても「入力してから再度送信」を促して必ず止める。
+    if (!stripePaymentElement) {
+      try {
+        await mountCardPaymentElement(orderData);
+      } catch (err) {
+        // create-intent失敗（サーバー障害・502等）。注文は送信しない。
+        stopWithCardError('カード決済の準備ができなかったため、ご注文は送信されていません。'
+          + 'しばらくしてもう一度お試しいただくか、お手数ですが別の支払い方法をお選びください。');
+        return;
+      }
+      stopWithCardError(CARD_INCOMPLETE_MSG);
+      return;
+    }
+
+    // 入力欄を出した後に注文内容（金額・お届け先・希望日・ポイント等）が変わっている場合は、
+    // 古い内容のまま決済・注文記録しないよう作り直して止める
+    if (mountedPayloadJson !== JSON.stringify(orderData)) {
+      try {
+        await mountCardPaymentElement(orderData);
+      } catch (err) {
+        stopWithCardError('カード決済の準備ができなかったため、ご注文は送信されていません。'
+          + 'しばらくしてもう一度お試しいただくか、お手数ですが別の支払い方法をお選びください。');
+        return;
+      }
+      stopWithCardError('ご注文内容が変わったため、カード情報をもう一度入力して、送信し直してください。');
+      return;
+    }
+
+    try {
+      const stripe = getStripe();
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements: stripeElements,
+        redirect: 'if_required',
+      });
+
+      if (error) {
+        // カード番号未入力・入力途中などはStripeが validation_error を返す
+        if (error.type === 'validation_error') {
+          stopWithCardError(CARD_INCOMPLETE_MSG);
+        } else {
+          stopWithCardError('決済に失敗しました。もう一度お試しいただくか、別の支払い方法をお選びください。');
+        }
+        return;
+      }
+
+      if (paymentIntent && (paymentIntent.status === 'succeeded' || paymentIntent.status === 'processing')) {
+        // 決済自体はここで完了。正式な注文確定はサーバーのWebhookが行うため、
+        // ここでは「確認中」の完了画面を出す。
+        showOrderCompletePending(orderData);
+      } else {
+        stopWithCardError(CARD_INCOMPLETE_MSG);
+      }
+    } catch (err) {
+      stopWithCardError('決済に失敗しました。もう一度お試しいただくか、別の支払い方法をお選びください。');
+    }
+  }
+
+  async function mountCardPaymentElement(orderData) {
+    const stripe = getStripe();
+    if (!stripe) {
+      throw new Error('決済モジュールの読み込みに失敗しました。ページを再読み込みしてください。'
+        + '（広告ブロッカー等の拡張機能が原因の場合があります）');
+    }
+    let res;
+    try {
+      res = await fetch(PAYMENT_API_BASE + '/create-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+      });
+    } catch (err) {
+      // ネットワークエラー（"Failed to fetch"）を日本語で分かる文言に置き換える
+      throw new Error('通信エラーでカード決済の準備ができませんでした。電波状況をご確認のうえ、もう一度お試しください。');
+    }
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error(errBody.error || '決済の準備に失敗しました');
+    }
+    const data = await res.json();
+    // 古い入力欄が残っていたら破棄してから新しく作る（金額変更時の再マウント）
+    unmountCardPaymentElement();
+    currentClientSecret = data.client_secret;
+
+    // locale: 'ja' … 表示を日本語に固定（ブラウザ言語まかせにしない）
+    // theme: 'night' … サイトの黒背景でもラベル・入力欄が読めるダーク配色
+    stripeElements = stripe.elements({
+      clientSecret: currentClientSecret,
+      locale: 'ja',
+      appearance: {
+        theme: 'night',
+        variables: {
+          colorPrimary: '#d4a843',
+          borderRadius: '6px',
+        },
+      },
+    });
+    stripePaymentElement = stripeElements.create('payment');
+    stripePaymentElement.mount('#payment-element');
+    mountedPayloadJson = JSON.stringify(orderData);
+  }
+
+  function updateTotal() {
+    let total = 0;
+    document.querySelectorAll('.order-product-row').forEach(row => {
+      const qty = parseInt(row.querySelector('.order-qty-num').textContent);
+      const price = getRowPrice(row);
+      total += price * qty;
+    });
+    document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
+    document.getElementById('orderSubmitBtn').disabled = total === 0;
+    const shippingEl = document.getElementById('orderShipping');
+    if (total >= 8000) {
+      shippingEl.textContent = '🎉 送料無料';
+      shippingEl.classList.add('free');
+    } else if (total > 0) {
+      const remain = 8000 - total;
+      shippingEl.textContent = 'あと¥' + remain.toLocaleString() + 'で送料無料';
+      shippingEl.classList.remove('free');
+    } else {
+      shippingEl.textContent = '※ 税込¥8,000以上で送料無料';
+      shippingEl.classList.remove('free');
+    }
+    // カード決済選択中に金額が変わったら、決済金額を合わせるため入力欄を作り直す
+    scheduleCardRemount();
+  }
+
+  function handleOrderSubmit(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('orderSubmitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '送信中...';
+
+    // 前回のエラー表示が残っていたら消す
+    const orderErrorBox = document.getElementById('orderErrorBox');
+    if (orderErrorBox) orderErrorBox.style.display = 'none';
+
+    const orderData = buildOrderPayload();
+
+    // クレジットカードの場合：Stripe決済（このページ内で完結）を実行し、
+    // 既存の /orders/api/hp-order には送らない（入金確定後、Webhook経由でサーバーが記録する）。
+    // select値とpayload両方を見る二重チェック（どちらかがカードなら通常送信には流さない）。
+    if (document.getElementById('orderPayment').value === 'credit'
+        || orderData.payment === 'クレジットカード') {
+      handleCardPaymentSubmit(orderData, submitBtn, orderErrorBox);
+      return;
+    }
+
+    // 銀行振込・PayPay・代金引換は従来通り（変更なし）
     fetch('https://akira042425-1.onrender.com/orders/api/hp-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items, total, name, phone, email, address, delivery, payment, date, note, member_id, use_points: validUsePoints })
+      body: JSON.stringify(orderData)
     }).then(r => {
       // サーバーがエラーを返した場合（500等）も「失敗」として扱う
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     }).then(data => {
-      // 注文完了画面を表示
-      const summary = document.getElementById('orderCompleteSummary');
-      let pointLine = '';
-      if (validUsePoints > 0) {
-        pointLine = '<br><span style="color:#E84040;font-weight:700;">ポイント利用: −¥' + validUsePoints.toLocaleString() + '</span>';
-        const totalNum = parseInt(total.replace(/[^\d]/g, '')) || 0;
-        const afterPoint = totalNum - validUsePoints;
-        pointLine += '<br><strong>お支払い金額: ¥' + afterPoint.toLocaleString() + '</strong>';
-      }
-      summary.innerHTML = '<strong>注文内容</strong><br>' + items.join('<br>') +
-        '<br><br><strong>合計: ' + total + '</strong>' + pointLine +
-        '<br><br><strong>お届け先</strong><br>' + name + '様<br>' + address +
-        '<br><br><strong>配送:</strong> ' + delivery +
-        '<br><strong>お支払い:</strong> ' + payment;
-
-      // ポイント情報
-      if (data.point_info) {
-        const ptMatch = data.point_info.match(/\+(\d+)pt.*残高:\s*(\d+)pt.*会員#(\d+)/);
-        if (ptMatch) {
-          document.getElementById('orderPointEarned').textContent = ptMatch[1];
-          document.getElementById('orderPointBalance').textContent = '残高: ' + ptMatch[2] + 'pt（会員番号: #' + ptMatch[3] + '）';
-          document.getElementById('orderCompletePoint').style.display = '';
-        }
-      }
-
-      // LINE未連携なら連携ボタンを表示
-      const orderLineBox = document.getElementById('orderCompleteLineLink');
-      if (orderLineBox && data.line_linked === false) {
-        orderLinkPhone = data.phone || phone.replace(/[\s\-\(\)]+/g, '');
-        orderLineBox.style.display = '';
-      } else if (orderLineBox) {
-        orderLineBox.style.display = 'none';
-      }
-
-      document.getElementById('orderCompleteOverlay').classList.add('show');
-
-      // カートリセット
-      resetOrderForm();
-
+      showOrderCompleteScreen(orderData, data);
     }).catch(err => {
       // 送信失敗：成功画面は出さず、正直に伝える。
       // 入力内容は消さずに残し、そのまま再送信できるようにする。
@@ -691,7 +943,7 @@
     document.getElementById('orderTotal').textContent = '¥0';
     document.getElementById('orderSubmitBtn').disabled = true;
     document.getElementById('orderSubmitBtn').textContent = '注文内容を送信する';
-    document.getElementById('orderShipping').textContent = '※ 税込¥5,000以上で送料無料';
+    document.getElementById('orderShipping').textContent = '※ 税込¥8,000以上で送料無料';
     document.getElementById('orderShipping').classList.remove('free');
     updateFloatingCart();
   }
