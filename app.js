@@ -515,7 +515,7 @@
   // クレジットカード決済（Stripe Payment Element）
   // 画面遷移せず、このページの中でカード入力〜決済完了まで完結させる。
   // ============================================================
-  const STRIPE_PUBLISHABLE_KEY = 'pk_test_51Tr9DtKYZC3tcH3jRCklU7JCLQAtzjzpfga9Me8PQceHpIS7u7ImDPOYZshewIx276X4WfGctHjExKiqtki6nLeK00Q8wRardO';
+  const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Tr9DeKcjgjrrEc7m6bPcA1qAeUezMYcy4y54Q4OlA1kWoZYq39DUf1VnjrXHyxJoph09LLUGKkjn3lbkl0perOu005b6JT774';
   const PAYMENT_API_BASE = 'https://akira042425-1.onrender.com/payment';
   let stripeInstance = null;
   let stripeElements = null;
