@@ -511,6 +511,9 @@
         paymentSelect.value = 'bank';
       }
     }
+    // 支払い方法が変わった可能性があるので、代引き手数料込みの合計を作り直す
+    updateTotal();
+    updateCardPaymentUI();
   }
 
   // ============================================================
@@ -556,6 +559,22 @@
   };
   // ¥8,000以上でも送料無料にならない地域
   const NO_FREE_SHIPPING_PREFS = ['北海道', '沖縄県'];
+
+  // ============================================================
+  // 代金引換（クロネコヤマト）の手数料（税込・2026-07-12 社長承認の確定額）
+  // 「代引きで渡す金額」＝商品小計＋送料の合計に応じて決まる。
+  //  ・1万円未満: ¥330 ／ 1万円以上〜3万円未満: ¥440 ／ 3万円以上〜10万円未満: ¥660
+  // 送料無料ライン（¥8,000以上）の判定は商品小計のみで行い、代引き手数料は
+  // その判定には一切関係させない（送料無料でも代引き手数料は別途かかる）。
+  // ============================================================
+  function calcCodFee(subtotal, shipFee) {
+    if (shipFee === null || shipFee === undefined) return null; // 送料未確定＝代引き手数料も未確定
+    const base = subtotal + shipFee;
+    if (base <= 0) return 0;
+    if (base < 10000) return 330;
+    if (base < 30000) return 440;
+    return 660; // 3万円以上10万円未満（10万円以上の区分は未確定のため同額を適用）
+  }
 
   // お届け先の都道府県を住所欄（郵便番号→zipcloudの自動入力）から判定する。
   // 住所欄は readonly（自動入力のみ）なので、値は必ず「都道府県名から始まる」形。
@@ -720,11 +739,19 @@
       }
     });
     // 送料も明細の1行として入れる（注文記録・確認メール・LINE通知にそのまま出る）
-    const shipInfo = calcShipping(getOrderSubtotal());
+    const orderSubtotal = getOrderSubtotal();
+    const shipInfo = calcShipping(orderSubtotal);
     if (shipInfo.fee > 0) {
       items.push('送料（' + shipInfo.pref + '宛） ¥' + shipInfo.fee.toLocaleString());
     } else if (shipInfo.fee === 0) {
       items.push('送料 無料（税込¥8,000以上）');
+    }
+    // 代金引換の場合のみ、代引き手数料も明細の1行として入れる
+    if (document.getElementById('orderPayment').value === 'cod') {
+      const codFee = calcCodFee(orderSubtotal, shipInfo.fee);
+      if (codFee) {
+        items.push('代引き手数料 ¥' + codFee.toLocaleString());
+      }
     }
     const total = document.getElementById('orderTotal').textContent;
     const name = document.getElementById('orderName').value;
@@ -936,8 +963,12 @@
   function updateTotal() {
     const subtotal = getOrderSubtotal();
     const ship = calcShipping(subtotal);
-    // 合計金額 ＝ 商品小計 ＋ 送料（送料未確定の間は商品小計のみ表示）
-    const total = subtotal + (ship.fee || 0);
+    const paymentEl = document.getElementById('orderPayment');
+    const paymentValue = paymentEl ? paymentEl.value : '';
+    const codFee = paymentValue === 'cod' ? calcCodFee(subtotal, ship.fee) : null;
+    // 合計金額 ＝ 商品小計 ＋ 送料 ＋（代金引換の場合のみ）代引き手数料
+    // （送料・代引き手数料が未確定の間はそれぞれ加算しない）
+    const total = subtotal + (ship.fee || 0) + (codFee || 0);
     document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
     document.getElementById('orderSubmitBtn').disabled = subtotal === 0;
 
@@ -963,6 +994,23 @@
       const remain = FREE_SHIPPING_LINE - subtotal;
       shippingEl.textContent = subLabel + ' ＋ 送料 ¥' + ship.fee.toLocaleString() + '（' + ship.pref + '宛）／ あと¥' + remain.toLocaleString() + 'で送料無料';
     }
+
+    // 代引き手数料の内訳行（代金引換以外では非表示。送料は送料無料でも手数料は別途かかる）
+    const codFeeEl = document.getElementById('orderCodFee');
+    if (codFeeEl) {
+      if (paymentValue === 'cod' && subtotal > 0) {
+        codFeeEl.style.display = '';
+        if (codFee === null) {
+          codFeeEl.textContent = '代引き手数料は郵便番号のご入力後に確定します';
+        } else {
+          codFeeEl.textContent = '代引き手数料 ¥' + codFee.toLocaleString();
+        }
+      } else {
+        codFeeEl.style.display = 'none';
+        codFeeEl.textContent = '';
+      }
+    }
+
     // カード決済選択中に金額が変わったら、決済金額を合わせるため入力欄を作り直す
     scheduleCardRemount();
   }
