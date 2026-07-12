@@ -517,6 +517,18 @@
   // ============================================================
   const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Tr9DeKcjgjrrEc7m6bPcA1qAeUezMYcy4y54Q4OlA1kWoZYq39DUf1VnjrXHyxJoph09LLUGKkjn3lbkl0perOu005b6JT774';
   const PAYMENT_API_BASE = 'https://akira042425-1.onrender.com/payment';
+  // 送料無料ライン（updateTotal()の表示閾値と合わせること）。
+  // ※ 送料は配送先・商品サイズにより実額が変わるため、このサイトでは自動計算していない
+  //   （実際の送料は注文後にご案内・別途ご請求する運用＝銀行振込/PayPay/代金引換は
+  //   従来どおりスタッフが手動で確認・調整できる）。
+  //   しかしクレジットカード決済はこの画面の合計金額でその場で確定課金されてしまうため、
+  //   送料未計算のままだと送料分を頂けずに出荷してしまう。実額計算ができるまでの
+  //   応急処置として、送料無料ラインに届かない注文はカード決済を選べないようにする。
+  const FREE_SHIPPING_LINE = 8000;
+  function getCurrentTotalNum() {
+    const el = document.getElementById('orderTotal');
+    return el ? (parseInt(el.textContent.replace(/[^\d]/g, '')) || 0) : 0;
+  }
   let stripeInstance = null;
   let stripeElements = null;
   let stripePaymentElement = null;
@@ -565,6 +577,13 @@
       return;
     }
     cardBox.style.display = '';
+    // 送料無料ラインに届かない注文はカード決済不可（上のFREE_SHIPPING_LINEの説明を参照）
+    if (getCurrentTotalNum() < FREE_SHIPPING_LINE) {
+      unmountCardPaymentElement();
+      showCardError('恐れ入りますが、¥' + FREE_SHIPPING_LINE.toLocaleString() + '未満のご注文はクレジットカード決済をご利用いただけません'
+        + '（送料を別途頂戴する必要があるため）。銀行振込・PayPay・代金引換のいずれかをお選びください。');
+      return;
+    }
     // カード選択時点でPaymentIntentを作りPayment Elementを表示する
     // （お客様が「送信する」を押す前にカード番号を入力できるようにするため）。
     // buildOrderPayload() が同期的に例外を投げても必ず画面に表示する
@@ -732,6 +751,15 @@
       } else {
         alert(msg);
       }
+    }
+
+    // 送料無料ラインに届かない注文はカード決済不可（FREE_SHIPPING_LINEの説明を参照）。
+    // updateCardPaymentUI側の入口チェックとは別に、ここでも二重に止める。
+    if (getCurrentTotalNum() < FREE_SHIPPING_LINE) {
+      unmountCardPaymentElement();
+      stopWithCardError('恐れ入りますが、¥' + FREE_SHIPPING_LINE.toLocaleString() + '未満のご注文はクレジットカード決済をご利用いただけません'
+        + '（送料を別途頂戴する必要があるため）。銀行振込・PayPay・代金引換のいずれかをお選びください。');
+      return;
     }
 
     // Payment Elementがまだ描画されていない＝カード情報を入力できていない状態。
