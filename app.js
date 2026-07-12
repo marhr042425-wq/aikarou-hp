@@ -490,6 +490,8 @@
             const r = data.results[0];
             addressInput.value = r.address1 + r.address2 + r.address3;
             addressInput.focus();
+            // 住所（都道府県）が決まったので送料を再計算して合計に反映する
+            updateTotal();
           }
         })
         .catch(() => {});
@@ -517,17 +519,76 @@
   // ============================================================
   const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Tr9DeKcjgjrrEc7m6bPcA1qAeUezMYcy4y54Q4OlA1kWoZYq39DUf1VnjrXHyxJoph09LLUGKkjn3lbkl0perOu005b6JT774';
   const PAYMENT_API_BASE = 'https://akira042425-1.onrender.com/payment';
-  // 送料無料ライン（updateTotal()の表示閾値と合わせること）。
-  // ※ 送料は配送先・商品サイズにより実額が変わるため、このサイトでは自動計算していない
-  //   （実際の送料は注文後にご案内・別途ご請求する運用＝銀行振込/PayPay/代金引換は
-  //   従来どおりスタッフが手動で確認・調整できる）。
-  //   しかしクレジットカード決済はこの画面の合計金額でその場で確定課金されてしまうため、
-  //   送料未計算のままだと送料分を頂けずに出荷してしまう。実額計算ができるまでの
-  //   応急処置として、送料無料ラインに届かない注文はカード決済を選べないようにする。
+  // ============================================================
+  // 地域別送料の自動計算（税込・2026-07-12 社長承認の確定額）
+  // 都道府県→地域の区分は佐川急便の標準区分（発送元: 福岡）に準拠。
+  // 80サイズ相当を基準とした固定額。
+  //  ・九州・中国・四国・関西: ¥1,600 ／ 北陸・中部: ¥1,900
+  //  ・関東・信越: ¥2,100 ／ 東北: ¥2,400 ／ 北海道: ¥3,000 ／ 沖縄: ¥2,400
+  // 商品小計¥8,000以上で送料無料。ただし北海道・沖縄は¥8,000以上でも送料をいただく。
+  // ============================================================
   const FREE_SHIPPING_LINE = 8000;
-  function getCurrentTotalNum() {
-    const el = document.getElementById('orderTotal');
-    return el ? (parseInt(el.textContent.replace(/[^\d]/g, '')) || 0) : 0;
+  const PREF_SHIPPING_FEES = {
+    // 北海道
+    '北海道': 3000,
+    // 東北
+    '青森県': 2400, '岩手県': 2400, '秋田県': 2400,
+    '宮城県': 2400, '山形県': 2400, '福島県': 2400,
+    // 関東（佐川区分では山梨は関東扱い）・信越
+    '茨城県': 2100, '栃木県': 2100, '群馬県': 2100, '埼玉県': 2100,
+    '千葉県': 2100, '東京都': 2100, '神奈川県': 2100, '山梨県': 2100,
+    '新潟県': 2100, '長野県': 2100,
+    // 北陸・中部（佐川区分では三重は中部扱い）
+    '富山県': 1900, '石川県': 1900, '福井県': 1900,
+    '静岡県': 1900, '愛知県': 1900, '岐阜県': 1900, '三重県': 1900,
+    // 関西
+    '滋賀県': 1600, '京都府': 1600, '大阪府': 1600,
+    '兵庫県': 1600, '奈良県': 1600, '和歌山県': 1600,
+    // 中国
+    '鳥取県': 1600, '島根県': 1600, '岡山県': 1600, '広島県': 1600, '山口県': 1600,
+    // 四国
+    '徳島県': 1600, '香川県': 1600, '愛媛県': 1600, '高知県': 1600,
+    // 九州
+    '福岡県': 1600, '佐賀県': 1600, '長崎県': 1600, '熊本県': 1600,
+    '大分県': 1600, '宮崎県': 1600, '鹿児島県': 1600,
+    // 沖縄
+    '沖縄県': 2400,
+  };
+  // ¥8,000以上でも送料無料にならない地域
+  const NO_FREE_SHIPPING_PREFS = ['北海道', '沖縄県'];
+
+  // お届け先の都道府県を住所欄（郵便番号→zipcloudの自動入力）から判定する。
+  // 住所欄は readonly（自動入力のみ）なので、値は必ず「都道府県名から始まる」形。
+  function getDestPrefecture() {
+    const addrEl = document.getElementById('orderAddress');
+    const addr = addrEl ? String(addrEl.value || '').trim() : '';
+    if (!addr) return null;
+    for (const pref of Object.keys(PREF_SHIPPING_FEES)) {
+      if (addr.startsWith(pref)) return pref;
+    }
+    return null; // 判定不能（住所未入力など）
+  }
+
+  // 商品小計から送料を計算する。
+  // 戻り値: { pref: 都道府県名 or null, fee: 送料（無料=0、判定不能=null） }
+  function calcShipping(subtotal) {
+    const pref = getDestPrefecture();
+    if (!pref) return { pref: null, fee: null };
+    if (subtotal >= FREE_SHIPPING_LINE && !NO_FREE_SHIPPING_PREFS.includes(pref)) {
+      return { pref: pref, fee: 0 };
+    }
+    return { pref: pref, fee: PREF_SHIPPING_FEES[pref] };
+  }
+
+  // 商品小計（送料・ポイント割引を含まない、商品だけの合計）
+  function getOrderSubtotal() {
+    let subtotal = 0;
+    document.querySelectorAll('.order-product-row').forEach(row => {
+      const qty = parseInt(row.querySelector('.order-qty-num').textContent);
+      const price = getRowPrice(row);
+      subtotal += price * qty;
+    });
+    return subtotal;
   }
   let stripeInstance = null;
   let stripeElements = null;
@@ -577,11 +638,11 @@
       return;
     }
     cardBox.style.display = '';
-    // 送料無料ラインに届かない注文はカード決済不可（上のFREE_SHIPPING_LINEの説明を参照）
-    if (getCurrentTotalNum() < FREE_SHIPPING_LINE) {
+    // お届け先の都道府県が分かるまでは送料（＝カード課金額）が確定しないため、
+    // カード入力欄は出さずに案内だけ表示する（送料抜きで課金してしまう事故の防止）。
+    if (getOrderSubtotal() > 0 && !getDestPrefecture()) {
       unmountCardPaymentElement();
-      showCardError('恐れ入りますが、¥' + FREE_SHIPPING_LINE.toLocaleString() + '未満のご注文はクレジットカード決済をご利用いただけません'
-        + '（送料を別途頂戴する必要があるため）。銀行振込・PayPay・代金引換のいずれかをお選びください。');
+      showCardError('郵便番号をご入力いただき住所が表示されると、送料を含めた合計金額でカード入力欄が表示されます。');
       return;
     }
     // カード選択時点でPaymentIntentを作りPayment Elementを表示する
@@ -658,6 +719,13 @@
         }
       }
     });
+    // 送料も明細の1行として入れる（注文記録・確認メール・LINE通知にそのまま出る）
+    const shipInfo = calcShipping(getOrderSubtotal());
+    if (shipInfo.fee > 0) {
+      items.push('送料（' + shipInfo.pref + '宛） ¥' + shipInfo.fee.toLocaleString());
+    } else if (shipInfo.fee === 0) {
+      items.push('送料 無料（税込¥8,000以上）');
+    }
     const total = document.getElementById('orderTotal').textContent;
     const name = document.getElementById('orderName').value;
     const phone = document.getElementById('orderPhone').value;
@@ -753,12 +821,11 @@
       }
     }
 
-    // 送料無料ラインに届かない注文はカード決済不可（FREE_SHIPPING_LINEの説明を参照）。
+    // 送料（＝課金額）が確定しないままカード決済はしない。
     // updateCardPaymentUI側の入口チェックとは別に、ここでも二重に止める。
-    if (getCurrentTotalNum() < FREE_SHIPPING_LINE) {
+    if (!getDestPrefecture()) {
       unmountCardPaymentElement();
-      stopWithCardError('恐れ入りますが、¥' + FREE_SHIPPING_LINE.toLocaleString() + '未満のご注文はクレジットカード決済をご利用いただけません'
-        + '（送料を別途頂戴する必要があるため）。銀行振込・PayPay・代金引換のいずれかをお選びください。');
+      stopWithCardError('お届け先の郵便番号・ご住所をご入力ください。送料を含めた合計金額でカード決済を行います。');
       return;
     }
 
@@ -864,26 +931,37 @@
     mountedPayloadJson = JSON.stringify(orderData);
   }
 
+  const SHIPPING_DEFAULT_NOTE = '※ 商品小計 税込¥8,000以上で送料無料（北海道・沖縄を除く）';
+
   function updateTotal() {
-    let total = 0;
-    document.querySelectorAll('.order-product-row').forEach(row => {
-      const qty = parseInt(row.querySelector('.order-qty-num').textContent);
-      const price = getRowPrice(row);
-      total += price * qty;
-    });
+    const subtotal = getOrderSubtotal();
+    const ship = calcShipping(subtotal);
+    // 合計金額 ＝ 商品小計 ＋ 送料（送料未確定の間は商品小計のみ表示）
+    const total = subtotal + (ship.fee || 0);
     document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
-    document.getElementById('orderSubmitBtn').disabled = total === 0;
+    document.getElementById('orderSubmitBtn').disabled = subtotal === 0;
+
     const shippingEl = document.getElementById('orderShipping');
-    if (total >= 8000) {
-      shippingEl.textContent = '🎉 送料無料';
+    shippingEl.classList.remove('free');
+    const subLabel = '商品小計 ¥' + subtotal.toLocaleString();
+    if (subtotal === 0) {
+      shippingEl.textContent = SHIPPING_DEFAULT_NOTE;
+    } else if (ship.fee === null) {
+      // 住所（都道府県）が未確定 → 送料はまだ足せない
+      if (subtotal >= FREE_SHIPPING_LINE) {
+        shippingEl.textContent = subLabel + ' ／ 送料は郵便番号のご入力後に自動計算されます（¥8,000以上は送料無料。※北海道・沖縄は送料無料対象外です）';
+      } else {
+        const remain = FREE_SHIPPING_LINE - subtotal;
+        shippingEl.textContent = subLabel + ' ／ あと¥' + remain.toLocaleString() + 'で送料無料（北海道・沖縄を除く）／ 送料は郵便番号のご入力後に自動計算されます';
+      }
+    } else if (ship.fee === 0) {
+      shippingEl.textContent = subLabel + ' ＋ 🎉 送料無料（¥8,000以上）';
       shippingEl.classList.add('free');
-    } else if (total > 0) {
-      const remain = 8000 - total;
-      shippingEl.textContent = 'あと¥' + remain.toLocaleString() + 'で送料無料';
-      shippingEl.classList.remove('free');
+    } else if (NO_FREE_SHIPPING_PREFS.includes(ship.pref)) {
+      shippingEl.textContent = subLabel + ' ＋ 送料 ¥' + ship.fee.toLocaleString() + '（' + ship.pref + '宛）※北海道・沖縄は送料無料対象外です';
     } else {
-      shippingEl.textContent = '※ 税込¥8,000以上で送料無料';
-      shippingEl.classList.remove('free');
+      const remain = FREE_SHIPPING_LINE - subtotal;
+      shippingEl.textContent = subLabel + ' ＋ 送料 ¥' + ship.fee.toLocaleString() + '（' + ship.pref + '宛）／ あと¥' + remain.toLocaleString() + 'で送料無料';
     }
     // カード決済選択中に金額が変わったら、決済金額を合わせるため入力欄を作り直す
     scheduleCardRemount();
@@ -966,13 +1044,10 @@
       btns.forEach(b => b.classList.toggle('active',
         isTea ? b.dataset.teaBags === '1' : b.dataset.multiplier === '1'));
     });
-    // フォームリセット
+    // フォームリセット（住所も消えるので送料込みの合計・内訳表示も作り直す）
     document.getElementById('orderForm').reset();
-    document.getElementById('orderTotal').textContent = '¥0';
-    document.getElementById('orderSubmitBtn').disabled = true;
     document.getElementById('orderSubmitBtn').textContent = '注文内容を送信する';
-    document.getElementById('orderShipping').textContent = '※ 税込¥8,000以上で送料無料';
-    document.getElementById('orderShipping').classList.remove('free');
+    updateTotal();
     updateFloatingCart();
   }
 
