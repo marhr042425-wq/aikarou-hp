@@ -774,6 +774,7 @@
   }
 
   function showOrderCompleteScreen(orderData, respData) {
+    hideOrderProcessingOverlay();
     const summary = document.getElementById('orderCompleteSummary');
     let pointLine = '';
     if (orderData.use_points > 0) {
@@ -812,6 +813,7 @@
   function showOrderCompletePending(orderData) {
     // カード決済はWebhook確定を待つため、断定的な完了ではなく
     // 「確認中」の趣旨で表示する（実際の入金確定はサーバー側Webhookで行う）。
+    hideOrderProcessingOverlay();
     const summary = document.getElementById('orderCompleteSummary');
     summary.innerHTML = '<strong>ご注文内容</strong><br>' + orderData.items.join('<br>') +
       '<br><br><strong>合計: ' + orderData.total + '</strong>' +
@@ -834,6 +836,7 @@
     // カード決済では、どんな失敗でも通常注文（/orders/api/hp-order）への
     // フォールバック送信は絶対に行わない。
     function stopWithCardError(msg) {
+      hideOrderProcessingOverlay();
       submitBtn.disabled = false;
       submitBtn.textContent = '注文内容を送信する';
       if (cardError) {
@@ -1015,11 +1018,23 @@
     scheduleCardRemount();
   }
 
+  // 送信中オーバーレイの表示・非表示（ボタン文字の変化だけでは気付きにくいため、
+  // 画面全体を覆って「送信して処理が進んでいる」ことをハッキリ伝える）。
+  function showOrderProcessingOverlay() {
+    const el = document.getElementById('orderProcessingOverlay');
+    if (el) el.classList.add('show');
+  }
+  function hideOrderProcessingOverlay() {
+    const el = document.getElementById('orderProcessingOverlay');
+    if (el) el.classList.remove('show');
+  }
+
   function handleOrderSubmit(e) {
     e.preventDefault();
     const submitBtn = document.getElementById('orderSubmitBtn');
     submitBtn.disabled = true;
     submitBtn.textContent = '送信中...';
+    showOrderProcessingOverlay();
 
     // 前回のエラー表示が残っていたら消す
     const orderErrorBox = document.getElementById('orderErrorBox');
@@ -1050,6 +1065,7 @@
     }).catch(err => {
       // 送信失敗：成功画面は出さず、正直に伝える。
       // 入力内容は消さずに残し、そのまま再送信できるようにする。
+      hideOrderProcessingOverlay();
       submitBtn.disabled = false;
       submitBtn.textContent = '注文内容を送信する';
       if (orderErrorBox) {

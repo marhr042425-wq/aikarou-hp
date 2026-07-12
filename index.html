@@ -1071,6 +1071,15 @@
   <p style="margin-top:12px;">&copy; 2026 愛華楼 All Rights Reserved.</p>
 </footer>
 
+<!-- 送信中オーバーレイ（注文送信ボタンを押してから完了画面が出るまでの間に表示。
+     ボタン文字の変化だけでは気付きにくい＝「何も起きていないように見える」対策 -->
+<div class="order-processing-overlay" id="orderProcessingOverlay">
+  <div class="order-processing-box">
+    <div class="order-processing-spinner"></div>
+    <div class="order-processing-msg">ご注文を送信しています…<br>そのままお待ちください</div>
+  </div>
+</div>
+
 <!-- 注文完了オーバーレイ -->
 <div class="order-complete-overlay" id="orderCompleteOverlay">
   <div class="order-complete-box">
@@ -1096,7 +1105,7 @@
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
-<script src="app.js?v=20260712c" defer></script>
+<script src="app.js?v=20260712d" defer></script>
 
 <!-- Google Analytics (GA4) - トラッキングIDを設定する際は以下のGA_MEASUREMENT_IDを置き換え -->
 <!--
