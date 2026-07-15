@@ -503,7 +503,7 @@
     const codOption = document.getElementById('codOption');
     const paymentSelect = document.getElementById('orderPayment');
     const paymentNote = document.getElementById('paymentNote');
-    if (delivery === 'yamato') {
+    if (delivery === 'yamato' || delivery === 'yamato_ambient') {
       codOption.style.display = '';
     } else {
       codOption.style.display = 'none';
@@ -761,7 +761,7 @@
     const banchi = document.getElementById('orderBanchi').value;
     const building = document.getElementById('orderBuilding').value;
     const address = '〒' + zip + ' ' + document.getElementById('orderAddress').value + banchi + (building ? ' ' + building : '');
-    const deliveryMap = { sagawa: '佐川急便（冷凍便）', yamato: 'クロネコヤマト（冷凍便）' };
+    const deliveryMap = { sagawa: '佐川急便（冷凍便）', yamato: 'クロネコヤマト（冷凍便）', sagawa_ambient: '佐川急便（常温便）', yamato_ambient: 'クロネコヤマト（常温便）' };
     const delivery = deliveryMap[document.getElementById('orderDelivery').value];
     const paymentMap = { bank: '銀行振込', credit: 'クレジットカード', paypay: 'PayPay', cod: '代金引換（クロネコヤマト）' };
     const payment = paymentMap[document.getElementById('orderPayment').value];
