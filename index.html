@@ -706,7 +706,7 @@
   <div class="order-total-bar fade-up">
     <div>
       <span class="order-total-label">合計金額</span>
-      <div class="order-shipping-info" id="orderShipping">※ 商品小計 税込¥8,000以上で送料無料（北海道・沖縄を除く）</div>
+      <div class="order-shipping-info" id="orderShipping">※ 冷凍便送料 全国一律¥1,200（税込）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から</div>
       <div class="order-shipping-info" id="orderCodFee" style="display:none"></div>
     </div>
     <span class="order-total-price" id="orderTotal">¥0</span>
@@ -737,7 +737,7 @@
         <div class="form-group" style="flex:1">
           <label for="orderAddress">住所（自動入力）*</label>
           <input type="text" id="orderAddress" required placeholder="郵便番号を入力すると自動入力されます" readonly>
-          <small style="color:#aaa;font-size:0.75rem;margin-top:4px;display:block">※ 送料は住所の入力後、合計金額に自動で加算されます。離島にお届けの場合、追加送料を別途ご相談させていただくことがあります。</small>
+          <small style="color:#aaa;font-size:0.75rem;margin-top:4px;display:block">※ 冷凍便の送料は全国一律¥1,200（税込）。住所の入力後、合計金額に自動で加算されます。北海道・沖縄・離島へのお届けは、実費送料を別途ご案内いたします。</small>
         </div>
       </div>
       <div class="order-form-row">
@@ -1107,7 +1107,7 @@
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
-<script src="app.js?v=20260712d" defer></script>
+<script src="app.js?v=20260718a" defer></script>
 
 <!-- Google Analytics (GA4) - トラッキングIDを設定する際は以下のGA_MEASUREMENT_IDを置き換え -->
 <!--
