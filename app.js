@@ -524,62 +524,32 @@
   const PAYMENT_API_BASE = 'https://akira042425-1.onrender.com/payment';
   // ============================================================
   // 送料の自動計算（税込・2026-07-18 社長承認の新体系）
-  //  ・冷凍便（クール便）: 全国一律 ¥1,200
-  //  ・北海道・沖縄・離島宛の冷凍便: 実費が一律額を大きく超えるため
+  //  ・冷凍便・常温便とも: 全国一律 ¥1,200（同日中に常温便も一律化で統一）
+  //  ・北海道・沖縄・離島宛: 実費が一律額を大きく超えるため
   //    金額はここでは確定させず「別途ご案内」（注文自体は受け付ける）
   //  ・商品小計 税込¥8,000以上で送料無料（北海道・沖縄・離島を除く）
   //  ・最低注文金額: 税込¥2,000（商品小計）
-  // ※ 常温便は今回の決定に含まれないため、旧・地域別の額
-  //   （PREF_SHIPPING_FEES）をそのまま使い続ける。
+  // ※ 旧・地域別送料（常温便用 PREF_SHIPPING_FEES）は 2026-07-18 に廃止。
+  //   送料は1注文につき1回だけ加算（冷凍・常温の混在でも二重取りしない）。
   // ============================================================
   const FREE_SHIPPING_LINE = 8000;
   const MIN_ORDER_SUBTOTAL = 2000; // 最低注文金額（税込・商品小計）
-  const FROZEN_SHIPPING_FEE = 1200; // 冷凍便 全国一律（税込）
-  // 冷凍便で送料を「別途ご案内」にする地域（実費が一律額を大きく超える）
+  const UNIFORM_SHIPPING_FEE = 1200; // 冷凍便・常温便とも 全国一律（税込）
+  // 送料を「別途ご案内」にする地域（実費が一律額を大きく超える）
   const SEPARATE_QUOTE_PREFS = ['北海道', '沖縄県'];
-  // ============================================================
-  // 【常温便用】旧・地域別送料（税込・2026-07-12 社長承認の確定額）
-  // 都道府県→地域の区分は佐川急便の標準区分（発送元: 福岡）に準拠。
-  // 80サイズ相当を基準とした固定額。
-  //  ・九州・中国・四国・関西: ¥1,600 ／ 北陸・中部: ¥1,900
-  //  ・関東・信越: ¥2,100 ／ 東北: ¥2,400 ／ 北海道: ¥3,000 ／ 沖縄: ¥2,400
-  // 商品小計¥8,000以上で送料無料。ただし北海道・沖縄は¥8,000以上でも送料をいただく。
-  // ============================================================
-  const PREF_SHIPPING_FEES = {
-    // 北海道
-    '北海道': 3000,
-    // 東北
-    '青森県': 2400, '岩手県': 2400, '秋田県': 2400,
-    '宮城県': 2400, '山形県': 2400, '福島県': 2400,
-    // 関東（佐川区分では山梨は関東扱い）・信越
-    '茨城県': 2100, '栃木県': 2100, '群馬県': 2100, '埼玉県': 2100,
-    '千葉県': 2100, '東京都': 2100, '神奈川県': 2100, '山梨県': 2100,
-    '新潟県': 2100, '長野県': 2100,
-    // 北陸・中部（佐川区分では三重は中部扱い）
-    '富山県': 1900, '石川県': 1900, '福井県': 1900,
-    '静岡県': 1900, '愛知県': 1900, '岐阜県': 1900, '三重県': 1900,
-    // 関西
-    '滋賀県': 1600, '京都府': 1600, '大阪府': 1600,
-    '兵庫県': 1600, '奈良県': 1600, '和歌山県': 1600,
-    // 中国
-    '鳥取県': 1600, '島根県': 1600, '岡山県': 1600, '広島県': 1600, '山口県': 1600,
-    // 四国
-    '徳島県': 1600, '香川県': 1600, '愛媛県': 1600, '高知県': 1600,
-    // 九州
-    '福岡県': 1600, '佐賀県': 1600, '長崎県': 1600, '熊本県': 1600,
-    '大分県': 1600, '宮崎県': 1600, '鹿児島県': 1600,
-    // 沖縄
-    '沖縄県': 2400,
-  };
-  // ¥8,000以上でも送料無料にならない地域（常温便＝旧体系用）
-  const NO_FREE_SHIPPING_PREFS = ['北海道', '沖縄県'];
-
-  // 配送方法が常温便（_ambient）かどうか。
-  // 常温便の送料体系は2026-07-18の一律化の対象外なので、旧・地域別のまま。
-  function isAmbientDelivery() {
-    const el = document.getElementById('orderDelivery');
-    return !!el && String(el.value || '').indexOf('_ambient') !== -1;
-  }
+  // 都道府県の判定用リスト（住所欄の先頭一致に使う）
+  const PREFECTURES = [
+    '北海道',
+    '青森県', '岩手県', '秋田県', '宮城県', '山形県', '福島県',
+    '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県', '山梨県',
+    '新潟県', '長野県',
+    '富山県', '石川県', '福井県', '静岡県', '愛知県', '岐阜県', '三重県',
+    '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
+    '鳥取県', '島根県', '岡山県', '広島県', '山口県',
+    '徳島県', '香川県', '愛媛県', '高知県',
+    '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県',
+    '沖縄県',
+  ];
 
   // ============================================================
   // 代金引換（クロネコヤマト）の手数料（税込・2026-07-12 社長承認の確定額）
@@ -603,7 +573,7 @@
     const addrEl = document.getElementById('orderAddress');
     const addr = addrEl ? String(addrEl.value || '').trim() : '';
     if (!addr) return null;
-    for (const pref of Object.keys(PREF_SHIPPING_FEES)) {
+    for (const pref of PREFECTURES) {
       if (addr.startsWith(pref)) return pref;
     }
     return null; // 判定不能（住所未入力など）
@@ -612,26 +582,19 @@
   // 商品小計から送料を計算する。
   // 戻り値: { pref: 都道府県名 or null,
   //          fee: 送料（無料=0、未確定=null）,
-  //          separate: true=北海道・沖縄・離島宛の冷凍便で「別途ご案内」 }
+  //          separate: true=北海道・沖縄・離島宛で「別途ご案内」 }
   function calcShipping(subtotal) {
     const pref = getDestPrefecture();
     if (!pref) return { pref: null, fee: null, separate: false };
-    if (isAmbientDelivery()) {
-      // 常温便: 旧・地域別体系のまま（2026-07-18の一律化は冷凍便のみ）
-      if (subtotal >= FREE_SHIPPING_LINE && !NO_FREE_SHIPPING_PREFS.includes(pref)) {
-        return { pref: pref, fee: 0, separate: false };
-      }
-      return { pref: pref, fee: PREF_SHIPPING_FEES[pref], separate: false };
-    }
-    // 冷凍便: 全国一律¥1,200（税込）。北海道・沖縄・離島は実費が大きく
-    // 超えるため金額を確定させず「別途ご案内」（注文は受け付ける）。
+    // 冷凍便・常温便とも: 全国一律¥1,200（税込）。北海道・沖縄・離島は実費が
+    // 大きく超えるため金額を確定させず「別途ご案内」（注文は受け付ける）。
     if (SEPARATE_QUOTE_PREFS.includes(pref)) {
       return { pref: pref, fee: null, separate: true };
     }
     if (subtotal >= FREE_SHIPPING_LINE) {
       return { pref: pref, fee: 0, separate: false };
     }
-    return { pref: pref, fee: FROZEN_SHIPPING_FEE, separate: false };
+    return { pref: pref, fee: UNIFORM_SHIPPING_FEE, separate: false };
   }
 
   // 商品小計（送料・ポイント割引を含まない、商品だけの合計）
@@ -706,7 +669,7 @@
       showCardError('郵便番号をご入力いただき住所が表示されると、送料を含めた合計金額でカード入力欄が表示されます。');
       return;
     }
-    // 北海道・沖縄・離島宛の冷凍便は送料が「別途ご案内」＝課金額が確定しないため、
+    // 北海道・沖縄・離島宛は送料が「別途ご案内」＝課金額が確定しないため、
     // カード決済は受け付けない（銀行振込・PayPayなら注文可能）。
     if (cardSubtotal > 0 && calcShipping(cardSubtotal).separate) {
       unmountCardPaymentElement();
@@ -918,7 +881,7 @@
       return;
     }
 
-    // 北海道・沖縄・離島宛の冷凍便（送料 別途ご案内）はカード決済不可。
+    // 北海道・沖縄・離島宛（送料 別途ご案内）はカード決済不可。
     if (calcShipping(submitSubtotal).separate) {
       unmountCardPaymentElement();
       stopWithCardError('北海道・沖縄・離島宛は送料を別途ご案内するため、クレジットカード決済はご利用いただけません。お手数ですが銀行振込またはPayPayをお選びください。');
@@ -1027,7 +990,7 @@
     mountedPayloadJson = JSON.stringify(orderData);
   }
 
-  const SHIPPING_DEFAULT_NOTE = '※ 冷凍便送料 全国一律¥1,200（税込）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から';
+  const SHIPPING_DEFAULT_NOTE = '※ 送料 全国一律¥1,200（税込・冷凍便／常温便とも）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から';
 
   function updateTotal() {
     const subtotal = getOrderSubtotal();
@@ -1051,8 +1014,8 @@
       const minRemain = MIN_ORDER_SUBTOTAL - subtotal;
       shippingEl.textContent = subLabel + ' ／ ご注文は税込¥2,000から承っております（あと¥' + minRemain.toLocaleString() + '）';
     } else if (ship.separate) {
-      // 北海道・沖縄・離島宛の冷凍便: 送料は確定させず別途ご案内
-      shippingEl.textContent = subLabel + ' ／ ' + ship.pref + '宛の冷凍便送料は別途ご案内いたします（ご注文確認後にご連絡します）';
+      // 北海道・沖縄・離島宛: 送料は確定させず別途ご案内（冷凍便・常温便とも）
+      shippingEl.textContent = subLabel + ' ／ ' + ship.pref + '宛の送料は別途ご案内いたします（ご注文確認後にご連絡します）';
     } else if (ship.fee === null) {
       // 住所（都道府県）が未確定 → 送料はまだ足せない
       if (subtotal >= FREE_SHIPPING_LINE) {
@@ -1064,8 +1027,6 @@
     } else if (ship.fee === 0) {
       shippingEl.textContent = subLabel + ' ＋ 🎉 送料無料（¥8,000以上）';
       shippingEl.classList.add('free');
-    } else if (isAmbientDelivery() && NO_FREE_SHIPPING_PREFS.includes(ship.pref)) {
-      shippingEl.textContent = subLabel + ' ＋ 送料 ¥' + ship.fee.toLocaleString() + '（' + ship.pref + '宛）※北海道・沖縄は送料無料対象外です';
     } else {
       const remain = FREE_SHIPPING_LINE - subtotal;
       shippingEl.textContent = subLabel + ' ＋ 送料 ¥' + ship.fee.toLocaleString() + '（' + ship.pref + '宛）／ あと¥' + remain.toLocaleString() + 'で送料無料';
