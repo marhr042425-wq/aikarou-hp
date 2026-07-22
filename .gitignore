@@ -3,3 +3,5 @@
 *.pdf
 *.png
 !aikaro_ura_page1.png
+__pycache__/
+*.pyc
