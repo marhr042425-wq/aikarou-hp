@@ -438,36 +438,60 @@
     applyPointDiscount();
   }
 
-  function useAllPoints() {
+  const MIN_POINT_USE = 50; // サーバー側 order_mgmt/hp_order.py の MIN_POINT_USE と同じ
+
+  // 「合計金額」欄（＝商品小計＋送料＋代引き手数料。ポイント割引前）を数値で読む
+  function getOrderTotalNum() {
     const totalText = document.getElementById('orderTotal').textContent;
-    const total = parseInt(totalText.replace(/[^\d]/g, '')) || 0;
-    const maxUse = Math.min(customerPoints, total);
-    document.getElementById('pointUseAmount').value = maxUse >= 50 ? maxUse : 0;
+    return parseInt(totalText.replace(/[^\d]/g, '')) || 0;
+  }
+
+  // 実際に使えるポイント数（残高上限・合計金額上限・50pt下限）。
+  // サーバー側 resolve_usable_points と同じルール。最終判断はサーバーが行うが、
+  // 画面表示をサーバーの請求額と食い違わせないため同じ計算をここでも行う。
+  function resolveUsablePoints(requested) {
+    const points = parseInt(requested) || 0;
+    if (points < MIN_POINT_USE) return 0;
+    const capped = Math.min(points, customerPoints, getOrderTotalNum());
+    return capped >= MIN_POINT_USE ? capped : 0;
+  }
+
+  function useAllPoints() {
+    const maxUse = Math.min(customerPoints, getOrderTotalNum());
+    document.getElementById('pointUseAmount').value = maxUse >= MIN_POINT_USE ? maxUse : 0;
     applyPointDiscount();
   }
 
   function applyPointDiscount() {
-    const useAmount = parseInt(document.getElementById('pointUseAmount').value) || 0;
+    const inputEl = document.getElementById('pointUseAmount');
     const infoEl = document.getElementById('pointDiscountInfo');
     const textEl = document.getElementById('pointDiscountText');
+    const useAmount = parseInt(inputEl.value) || 0;
+    const total = getOrderTotalNum();
 
-    // バリデーション
-    if (useAmount > customerPoints) {
-      document.getElementById('pointUseAmount').value = customerPoints;
+    // バリデーション: 残高を超える／合計金額を超える入力はその場で丸める
+    // （合計を超えるとお支払い金額がマイナスになってしまうため）
+    const upperLimit = total > 0 ? Math.min(customerPoints, total) : customerPoints;
+    if (useAmount > upperLimit) {
+      inputEl.value = upperLimit;
       applyPointDiscount();
       return;
     }
 
-    if (useAmount > 0 && useAmount < 50) {
+    if (useAmount > 0 && useAmount < MIN_POINT_USE) {
       infoEl.style.display = '';
-      textEl.textContent = '※ 50pt以上から利用可能です';
+      textEl.innerHTML = '※ 50pt以上から利用可能です';
       textEl.style.color = '#aaa';
       return;
     }
 
-    if (useAmount >= 50) {
+    const applied = resolveUsablePoints(useAmount);
+    if (applied >= MIN_POINT_USE) {
       infoEl.style.display = '';
-      textEl.textContent = '−¥' + useAmount.toLocaleString() + ' ポイント割引適用';
+      // 割引額だけでなく「実際にお支払いいただく金額」まで見せる
+      // （2026-07-26: 合計欄は割引前のままなので、ここで必ず明示する）
+      textEl.innerHTML = '−¥' + applied.toLocaleString() + ' ポイント割引適用'
+        + '<br>お支払い金額: ¥' + Math.max(total - applied, 0).toLocaleString();
       textEl.style.color = '#E84040';
     } else {
       infoEl.style.display = 'none';
@@ -634,6 +658,25 @@
     if (cardError) { cardError.style.display = 'none'; cardError.textContent = ''; }
   }
 
+  // カードに実際に請求される金額の表示（サーバーが確定した金額をそのまま出す）
+  function showCardChargeAmount(amount, orderTotal, pointsUsed) {
+    const el = document.getElementById('cardChargeAmount');
+    if (!el) return;
+    let html = 'このカードへのご請求額: ¥' + Number(amount).toLocaleString();
+    if (pointsUsed > 0) {
+      html += '<br><span style="font-weight:400;font-size:0.85rem;color:#ccc;">'
+        + '（ご注文合計 ¥' + Number(orderTotal).toLocaleString()
+        + ' − ポイント ' + Number(pointsUsed).toLocaleString() + 'pt）</span>';
+    }
+    el.innerHTML = html;
+    el.style.display = '';
+  }
+
+  function hideCardChargeAmount() {
+    const el = document.getElementById('cardChargeAmount');
+    if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+  }
+
   function unmountCardPaymentElement() {
     if (stripePaymentElement) {
       stripePaymentElement.unmount();
@@ -642,6 +685,7 @@
     stripeElements = null;
     currentClientSecret = null;
     mountedPayloadJson = '';
+    hideCardChargeAmount();
   }
 
   function updateCardPaymentUI() {
@@ -782,8 +826,12 @@
     const date = document.getElementById('orderDate').value || '指定なし';
     const note = document.getElementById('orderNote').value || 'なし';
     const member_id = document.getElementById('orderMemberId').value.trim();
-    const usePoints = parseInt(document.getElementById('pointUseAmount').value) || 0;
-    const validUsePoints = (usePoints >= 50 && usePoints <= customerPoints) ? usePoints : 0;
+    // 残高上限・合計金額上限・50pt下限を通した「実際に使えるポイント数」を送る。
+    // サーバー側も同じルール（resolve_usable_points）で再判定するので、
+    // ここが多少ズレても請求額と減算額が食い違うことはない。
+    const validUsePoints = resolveUsablePoints(
+      document.getElementById('pointUseAmount').value
+    );
     return { items, total, name, phone, email, address, delivery, payment, date, note, member_id, use_points: validUsePoints };
   }
 
@@ -829,8 +877,17 @@
     // 「確認中」の趣旨で表示する（実際の入金確定はサーバー側Webhookで行う）。
     hideOrderProcessingOverlay();
     const summary = document.getElementById('orderCompleteSummary');
+    // カードに実際に請求された金額（＝合計 − ポイント）を明示する
+    let pendingPointLine = '';
+    if (orderData.use_points > 0) {
+      const totalNum = parseInt(String(orderData.total).replace(/[^\d]/g, '')) || 0;
+      pendingPointLine = '<br><span style="color:#E84040;font-weight:700;">ポイント利用: −¥'
+        + orderData.use_points.toLocaleString() + '</span>'
+        + '<br><strong>カードご請求額: ¥'
+        + Math.max(totalNum - orderData.use_points, 0).toLocaleString() + '</strong>';
+    }
     summary.innerHTML = '<strong>ご注文内容</strong><br>' + orderData.items.join('<br>') +
-      '<br><br><strong>合計: ' + orderData.total + '</strong>' +
+      '<br><br><strong>合計: ' + orderData.total + '</strong>' + pendingPointLine +
       '<br><br><strong>お届け先</strong><br>' + orderData.name + '様<br>' + orderData.address +
       '<br><br><strong>配送:</strong> ' + orderData.delivery +
       '<br><strong>お支払い:</strong> ' + orderData.payment +
@@ -841,6 +898,17 @@
 
   const CARD_INCOMPLETE_MSG = 'カード決済が完了していません。カード情報を入力してお支払いを完了してください'
     + '（カード入力欄が表示されない場合は、お手数ですが別の支払い方法をお選びください）';
+
+  // カード決済の準備（create-intent）に失敗したときの文言。
+  // サーバーが理由を返している場合（ポイント利用額が多すぎる等）はそれを優先して伝える。
+  function cardPrepErrorMsg(err) {
+    const detail = err && err.message ? String(err.message) : '';
+    if (detail) {
+      return detail + '（ご注文はまだ送信されていません）';
+    }
+    return 'カード決済の準備ができなかったため、ご注文は送信されていません。'
+      + 'しばらくしてもう一度お試しいただくか、お手数ですが別の支払い方法をお選びください。';
+  }
 
   async function handleCardPaymentSubmit(orderData, submitBtn, orderErrorBox) {
     const cardError = document.getElementById('cardPaymentError');
@@ -894,9 +962,9 @@
       try {
         await mountCardPaymentElement(orderData);
       } catch (err) {
-        // create-intent失敗（サーバー障害・502等）。注文は送信しない。
-        stopWithCardError('カード決済の準備ができなかったため、ご注文は送信されていません。'
-          + 'しばらくしてもう一度お試しいただくか、お手数ですが別の支払い方法をお選びください。');
+        // create-intent失敗（サーバー障害・502、ポイント利用額が多すぎる等）。
+        // 注文は送信しない。サーバーからの具体的な理由があればそれを見せる。
+        stopWithCardError(cardPrepErrorMsg(err));
         return;
       }
       stopWithCardError(CARD_INCOMPLETE_MSG);
@@ -909,8 +977,7 @@
       try {
         await mountCardPaymentElement(orderData);
       } catch (err) {
-        stopWithCardError('カード決済の準備ができなかったため、ご注文は送信されていません。'
-          + 'しばらくしてもう一度お試しいただくか、お手数ですが別の支払い方法をお選びください。');
+        stopWithCardError(cardPrepErrorMsg(err));
         return;
       }
       stopWithCardError('ご注文内容が変わったため、カード情報をもう一度入力して、送信し直してください。');
@@ -988,6 +1055,11 @@
     stripePaymentElement = stripeElements.create('payment');
     stripePaymentElement.mount('#payment-element');
     mountedPayloadJson = JSON.stringify(orderData);
+    // サーバーが確定した「実際にカードへ請求される金額」を必ず画面に出す。
+    // ポイント利用分はサーバー側で差し引かれている（2026-07-26 修正）。
+    if (typeof data.amount === 'number') {
+      showCardChargeAmount(data.amount, data.order_total, data.points_used || 0);
+    }
   }
 
   const SHIPPING_DEFAULT_NOTE = '※ 送料 全国一律¥1,200（税込・冷凍便／常温便とも）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から';
@@ -1049,6 +1121,10 @@
         codFeeEl.textContent = '';
       }
     }
+
+    // 合計が変わるとポイントの上限（合計金額まで）とお支払い金額の表示も変わるので
+    // 必ず引き直す（applyPointDiscount は updateTotal を呼ばないので再帰しない）。
+    applyPointDiscount();
 
     // カード決済選択中に金額が変わったら、決済金額を合わせるため入力欄を作り直す
     scheduleCardRemount();

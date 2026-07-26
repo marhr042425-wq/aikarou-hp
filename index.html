@@ -819,6 +819,7 @@
            注文内容の入力がすべて済んだ後にカード情報を入れていただくため、送信ボタン直前に置く -->
       <div id="cardPaymentBox" style="display:none;margin:12px 0 16px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(212,168,67,0.3);border-radius:8px;">
         <p style="color:var(--gold);font-weight:700;font-size:0.9rem;margin-bottom:10px;">💳 カード情報入力</p>
+        <div id="cardChargeAmount" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(212,168,67,0.12);border-radius:4px;color:var(--gold);font-weight:700;font-size:0.95rem;"></div>
         <div id="payment-element" style="margin-bottom:10px;"></div>
         <div id="cardPaymentError" style="display:none;color:#E84040;font-size:0.85rem;margin-top:8px;"></div>
         <small style="color:#aaa;font-size:0.75rem;display:block;margin-top:8px;">※ カード情報はStripe（決済代行会社）に直接送信され、当店のサーバーには保存されません。</small>
@@ -1103,7 +1104,7 @@
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
-<script src="app.js?v=20260718b" defer></script>
+<script src="app.js?v=20260726a" defer></script>
 
 <!-- Google Analytics (GA4) 測定ID: G-H5MT5P6XZH（今津屋－愛華楼 プロパティ）2026-07-26 有効化 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-H5MT5P6XZH"></script>
