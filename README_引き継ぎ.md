@@ -31,7 +31,6 @@ aikarou-hp/
     ├── kakuniburger.jpg    （角煮バーガー）
     ├── charshuman.jpg      （チャーシューまん）
     ├── zasai.jpg           （ザーサイ）
-    ├── storefront.jpg      （店舗外観）
     └── event-booth.jpg     （催事ブース）
 ```
 
