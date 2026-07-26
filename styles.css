@@ -782,6 +782,16 @@
     margin-right: 4px;
   }
 
+  /* 保存料・着色料・増量剤・膨張剤 不使用の表示（対象3品のみ） */
+  .allergen-text.additive-free {
+    margin-top: 5px;
+    color: rgba(212,168,67,0.85);
+  }
+
+  .allergen-text.additive-free strong {
+    color: var(--gold);
+  }
+
   .menu-card-footer {
     display: flex;
     justify-content: space-between;

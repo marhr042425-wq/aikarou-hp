@@ -47,6 +47,7 @@ PRODUCTS = [
     },
     {
         "slug": "nikushumai",
+        "additive_free": True,
         "name": "肉焼売",
         "name_en": "Pork Shumai",
         "image": "/images/nikushyumai.jpg",
@@ -74,6 +75,7 @@ PRODUCTS = [
     },
     {
         "slug": "ebi-shumai",
+        "additive_free": True,
         "name": "海老焼売",
         "name_en": "Shrimp Shumai",
         "image": "/images/ebi-shumai.jpg",
@@ -101,6 +103,7 @@ PRODUCTS = [
     },
     {
         "slug": "niraniku",
+        "additive_free": True,
         "name": "肉にら饅頭",
         "name_en": "Nira-Niku Manju",
         "image": "/images/niraniku.jpg",
@@ -283,6 +286,11 @@ def render_product_lp(p):
     cook_html = "\n".join(cook_blocks)
     nut = p["nutrition"]
     supplier_note_html = f'<p class="pp-supplier-note">{escape(p["supplier_note"])}</p>' if p.get("supplier_note") else ""
+    # 「保存料・着色料・増量剤・膨張剤 不使用」は原材料に該当添加物がない商品のみ表示
+    additive_free_html = (
+        '<p class="pp-additive-free">保存料・着色料・増量剤・膨張剤 不使用</p>'
+        if p.get("additive_free") else ""
+    )
     nut_note = nut.get("note") or f"1個{p['weight'].split(' ')[1] if ' ' in p['weight'] else p['weight']}当たり"
 
     schema = {
@@ -348,6 +356,7 @@ body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans 
 .pp-allergen-full {{ color: #ccc; font-size: 0.95rem; }}
 .pp-allergen-full strong {{ color: #ffd700; margin-right: 0.5rem; }}
 .pp-ingredients {{ color: #b0b0b0; font-size: 0.9rem; line-height: 1.7; padding: 1rem; background: #1a1a1a; border-radius: 8px; }}
+.pp-additive-free {{ color: #ffd700; font-size: 0.9rem; font-weight: 700; margin-top: 0.75rem; }}
 .pp-nutrition {{ width: 100%; border-collapse: collapse; background: #1a1a1a; border-radius: 8px; overflow: hidden; }}
 .pp-nutrition th, .pp-nutrition td {{ padding: 0.6rem 0.85rem; text-align: left; border-bottom: 1px solid #2a2a2a; }}
 .pp-nutrition th {{ color: #999; font-weight: 500; width: 8em; }}
@@ -418,6 +427,7 @@ body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans 
   <section class="pp-section">
     <h2>原材料名</h2>
     <p class="pp-ingredients">{escape(p['ingredients'])}</p>
+    {additive_free_html}
     {supplier_note_html}
   </section>
 
