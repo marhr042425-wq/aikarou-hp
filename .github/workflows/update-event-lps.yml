@@ -1,14 +1,25 @@
-# 催事LP・リンク集の自動更新（🔴-2 恒久対策）
+# 催事LP・リンク集の自動更新 ＋ 配信ブランチ（gh-pages）への同期
 #
-# 以前は Mac のローカルルーチン（lp-generator）で毎朝更新していたが、
-# Mac の起動状態に依存し「静かに止まる」事故（6/23〜26のAPI 403、
-# その後のタスク未登録）が起きたため、GitHub Actions に移設。
+# 【経緯】
+# - 以前は Mac のローカルルーチンで毎朝更新 → Mac 依存で止まる事故が起き
+#   GitHub Actions に移設（🔴-2 恒久対策）。
+# - 2026-07-24 に main へブランチ保護（PR必須）を設定（スタッフ共同開発の関所）。
+#   その結果 bot の main への push が GH006 で拒否され、7/27〜30 の4日連続で
+#   自動更新が失敗した。
+# - 恒久対策（C案）: 「人が触る場所」と「ロボットが書く場所」を分離。
+#     main     … 人間の作業場（ブランチ保護あり・スタッフはPR必須）
+#     gh-pages … GitHub Pages の配信元（保護なし・この Actions だけが書く）
+#   本ワークフローは main には一切書き込まない。
 #
-# - 毎日 21:30 UTC（= 朝 6:30 JST）に実行
-# - スクリプトは催事システムの公開APIから取得（DBには接続しない＝秘密情報不要）
-# - 差分があるときだけ commit & push → GitHub Pages が自動公開
-# - 失敗すると GitHub がリポジトリオーナーへ自動メール通知する
-#   （Actions の既定動作。これ自体が「止まったら気づける」仕組み）
+# 【仕組み】毎回 gh-pages を「main の内容 ＋ 最新の生成物」で作り直して
+#   force push する。作り直し方式なので履歴の衝突が構造的に起きない。
+#   - 毎朝 21:30 UTC（= 6:30 JST）: 催事LP・リンク集を再生成して配信
+#   - main への push（スタッフのPRマージ等）: 直ちに配信ブランチへ反映
+#     （このトリガーが無いとスタッフのHP修正が本番に出なくなる）
+# - スクリプトは催事システムの公開APIから取得（DB接続なし＝秘密情報不要）
+# - 失敗すると GitHub がリポジトリオーナーへ自動メール通知する（既定動作）
+# - gh-pages への push は GITHUB_TOKEN で行い、それが GitHub Pages の
+#   再ビルドを起こす（本リポジトリで実績ある挙動）
 
 name: 催事LP自動更新
 
@@ -16,23 +27,28 @@ on:
   schedule:
     - cron: '30 21 * * *'   # 21:30 UTC = 6:30 JST
   workflow_dispatch: {}      # 手動実行（動作確認用）
+  push:
+    branches:
+      - main                 # 人間が main を更新したら配信ブランチへ同期
 
 permissions:
-  contents: write            # 生成物の commit & push に必要
+  contents: write            # gh-pages への push に必要（main には書かない）
 
 concurrency:
   group: update-event-lps
   cancel-in-progress: false
 
 env:
-  TZ: Asia/Tokyo             # date.today() を JST 基準にする（Mac実行時代と同じ挙動）
+  TZ: Asia/Tokyo             # date.today() を JST 基準にする
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: チェックアウト
+      - name: チェックアウト（常に main を土台にする）
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Python セットアップ
         uses: actions/setup-python@v5
@@ -47,15 +63,22 @@ jobs:
       - name: リンク集生成
         run: python3 scripts/generate_links_page.py
 
-      - name: 差分があれば commit & push
+      - name: 配信ブランチ（gh-pages）を作り直して push
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # main の HEAD を土台に gh-pages を作り直す
+          git checkout -B gh-pages
+
           # 生成物のディレクトリだけを名指しで stage（git add -A は使わない）
           git add events links
           if git diff --cached --quiet; then
-            echo "差分なし。コミットしません。"
-            exit 0
+            echo "生成物に差分なし。main と同一内容で配信ブランチを更新します。"
+          else
+            git commit -m "催事LP自動更新 ($(date +%Y-%m-%d))"
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "催事LP自動更新 ($(date +%Y-%m-%d))"
-          git push
+
+          # 作り直し方式のため force push（gh-pages の履歴は使い捨て。
+          # 正史は main 側に残る）。main には一切 push しない。
+          git push --force origin gh-pages
