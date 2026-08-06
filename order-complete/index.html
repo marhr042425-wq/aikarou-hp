@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お支払いの確認｜本格中華 愛華楼</title>
+<meta name="description" content="本格中華 愛華楼 オンライン注文のお支払い結果ページです。">
+<!-- 決済の戻り先ページ。検索結果には出さない（お客様が直接来るページではないため） -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  body { background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif; }
+  .oc-hero { background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%); color: #fff; padding: 1rem 1.25rem; text-align: center; }
+  .oc-hero h1 { margin: 0; font-size: 1.15rem; color: #fff; }
+  .oc-main { max-width: 620px; margin: 0 auto; padding: 2rem 1.5rem 1rem; }
+  .oc-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.6rem 1.4rem; text-align: center; }
+  .oc-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 0.6rem; }
+  .oc-title { font-size: 1.05rem; font-weight: 700; color: #ffd700; margin: 0 0 0.8rem; line-height: 1.6; }
+  .oc-title.ng { color: #ff7b7b; }
+  .oc-text { color: #ddd; font-size: 0.9rem; line-height: 1.9; margin: 0; }
+  .oc-sub { color: #999; font-size: 0.8rem; line-height: 1.8; margin-top: 1rem; }
+  .oc-btn { display: inline-block; margin-top: 1.4rem; padding: 0.75rem 1.8rem; background: linear-gradient(135deg, #d4a843, #c49b30); color: #1a1a1a; font-weight: 700; border-radius: 4px; text-decoration: none; font-size: 0.9rem; }
+  .oc-footer { text-align: center; padding: 2rem 1rem; color: #666; font-size: 0.85rem; border-top: 1px solid #2a2a2a; margin-top: 2rem; }
+  .oc-footer a { color: #ffd700; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="oc-hero">
+    <h1>本格中華 愛華楼</h1>
+  </div>
+  <div class="oc-main">
+    <div class="oc-card">
+      <div class="oc-icon" id="ocIcon">⏳</div>
+      <p class="oc-title" id="ocTitle">お支払いを確認しています</p>
+      <p class="oc-text" id="ocText">
+        少々お待ちください。確認が取れ次第、ご登録のメールアドレスへご注文確認のご連絡をいたします。
+      </p>
+      <p class="oc-sub" id="ocSub">
+        ※ この画面を閉じていただいて問題ありません。<br>
+        ※ ご不明な点は、LINEまたはお電話でお気軽にお問い合わせください。
+      </p>
+      <a class="oc-btn" href="/">トップページへ戻る</a>
+    </div>
+  </div>
+  <div class="oc-footer">
+    <a href="/">本格中華 愛華楼</a>
+  </div>
+
+<script>
+// PayPay等の決済画面から戻ってきたお客様に、結果の見通しをお伝えするだけのページ。
+// 【重要】この画面では注文を確定させない（作らない・書き換えない）。
+// 注文が確定するのは、Stripeからサーバーへ「入金OK」の合図（Webhook）が
+// 届いたときだけ。ブラウザの表示を根拠にお金や注文を動かさない。
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var status = params.get('redirect_status') || '';
+  var icon = document.getElementById('ocIcon');
+  var title = document.getElementById('ocTitle');
+  var text = document.getElementById('ocText');
+  var sub = document.getElementById('ocSub');
+
+  if (status === 'succeeded' || status === 'pending' || status === 'processing') {
+    // 表示はそのまま（「確認しています」）
+    return;
+  }
+
+  if (status === 'failed' || status === 'canceled') {
+    icon.textContent = '⚠️';
+    title.textContent = 'お支払いが完了していません';
+    title.className = 'oc-title ng';
+    text.innerHTML = 'お支払いが取り消された、または完了しなかったため、'
+      + '<strong>ご注文は承っておりません。</strong><br>'
+      + 'お手数ですが、トップページのご注文フォームからもう一度お試しください。';
+    sub.innerHTML = '※ 料金は発生しておりません。<br>'
+      + '※ うまくいかない場合は、銀行振込をお選びいただくか、LINE・お電話でご注文ください。';
+    return;
+  }
+
+  // 状態が分からないとき（直接このURLを開いた場合など）
+  icon.textContent = '📄';
+  title.textContent = 'ご注文フォームはトップページにございます';
+  text.textContent = 'このページはお支払い後の確認用ページです。';
+  sub.innerHTML = '※ ご注文がお済みの場合は、確認のご連絡をお待ちください。';
+})();
+</script>
+</body>
+</html>

@@ -546,6 +546,10 @@
   // ============================================================
   const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Tr9DeKcjgjrrEc7m6bPcA1qAeUezMYcy4y54Q4OlA1kWoZYq39DUf1VnjrXHyxJoph09LLUGKkjn3lbkl0perOu005b6JT774';
   const PAYMENT_API_BASE = 'https://akira042425-1.onrender.com/payment';
+  // PayPay等「一度その決済画面へ移動して戻ってくる」支払い方法の戻り先ページ。
+  // カード決済はこのページ内で完結するので、ここには戻ってこない。
+  // 戻ってきた画面では注文を確定させない（確定はサーバー側のWebhookのみ）。
+  const PAYMENT_RETURN_URL = window.location.origin + '/order-complete/';
   // ============================================================
   // 送料の自動計算（税込・2026-07-18 社長承認の新体系）
   //  ・冷凍便・常温便とも: 全国一律 ¥1,200（同日中に常温便も一律化で統一）
@@ -710,14 +714,16 @@
     // カード入力欄は出さずに案内だけ表示する（送料抜きで課金してしまう事故の防止）。
     if (cardSubtotal > 0 && !getDestPrefecture()) {
       unmountCardPaymentElement();
-      showCardError('郵便番号をご入力いただき住所が表示されると、送料を含めた合計金額でカード入力欄が表示されます。');
+      showCardError('郵便番号をご入力いただき住所が表示されると、送料を含めた合計金額でお支払い欄が表示されます。');
       return;
     }
     // 北海道・沖縄・離島宛は送料が「別途ご案内」＝課金額が確定しないため、
-    // カード決済は受け付けない（銀行振込・PayPayなら注文可能）。
+    // その場でお金をいただく決済（カード・PayPay等）は受け付けない。
+    // ※ PayPayは2026-08-06にStripe経由へ移行したため、この制限がPayPayにも及ぶ。
+    //   ご案内先は銀行振込（と、クロネコヤマト便なら代金引換）のみ。
     if (cardSubtotal > 0 && calcShipping(cardSubtotal).separate) {
       unmountCardPaymentElement();
-      showCardError('北海道・沖縄・離島宛は送料を別途ご案内するため、クレジットカード決済はご利用いただけません。お手数ですが銀行振込またはPayPayをお選びください。');
+      showCardError('北海道・沖縄・離島宛は送料を別途ご案内するため、この画面でのお支払い（クレジットカード・PayPay）はご利用いただけません。お手数ですが銀行振込をお選びください。');
       return;
     }
     // カード選択時点でPaymentIntentを作りPayment Elementを表示する
@@ -735,7 +741,7 @@
     // （揃わないままPaymentIntentを作りに行くと400エラーになるため）
     if (!payload.items.length || !String(payload.name).trim() || !String(payload.phone).trim()) {
       unmountCardPaymentElement();
-      showCardError('商品の選択と、お名前・電話番号のご入力が済むと、ここにカード入力欄が表示されます。');
+      showCardError('商品の選択と、お名前・電話番号のご入力が済むと、ここにお支払い欄が表示されます。');
       return;
     }
     // すでに同じ注文内容でマウント済みなら何もしない（入力中のカード番号を消さない）
@@ -821,6 +827,12 @@
     const address = '〒' + zip + ' ' + document.getElementById('orderAddress').value + banchi + (building ? ' ' + building : '');
     const deliveryMap = { sagawa: '佐川急便（冷凍便）', yamato: 'クロネコヤマト（冷凍便）', sagawa_ambient: '佐川急便（常温便）', yamato_ambient: 'クロネコヤマト（常温便）' };
     const delivery = deliveryMap[document.getElementById('orderDelivery').value];
+    // credit … カード／PayPay／Apple Pay等をまとめた「その場でお支払い」の枠。
+    //   実際にどれで支払われたかは、決済確定後にサーバー側（Stripeの記録）で
+    //   確かめて注文に書き込むので、ここは代表名のままでよい。
+    // paypay … 2026-08-06に選択肢からは外した（Stripe経由へ移行）。ただし
+    //   古いページが残っているお客様の端末から送られてくる可能性があるため、
+    //   従来どおり「PayPay」（＝手作業でご案内する運用）として受けられるよう残す。
     const paymentMap = { bank: '銀行振込', credit: 'クレジットカード', paypay: 'PayPay', cod: '代金引換（クロネコヤマト）' };
     const payment = paymentMap[document.getElementById('orderPayment').value];
     const date = document.getElementById('orderDate').value || '指定なし';
@@ -873,17 +885,17 @@
   }
 
   function showOrderCompletePending(orderData) {
-    // カード決済はWebhook確定を待つため、断定的な完了ではなく
+    // オンライン決済（カード・PayPay）はWebhook確定を待つため、断定的な完了ではなく
     // 「確認中」の趣旨で表示する（実際の入金確定はサーバー側Webhookで行う）。
     hideOrderProcessingOverlay();
     const summary = document.getElementById('orderCompleteSummary');
-    // カードに実際に請求された金額（＝合計 − ポイント）を明示する
+    // 実際に請求された金額（＝合計 − ポイント）を明示する
     let pendingPointLine = '';
     if (orderData.use_points > 0) {
       const totalNum = parseInt(String(orderData.total).replace(/[^\d]/g, '')) || 0;
       pendingPointLine = '<br><span style="color:#E84040;font-weight:700;">ポイント利用: −¥'
         + orderData.use_points.toLocaleString() + '</span>'
-        + '<br><strong>カードご請求額: ¥'
+        + '<br><strong>ご請求額: ¥'
         + Math.max(totalNum - orderData.use_points, 0).toLocaleString() + '</strong>';
     }
     summary.innerHTML = '<strong>ご注文内容</strong><br>' + orderData.items.join('<br>') +
@@ -896,8 +908,8 @@
     resetOrderForm();
   }
 
-  const CARD_INCOMPLETE_MSG = 'カード決済が完了していません。カード情報を入力してお支払いを完了してください'
-    + '（カード入力欄が表示されない場合は、お手数ですが別の支払い方法をお選びください）';
+  const CARD_INCOMPLETE_MSG = 'お支払いが完了していません。お支払い情報を入力して、お支払いを完了してください'
+    + '（お支払い欄が表示されない場合は、お手数ですが別の支払い方法をお選びください）';
 
   // カード決済の準備（create-intent）に失敗したときの文言。
   // サーバーが理由を返している場合（ポイント利用額が多すぎる等）はそれを優先して伝える。
@@ -949,10 +961,10 @@
       return;
     }
 
-    // 北海道・沖縄・離島宛（送料 別途ご案内）はカード決済不可。
+    // 北海道・沖縄・離島宛（送料 別途ご案内）はカード・PayPayとも決済不可。
     if (calcShipping(submitSubtotal).separate) {
       unmountCardPaymentElement();
-      stopWithCardError('北海道・沖縄・離島宛は送料を別途ご案内するため、クレジットカード決済はご利用いただけません。お手数ですが銀行振込またはPayPayをお選びください。');
+      stopWithCardError('北海道・沖縄・離島宛は送料を別途ご案内するため、この画面でのお支払い（クレジットカード・PayPay）はご利用いただけません。お手数ですが銀行振込をお選びください。');
       return;
     }
 
@@ -988,7 +1000,11 @@
       const stripe = getStripe();
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements: stripeElements,
+        // redirect:'if_required' … カードはこの画面のまま完結し、
+        // PayPayのように移動が必要な支払い方法のときだけ画面が移動する。
+        // return_url は移動が必要な支払い方法のために必須（カードでは使われない）。
         redirect: 'if_required',
+        confirmParams: { return_url: PAYMENT_RETURN_URL },
       });
 
       if (error) {

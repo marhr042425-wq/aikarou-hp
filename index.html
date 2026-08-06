@@ -756,8 +756,7 @@
           <label for="orderPayment">お支払い方法</label>
           <select id="orderPayment" onchange="updateCardPaymentUI(); updateTotal()">
             <option value="bank">銀行振込</option>
-            <option value="credit">クレジットカード</option>
-            <option value="paypay">PayPay</option>
+            <option value="credit">クレジットカード・PayPay</option>
             <option value="cod" id="codOption" style="display:none">代金引換（クロネコヤマト）</option>
           </select>
           <small style="color:#aaa;font-size:0.75rem;margin-top:4px;display:block">※ 代金引換はクロネコヤマトのみ対応しております。</small>
@@ -815,14 +814,16 @@
         <label for="orderNote">備考</label>
         <textarea id="orderNote" placeholder="ご要望がございましたらご記入ください"></textarea>
       </div>
-      <!-- カード情報入力（クレジットカード選択時のみ表示）
-           注文内容の入力がすべて済んだ後にカード情報を入れていただくため、送信ボタン直前に置く -->
+      <!-- お支払い情報入力（「クレジットカード・PayPay」選択時のみ表示）
+           カード／PayPay／Apple Pay 等はこの枠の中でお客様が選ぶ（表示できる決済手段は
+           Stripe管理画面の設定に従う）。注文内容の入力がすべて済んだ後に入れていただくため、
+           送信ボタン直前に置く -->
       <div id="cardPaymentBox" style="display:none;margin:12px 0 16px;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(212,168,67,0.3);border-radius:8px;">
-        <p style="color:var(--gold);font-weight:700;font-size:0.9rem;margin-bottom:10px;">💳 カード情報入力</p>
+        <p style="color:var(--gold);font-weight:700;font-size:0.9rem;margin-bottom:10px;">💳 お支払い情報の入力</p>
         <div id="cardChargeAmount" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(212,168,67,0.12);border-radius:4px;color:var(--gold);font-weight:700;font-size:0.95rem;"></div>
         <div id="payment-element" style="margin-bottom:10px;"></div>
         <div id="cardPaymentError" style="display:none;color:#E84040;font-size:0.85rem;margin-top:8px;"></div>
-        <small style="color:#aaa;font-size:0.75rem;display:block;margin-top:8px;">※ カード情報はStripe（決済代行会社）に直接送信され、当店のサーバーには保存されません。</small>
+        <small style="color:#aaa;font-size:0.75rem;display:block;margin-top:8px;">※ カード情報はStripe（決済代行会社）に直接送信され、当店のサーバーには保存されません。<br>※ PayPayをお選びの場合は、PayPayのお支払い画面に移動し、お支払い後この画面に戻ります。</small>
       </div>
     </div>
     <button type="submit" class="order-submit-btn" id="orderSubmitBtn" disabled>注文内容を送信する</button>
@@ -1104,7 +1105,7 @@
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
-<script src="app.js?v=20260726a" defer></script>
+<script src="app.js?v=20260806a" defer></script>
 
 <!-- Google Analytics (GA4) 測定ID: G-H5MT5P6XZH（今津屋－愛華楼 プロパティ）2026-07-26 有効化 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-H5MT5P6XZH"></script>
