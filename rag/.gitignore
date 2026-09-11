@@ -1,0 +1,10 @@
+# APIキー（絶対にコミットしない）
+.env
+
+# ベクトルDB本体（ingest.py で自動生成・再構築できる）
+chroma_db/
+
+# Python
+venv/
+__pycache__/
+*.pyc
