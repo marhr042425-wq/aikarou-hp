@@ -27,8 +27,6 @@
     function applyHpPrices(map) {
       // 1. メニューカード（.menu-card / .featured セクション）
       document.querySelectorAll('.menu-card').forEach(card => {
-        // data-fixed-price のカードはHTML側の価格が正（サイズごとに実額を持つ商品）
-        if (card.hasAttribute('data-fixed-price')) return;
         const nameEl = card.querySelector('.menu-card-name');
         if (!nameEl) return;
         const p = map[nameEl.textContent.trim()];
@@ -64,8 +62,6 @@
       document.querySelectorAll('.order-product-row').forEach(row => {
         // モンゴル茶はボタンごとに割引済みの実額を持つため、DB単価での上書き対象外
         if (row.classList.contains('has-tea-size')) return;
-        // ザーサイ（140g/280g/1kg）もサイズごとに実額を持つため上書き対象外
-        if (row.classList.contains('has-unit-size')) return;
         const nameEl = row.querySelector('.order-product-name');
         if (!nameEl) return;
         // 「肉焼売【生冷凍】」「肉焼売【調理済み冷凍】」も「肉焼売」にマッチ
@@ -292,55 +288,6 @@
     updateFloatingCart();
   }
 
-  // ============================================================
-  // 内容量サイズ選択（ザーサイ 140g / 280g / 1kg）
-  // 倍率がきれいな数字にならない（280g=1.947倍）ので、ボタンごとに
-  // 「税込の実額」と「元値」を直接持たせる実額方式。
-  // モンゴル茶（has-tea-size）とは別クラス（has-unit-size）なので互いに影響しない。
-  // data-multiplier を持たないので getRowPrice() は data-price×1＝実額になる。
-  // ============================================================
-
-  // 注文行に選択中サイズ（実額・元値・単位）を反映する
-  function applyUnitSize(row, btn) {
-    row.querySelectorAll('.order-size-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    row.dataset.price = btn.dataset.unitPrice;          // 税込の実額
-    row.dataset.origPrice = btn.dataset.unitOrig || '';  // 取り消し線で出す定価
-    row.dataset.unit = btn.dataset.unitLabel;            // 140g / 280g / 1kg
-    renderUnitRowPrice(row);
-  }
-
-  // 注文行のサイズボタンを押したとき
-  function selectOrderUnitSize(btn) {
-    const row = btn.closest('.order-product-row');
-    if (!row) return;
-    applyUnitSize(row, btn);
-    const numEl = row.querySelector('.order-qty-num');
-    const subEl = row.querySelector('.order-subtotal');
-    const qty = parseInt(numEl.textContent);
-    if (qty > 0) {
-      subEl.textContent = '¥' + (getRowPrice(row) * qty).toLocaleString();
-      subEl.classList.add('has-value');
-    }
-    updateTotal();
-    updateFloatingCart();
-  }
-
-  // 注文行の価格テキスト（「¥1,600 → ¥1,480 / 280g（税込）」）を再描画
-  function renderUnitRowPrice(row) {
-    const priceEl = row.querySelector('.order-product-price');
-    if (!priceEl) return;
-    const price = parseInt(row.dataset.price) || 0;
-    const orig = parseInt(row.dataset.origPrice) || 0;
-    const unit = row.dataset.unit || '';
-    let html = '';
-    if (orig) {
-      html += '<span class="order-original-price">¥' + orig.toLocaleString() + '</span> → ';
-    }
-    html += '¥' + price.toLocaleString() + ' / ' + unit + '（税込）';
-    priceEl.innerHTML = html;
-  }
-
   // Add to order from menu card
   function addToOrder(productName) {
     // メニューカードでサイズが選ばれていれば、対応する注文行のサイズも合わせる
@@ -353,24 +300,14 @@
       sizeWrap = document.querySelector('.menu-size-select[data-product="' + baseProduct + '"]');
     }
     let selectedMultiplier = null;
-    let selectedUnitLabel = null;
     if (sizeWrap) {
       const active = sizeWrap.querySelector('.menu-size-btn.active');
-      if (active) {
-        selectedMultiplier = active.dataset.multiplier;
-        selectedUnitLabel = active.dataset.unitLabel;   // ザーサイなど内容量サイズ
-      }
+      if (active) selectedMultiplier = active.dataset.multiplier;
     }
     const rows = document.querySelectorAll('.order-product-row');
     for (const row of rows) {
       const name = row.querySelector('.order-product-name').textContent;
       if (name === productName) {
-        // 内容量サイズ商品（ザーサイ）なら、カードで選んだ内容量を注文行に反映
-        if (selectedUnitLabel && row.classList.contains('has-unit-size')) {
-          const unitBtn = row.querySelector(
-            '.order-size-btn[data-unit-label="' + selectedUnitLabel + '"]');
-          if (unitBtn) applyUnitSize(row, unitBtn);
-        }
         // サイズ選択商品なら、カードで選んだサイズを注文行に反映
         if (selectedMultiplier && row.classList.contains('has-size')) {
           const sizeBtn = row.querySelector('.order-size-btn[data-multiplier="' + selectedMultiplier + '"]');
@@ -853,9 +790,6 @@
           } else {
             items.push(setLabel + ' ' + subtotal);
           }
-        } else if (row.classList.contains('has-unit-size')) {
-          // 例「ザーサイ 280g × 2 ¥2,960」
-          items.push(name + ' ' + (row.dataset.unit || '') + ' × ' + qty + ' ' + subtotal);
         } else if (row.classList.contains('has-size')) {
           const pieces = getRowPieces(row);
           const totalPieces = pieces * qty;
@@ -1293,11 +1227,6 @@
         btns.forEach(b => b.classList.toggle('active', b.dataset.multiplier === '1'));
         renderSizeRowPrice(row);
       }
-      // ザーサイは一番小さい内容量（140g）に戻す
-      if (row.classList.contains('has-unit-size')) {
-        const firstBtn = row.querySelector('.order-size-btn');
-        if (firstBtn) applyUnitSize(row, firstBtn);
-      }
       // モンゴル茶は1袋に戻す
       if (row.classList.contains('has-tea-size')) {
         row.dataset.teaBags = '1';
@@ -1310,12 +1239,10 @@
     // メニューカードのサイズ選択も基準サイズに戻す
     document.querySelectorAll('.menu-size-select').forEach(wrap => {
       const btns = wrap.querySelectorAll('.menu-size-btn');
-      // モンゴル茶カードは data-tea-bags、内容量サイズ（ザーサイ）は先頭ボタン、
-      // それ以外は data-multiplier が「1」のボタンを基準に
+      // モンゴル茶カードは data-tea-bags、それ以外は data-multiplier が「1」のボタンを基準に
       const isTea = wrap.dataset.product === 'モンゴル茶';
-      const isUnit = !!(btns[0] && btns[0].dataset.unitLabel);
-      btns.forEach((b, i) => b.classList.toggle('active',
-        isUnit ? i === 0 : (isTea ? b.dataset.teaBags === '1' : b.dataset.multiplier === '1')));
+      btns.forEach(b => b.classList.toggle('active',
+        isTea ? b.dataset.teaBags === '1' : b.dataset.multiplier === '1'));
     });
     // フォームリセット（住所も消えるので送料込みの合計・内訳表示も作り直す）
     document.getElementById('orderForm').reset();
