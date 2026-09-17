@@ -260,6 +260,13 @@ PRODUCTS = [
         ],
         "supplier_note": "製造者: マニハ食品株式会社（群馬県）",
         "tag": "やみつき",
+        # 内容量ごとの実額（税込）。倍率ではないのでサイズごとに定価・HP価格を持つ。
+        # トップページ index.html の注文フォームの実額と必ず一致させること。
+        "size_variants": [
+            {"label": "140g", "price_original": 800, "price_hp": 760},
+            {"label": "280g", "price_original": 1600, "price_hp": 1520},
+            {"label": "1kg", "price_original": 5714, "price_hp": 5428},
+        ],
     },
 ]
 
@@ -293,6 +300,37 @@ def render_product_lp(p):
     )
     nut_note = nut.get("note") or f"1個{p['weight'].split(' ')[1] if ' ' in p['weight'] else p['weight']}当たり"
 
+    # 内容量ごとに価格が違う商品（ザーサイ）は、サイズ別の価格表を出す
+    variants = p.get("size_variants") or []
+    # 注記に出す内容量。サイズ展開商品は全サイズを並べる（例: 140g / 280g / 1kg）
+    weight_note = " / ".join(v["label"] for v in variants) if variants else p["weight"]
+    if variants:
+        rows = "".join(
+            f'\n      <tr><th>{escape(v["label"])}</th>'
+            f'<td><span class="pp-variant-original">¥{v["price_original"]:,}</span> '
+            f'<span class="pp-variant-hp">¥{v["price_hp"]:,}</span></td></tr>'
+            for v in variants
+        )
+        variants_html = (
+            '\n    <table class="pp-variants">'
+            '\n      <tr><th>内容量</th><td>価格（税込）</td></tr>'
+            f'{rows}'
+            '\n    </table>'
+        )
+        variants_css = (
+            ".pp-variants { width: 100%; border-collapse: collapse; background: #1a1a1a;"
+            " border-radius: 8px; overflow: hidden; margin-top: 0.75rem; }\n"
+            ".pp-variants th, .pp-variants td { padding: 0.6rem 0.85rem; text-align: left;"
+            " border-bottom: 1px solid #2a2a2a; }\n"
+            ".pp-variants th { color: #999; font-weight: 500; width: 8em; }\n"
+            ".pp-variant-original { color: #999; text-decoration: line-through;"
+            " margin-right: 0.4rem; }\n"
+            ".pp-variant-hp { color: #ffd700; font-weight: 700; }\n"
+        )
+    else:
+        variants_html = ""
+        variants_css = ""
+
     schema = {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -308,6 +346,18 @@ def render_product_lp(p):
             "availability": "https://schema.org/InStock",
         },
     }
+    if variants:
+        schema["offers"] = [
+            {
+                "@type": "Offer",
+                "name": f"{p['name']} {v['label']}",
+                "url": canonical,
+                "priceCurrency": "JPY",
+                "price": v["price_hp"],
+                "availability": "https://schema.org/InStock",
+            }
+            for v in variants
+        ]
     schema_json = json.dumps(schema, ensure_ascii=False, indent=2)
 
     return f"""<!DOCTYPE html>
@@ -356,7 +406,7 @@ body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans 
 .pp-allergen-full {{ color: #ccc; font-size: 0.95rem; }}
 .pp-allergen-full strong {{ color: #ffd700; margin-right: 0.5rem; }}
 .pp-ingredients {{ color: #b0b0b0; font-size: 0.9rem; line-height: 1.7; padding: 1rem; background: #1a1a1a; border-radius: 8px; }}
-.pp-additive-free {{ color: #ffd700; font-size: 0.9rem; font-weight: 700; margin-top: 0.75rem; }}
+{variants_css}.pp-additive-free {{ color: #ffd700; font-size: 0.9rem; font-weight: 700; margin-top: 0.75rem; }}
 .pp-nutrition {{ width: 100%; border-collapse: collapse; background: #1a1a1a; border-radius: 8px; overflow: hidden; }}
 .pp-nutrition th, .pp-nutrition td {{ padding: 0.6rem 0.85rem; text-align: left; border-bottom: 1px solid #2a2a2a; }}
 .pp-nutrition th {{ color: #999; font-weight: 500; width: 8em; }}
@@ -409,7 +459,7 @@ body {{ background: #0d0d0d; color: #f5f5f5; margin: 0; font-family: 'Noto Sans 
       <span class="pp-price-unit">/ {escape(p['unit_text'])}</span>
       <span class="pp-tag">{escape(p['tag'])}</span>
     </div>
-    <p class="pp-nutrition-note">※ HP価格は催事リピーター 5%OFF 適用後の表示価格です。内容量: {escape(p['weight'])}</p>
+    <p class="pp-nutrition-note">※ HP価格は催事リピーター 5%OFF 適用後の表示価格です。内容量: {escape(weight_note)}</p>{variants_html}
   </section>
 
   <section class="pp-section">
@@ -466,13 +516,21 @@ def render_products_index():
     """商品一覧ページ"""
     cards_html = []
     for p in PRODUCTS:
+        variants = p.get("size_variants") or []
+        if variants:
+            price_html = (
+                f'¥{min(v["price_hp"] for v in variants):,}〜 '
+                f'<small>/ ' + '・'.join(escape(v["label"]) for v in variants) + '（税込）</small>'
+            )
+        else:
+            price_html = f'¥{p["price_hp"]} <small>/ {escape(p["unit_text"])}</small>'
         cards_html.append(f"""
       <a class="pi-card" href="/products/{p['slug']}/">
         <img src="{escape(p['image'])}" alt="{escape(p['name'])}">
         <div class="pi-card-body">
           <div class="pi-card-name">{escape(p['name'])}</div>
           <div class="pi-card-tagline">{escape(p['tagline'])}</div>
-          <div class="pi-card-price">¥{p['price_hp']} <small>/ {escape(p['unit_text'])}</small></div>
+          <div class="pi-card-price">{price_html}</div>
         </div>
       </a>""")
     cards = "\n".join(cards_html)
