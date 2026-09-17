@@ -265,6 +265,7 @@ PRODUCTS = [
         "size_variants": [
             {"label": "140g", "price_original": 800, "price_hp": 760},
             {"label": "280g", "price_original": 1600, "price_hp": 1520},
+            {"label": "1kg", "price_original": 5714, "price_hp": 5428},
         ],
     },
 ]
@@ -301,7 +302,7 @@ def render_product_lp(p):
 
     # 内容量ごとに価格が違う商品（ザーサイ）は、サイズ別の価格表を出す
     variants = p.get("size_variants") or []
-    # 注記に出す内容量。サイズ展開商品は全サイズを並べる（例: 140g / 280g）
+    # 注記に出す内容量。サイズ展開商品は全サイズを並べる（例: 140g / 280g / 1kg）
     weight_note = " / ".join(v["label"] for v in variants) if variants else p["weight"]
     if variants:
         rows = "".join(
