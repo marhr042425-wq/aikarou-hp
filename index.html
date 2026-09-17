@@ -385,7 +385,8 @@
     </div>
 
     <!-- ザーサイ -->
-    <div class="menu-card fade-up">
+    <!-- data-fixed-price: サイズごとに実額を持つのでDB価格での上書きはしない -->
+    <div class="menu-card fade-up" data-fixed-price>
       <img src="images/zasai.jpg" alt="ザーサイ" class="menu-card-img">
       <div class="menu-card-body">
         <div class="menu-card-name">ザーサイ</div>
@@ -396,6 +397,11 @@
         <div class="menu-card-footer">
           <div class="menu-card-price"><span class="original-price">¥800</span> <span class="hp-price">¥760</span> <small>/ 140g（税込）</small></div>
           <span class="frozen-badge">要冷蔵</span>
+        </div>
+        <div class="menu-size-select" data-product="ザーサイ">
+          <button type="button" class="menu-size-btn active" onclick="selectSize(this)" data-unit-label="140g">140g ¥760</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-unit-label="280g">280g ¥1,480</button>
+          <button type="button" class="menu-size-btn" onclick="selectSize(this)" data-unit-label="1kg">1kg ¥4,980</button>
         </div>
         <button class="menu-add-btn" onclick="addToOrder('ザーサイ')">＋ カートに追加</button>
       </div>
@@ -662,10 +668,15 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row" data-price="760" data-unit="140g">
+    <div class="order-product-row has-unit-size" data-price="760" data-unit="140g" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">ザーサイ</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 140g（税込）</div>
+        <div class="order-size-select">
+          <button type="button" class="order-size-btn active" onclick="selectOrderUnitSize(this)" data-unit-price="760" data-unit-orig="800" data-unit-label="140g">140g</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderUnitSize(this)" data-unit-price="1480" data-unit-orig="1600" data-unit-label="280g">280g</button>
+          <button type="button" class="order-size-btn" onclick="selectOrderUnitSize(this)" data-unit-price="4980" data-unit-orig="5714" data-unit-label="1kg">1kg</button>
+        </div>
       </div>
       <div class="order-qty">
         <button type="button" onclick="changeQty(this,-1)">−</button>
