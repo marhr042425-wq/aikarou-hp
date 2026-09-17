@@ -262,9 +262,41 @@ PRODUCTS = [
         "tag": "やみつき",
         # 内容量ごとの実額（税込）。倍率ではないのでサイズごとに定価・HP価格を持つ。
         # トップページ index.html の注文フォームの実額と必ず一致させること。
+        #
+        # ┌──────────────────────────────────────────────────────────────┐
+        # │ 【1kg は一時的に非表示中】2026-09-17（社長判断）                │
+        # │  恒久的な廃止ではない。再開の指示が出たら下の 1〜4 を戻す。      │
+        # │  ※ 取り下げの事情は社内記録のみ。HP（ページ本文）には書かない。 │
+        # │                                                                │
+        # │ ＜再開手順＞                                                   │
+        # │  0) いちばん簡単な方法: 取り下げコミット                        │
+        # │     「ザーサイの1kgサイズを一旦取り下げ」を git revert する。    │
+        # │     それで 1〜4 がまとめて戻る。手で戻す場合は以下。            │
+        # │  1) このすぐ下のコメント行（1kg の1行）の「# 」を外す。         │
+        # │  2) python3 scripts/generate_product_lps.py を実行。            │
+        # │     → products/zasai/index.html の価格表・内容量注記・          │
+        # │       構造化データ（JSON-LD の Offer）が自動で戻る。            │
+        # │  3) index.html の2か所にボタンを戻す。                          │
+        # │     ・商品カード .menu-size-select[data-product="ザーサイ"]     │
+        # │       <button type="button" class="menu-size-btn"              │
+        # │         onclick="selectSize(this)"                             │
+        # │         data-unit-label="1kg">1kg ¥5,428</button>               │
+        # │     ・注文フォーム .order-product-row.has-unit-size の          │
+        # │       .order-size-select                                       │
+        # │       <button type="button" class="order-size-btn"              │
+        # │         onclick="selectOrderUnitSize(this)"                     │
+        # │         data-unit-price="5428" data-unit-orig="5714"            │
+        # │         data-unit-label="1kg">1kg</button>                     │
+        # │  4) products/index.html のザーサイの価格表記を                   │
+        # │     「¥760〜 / 140g・280g・1kg（税込）」に戻す。                │
+        # │  5) 念のため app.js のコメント（140g/280g と書いた3か所）も      │
+        # │     1kg を含む表記に戻す（処理には影響しない）。                 │
+        # └──────────────────────────────────────────────────────────────┘
         "size_variants": [
             {"label": "140g", "price_original": 800, "price_hp": 760},
             {"label": "280g", "price_original": 1600, "price_hp": 1520},
+            # ↓ここが1kg。非表示中。再開するときは行頭の「# 」を外す。
+            # {"label": "1kg", "price_original": 5714, "price_hp": 5428},
         ],
     },
 ]
