@@ -64,7 +64,7 @@
       document.querySelectorAll('.order-product-row').forEach(row => {
         // モンゴル茶はボタンごとに割引済みの実額を持つため、DB単価での上書き対象外
         if (row.classList.contains('has-tea-size')) return;
-        // ザーサイ（140g/280g/1kg）もサイズごとに実額を持つため上書き対象外
+        // ザーサイ（140g/280g）もサイズごとに実額を持つため上書き対象外
         if (row.classList.contains('has-unit-size')) return;
         const nameEl = row.querySelector('.order-product-name');
         if (!nameEl) return;
@@ -293,7 +293,7 @@
   }
 
   // ============================================================
-  // 内容量サイズ選択（ザーサイ 140g / 280g / 1kg）
+  // 内容量サイズ選択（ザーサイ 140g / 280g）
   // 倍率がきれいな数字にならない（280g=1.947倍）ので、ボタンごとに
   // 「税込の実額」と「元値」を直接持たせる実額方式。
   // モンゴル茶（has-tea-size）とは別クラス（has-unit-size）なので互いに影響しない。
@@ -306,7 +306,7 @@
     btn.classList.add('active');
     row.dataset.price = btn.dataset.unitPrice;          // 税込の実額
     row.dataset.origPrice = btn.dataset.unitOrig || '';  // 取り消し線で出す定価
-    row.dataset.unit = btn.dataset.unitLabel;            // 140g / 280g / 1kg
+    row.dataset.unit = btn.dataset.unitLabel;            // 140g / 280g
     renderUnitRowPrice(row);
   }
 
