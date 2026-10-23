@@ -531,8 +531,16 @@
     justify-content: space-between;
     max-width: 600px;
     margin: 0 auto;
+    gap: 12px;
   }
   .floating-cart-icon { font-size: 1.4rem; }
+  .floating-cart-summary {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+  }
   .floating-cart-info {
     color: #fff;
     font-weight: 700;
@@ -546,6 +554,26 @@
     font-weight: 700;
     font-size: 0.85rem;
     white-space: nowrap;
+  }
+  .floating-cart-shipping {
+    color: #fff1b8;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .floating-cart-shipping-note {
+    color: #fff;
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+  @media (max-width: 480px) {
+    .floating-cart { padding-left: 12px; padding-right: 12px; }
+    .floating-cart-inner { gap: 8px; }
+    .floating-cart-icon { display: none; }
+    .floating-cart-info { font-size: 0.8rem; }
+    .floating-cart-shipping { font-size: 0.9rem; }
+    .floating-cart-shipping-note { font-size: 0.65rem; }
+    .floating-cart-btn { padding: 8px 12px; font-size: 0.75rem; }
   }
 
   .ig-float {
@@ -1590,6 +1618,30 @@
     line-height: 2;
     margin-bottom: 32px;
   }
+
+  .order-shipping-banner {
+    margin-bottom: 28px;
+    padding: 24px 16px;
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(212,168,67,0.14), rgba(212,168,67,0.04));
+    text-align: center;
+  }
+  .order-shipping-banner-title {
+    color: #fff;
+    font-size: clamp(0.95rem, 3.5vw, 1.15rem);
+    line-height: 1.7;
+  }
+  .order-shipping-banner-title strong { color: var(--gold); }
+  .order-shipping-banner-title span {
+    color: var(--gold);
+    font-size: clamp(1.8rem, 7vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+  .order-shipping-banner-discount { margin-top: 8px; color: #fff; font-size: 0.95rem; }
+  .order-shipping-banner-discount strong { color: #ff8a80; }
+  .order-shipping-banner-note { margin-top: 10px; color: #ddd; font-size: 0.8rem; line-height: 1.7; }
 
   .order-product-list {
     display: flex;

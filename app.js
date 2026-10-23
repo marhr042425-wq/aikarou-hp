@@ -422,18 +422,29 @@
     });
     document.getElementById('floatingCartCount').textContent = totalQty;
     document.getElementById('floatingCartTotal').textContent = '¥' + totalPrice.toLocaleString();
+    // 送料無料の判定は既存の送料計算と同じ商品小計・お届け先を使う。
+    const ship = calcShipping(totalPrice);
+    const shippingMessage = totalQty === 0 ? ''
+      : ship.separate ? '送料は別途ご案内します'
+      : totalPrice < FREE_SHIPPING_LINE
+        ? '送料無料まで あと¥' + (FREE_SHIPPING_LINE - totalPrice).toLocaleString()
+        : ship.fee === 0 ? '送料無料です'
+        : '対象地域は送料無料です';
+    const shippingEl = document.getElementById('floatingCartShipping');
+    if (shippingEl.textContent !== shippingMessage) shippingEl.textContent = shippingMessage;
     const cart = document.getElementById('floatingCart');
     if (totalQty > 0) {
       cart.classList.add('show');
       // Float buttons up
-      document.querySelector('.line-float').style.bottom = '80px';
-      document.querySelector('.ig-float').style.bottom = '166px';
+      document.querySelector('.line-float').style.bottom = (cart.offsetHeight + 24) + 'px';
+      document.querySelector('.ig-float').style.bottom = (cart.offsetHeight + 110) + 'px';
     } else {
       cart.classList.remove('show');
       document.querySelector('.line-float').style.bottom = '24px';
       document.querySelector('.ig-float').style.bottom = '110px';
     }
   }
+  window.addEventListener('resize', updateFloatingCart);
 
   // Order form logic
   function changeQty(btn, delta) {
@@ -1210,6 +1221,8 @@
 
     // カード決済選択中に金額が変わったら、決済金額を合わせるため入力欄を作り直す
     scheduleCardRemount();
+    // 郵便番号によるお届け先の変更でも、固定バーの送料案内を更新する。
+    updateFloatingCart();
   }
 
   // 送信中オーバーレイの表示・非表示（ボタン文字の変化だけでは気付きにくいため、
