@@ -89,6 +89,35 @@ def is_active(event):
     return end >= date.today()
 
 
+EVENT_IMAGES = [
+    "https://aikaro.jp/images/event-booth.jpg",
+    "https://aikaro.jp/images/nikushyumai.jpg",
+    "https://aikaro.jp/images/ebi-shumai.jpg",
+    "https://aikaro.jp/images/yakishoronpo2.jpg",
+]
+
+PREFECTURE_RE = re.compile(r'^(東京都|北海道|(?:京都|大阪)府|.{2,3}?県)')
+
+
+def build_postal_address(address):
+    """住所文字列を schema.org PostalAddress に変換。
+    例: '福岡県福岡市中央区天神2丁目11番3号'
+      → addressRegion='福岡県', streetAddress='福岡市中央区天神2丁目11番3号'
+    APIに住所が無い催事は国のみ（住所を推測で埋めない）。
+    """
+    postal = {"@type": "PostalAddress"}
+    address = (address or "").strip()
+    if address:
+        m = PREFECTURE_RE.match(address)
+        if m:
+            postal["addressRegion"] = m.group(1)
+            postal["streetAddress"] = address[m.end():].strip()
+        else:
+            postal["streetAddress"] = address
+    postal["addressCountry"] = "JP"
+    return postal
+
+
 def render_event_lp(event):
     """1催事のLP HTML を生成"""
     eid = event.get("id", "")
@@ -108,27 +137,38 @@ def render_event_lp(event):
     map_url = f"https://www.google.com/maps/search/?api=1&query={escape(map_query)}"
 
     # JSON-LD Event schema
+    aikaro_org = {
+        "@type": "Organization",
+        "name": "本格中華 愛華楼",
+        "url": "https://aikaro.jp/",
+    }
     schema = {
         "@context": "https://schema.org",
         "@type": "Event",
         "name": f"愛華楼 出店：{venue}",
+        "description": description,
         "startDate": start,
         "endDate": end,
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "image": EVENT_IMAGES,
         "location": {
             "@type": "Place",
             "name": venue,
+            "address": build_postal_address(address),
         },
-        "organizer": {
-            "@type": "Organization",
-            "name": "本格中華 愛華楼",
-            "url": "https://aikaro.jp/",
+        "performer": aikaro_org,
+        "organizer": aikaro_org,
+        # 会場での実演販売は入場無料（商品代金は別）
+        "offers": {
+            "@type": "Offer",
+            "url": canonical,
+            "price": "0",
+            "priceCurrency": "JPY",
+            "availability": "https://schema.org/InStock",
         },
         "url": canonical,
     }
-    if address:
-        schema["location"]["address"] = address
 
     schema_json = json.dumps(schema, ensure_ascii=False, indent=2)
 
