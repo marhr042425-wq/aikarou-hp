@@ -425,6 +425,8 @@
     // 送料無料の判定は既存の送料計算と同じ商品小計・お届け先を使う。
     const ship = calcShipping(totalPrice);
     const shippingMessage = totalQty === 0 ? ''
+      : totalPrice < MIN_ORDER_SUBTOTAL
+        ? 'ご注文は税込¥' + MIN_ORDER_SUBTOTAL.toLocaleString() + 'から（あと¥' + (MIN_ORDER_SUBTOTAL - totalPrice).toLocaleString() + '）'
       : ship.separate ? '送料は別途ご案内します'
       : totalPrice < FREE_SHIPPING_LINE
         ? '送料無料まで あと¥' + (FREE_SHIPPING_LINE - totalPrice).toLocaleString()
@@ -634,6 +636,16 @@
   // ※ 旧・地域別送料（常温便用 PREF_SHIPPING_FEES）は 2026-07-18 に廃止。
   //   送料は1注文につき1回だけ加算（冷凍・常温の混在でも二重取りしない）。
   // ============================================================
+  // 送料無料ラインを変更するときに一緒に確認する8か所（検索語: 8,000 / 8000）:
+  // 1. app.js: この FREE_SHIPPING_LINE（送料計算・固定バーの残額計算）
+  // 2. app.js: buildOrderPayload() の「送料 無料」明細
+  // 3. app.js: SHIPPING_DEFAULT_NOTE（商品未選択時の送料案内）
+  // 4. app.js: updateTotal() の住所未入力・ライン達成時の案内
+  // 5. app.js: updateTotal() の送料無料確定時の案内
+  // 6. index.html: order-shipping-banner-title（注文フォーム冒頭）
+  // 7. index.html: orderShipping（JS更新前の初期表示）
+  // 8. tokushoho.html: 送料の注記
+  // 併せて催事管理アプリ側のHP受注・決済APIの金額設定も確認すること。
   const FREE_SHIPPING_LINE = 8000;
   const MIN_ORDER_SUBTOTAL = 2000; // 最低注文金額（税込・商品小計）
   const UNIFORM_SHIPPING_FEE = 1200; // 冷凍便・常温便とも 全国一律（税込）
