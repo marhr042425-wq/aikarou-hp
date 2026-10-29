@@ -49,7 +49,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="styles.css?v=20261023a">
+<link rel="stylesheet" href="styles.css?v=20261029a">
 </head>
 <body>
 
@@ -1056,7 +1056,7 @@
 </section>
 
 <!-- FLOATING CART BAR -->
-<div class="floating-cart" id="floatingCart" onclick="document.getElementById('orderform').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>document.getElementById('orderName').focus(),600)">
+<div class="floating-cart" id="floatingCart">
   <div class="floating-cart-inner">
     <span class="floating-cart-icon">🛒</span>
     <span class="floating-cart-summary">
@@ -1064,7 +1064,7 @@
       <span class="floating-cart-shipping" id="floatingCartShipping" role="status" aria-live="polite" aria-atomic="true"></span>
       <span class="floating-cart-shipping-note">※北海道・沖縄・離島は別途送料</span>
     </span>
-    <span class="floating-cart-btn">注文へ進む ▶</span>
+    <a class="floating-cart-btn" href="#orderForm">注文へ進む ▶</a>
   </div>
 </div>
 

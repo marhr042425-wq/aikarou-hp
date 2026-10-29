@@ -519,7 +519,6 @@
     background: linear-gradient(135deg, #B22222, #8B0000);
     padding: 12px 20px;
     padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    cursor: pointer;
     transform: translateY(100%);
     transition: transform 0.3s ease;
     box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
@@ -547,6 +546,7 @@
     font-size: 1rem;
   }
   .floating-cart-btn {
+    display: inline-block;
     background: #fff;
     color: #B22222;
     padding: 8px 18px;
@@ -554,6 +554,11 @@
     font-weight: 700;
     font-size: 0.85rem;
     white-space: nowrap;
+    text-decoration: none;
+  }
+  .floating-cart-btn:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
   }
   .floating-cart-shipping {
     color: #fff1b8;
@@ -1758,6 +1763,9 @@
     color: #06C755;
     font-weight: 700;
   }
+
+  /* 入力欄へ直接移動したとき、固定ヘッダーで先頭が隠れないようにする。 */
+  #orderForm { scroll-margin-top: 88px; }
 
   .order-form-fields {
     display: flex;
