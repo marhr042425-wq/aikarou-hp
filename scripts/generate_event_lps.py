@@ -170,7 +170,9 @@ def render_event_lp(event):
         "url": canonical,
     }
 
-    schema_json = json.dumps(schema, ensure_ascii=False, indent=2)
+    # HTML内でもJSONの文字列値がそのまま保たれるよう、区切り記号を表記する。
+    schema_json = (json.dumps(schema, ensure_ascii=False, indent=2)
+                   .replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026'))
 
     return f"""<!DOCTYPE html>
 <html lang="ja">

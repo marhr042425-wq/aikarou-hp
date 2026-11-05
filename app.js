@@ -1533,6 +1533,12 @@
   (function loadSchedule() {
     var container = document.getElementById('scheduleContainer');
     if (!container) return;
+    // APIの表示名は、記号も含めて文字として表示する。
+    function escapeScheduleText(value) {
+      return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+      });
+    }
     fetch('https://akira042425-1.onrender.com/events/api/public/schedule')
       .then(function(r) { return r.json(); })
       .then(function(events) {
@@ -1554,7 +1560,7 @@
           var startDay = sp[2] ? parseInt(sp[2]) : '';
           var endDay = ep[2] ? parseInt(ep[2]) : '';
           var range = startDay === endDay ? '' : '〜' + (ep[1] !== sp[1] ? parseInt(ep[1]) + '/' : '') + endDay + '日';
-          var lpHref = ev.id ? '/events/' + ev.id + '/' : '#';
+          var lpHref = ev.id ? '/events/' + encodeURIComponent(String(ev.id)) + '/' : '#';
           var tag = ev.id ? 'a' : 'div';
           html += '<' + tag + ' class="schedule-card"' + (ev.id ? ' href="' + lpHref + '"' : '') + '>' +
             '<div class="schedule-card-date">' +
@@ -1563,8 +1569,8 @@
             (range ? '<span class="schedule-card-range">' + range + '</span>' : '') +
             '</div>' +
             '<div class="schedule-card-body">' +
-            '<div class="schedule-card-venue">' + (ev.venue || ev.name || '') + '</div>' +
-            (ev.area ? '<div class="schedule-card-area">' + ev.area + '</div>' : '') +
+            '<div class="schedule-card-venue">' + escapeScheduleText(ev.venue || ev.name || '') + '</div>' +
+            (ev.area ? '<div class="schedule-card-area">' + escapeScheduleText(ev.area) + '</div>' : '') +
             '</div></' + tag + '>';
         });
         html += '</div>';
