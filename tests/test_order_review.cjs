@@ -22,24 +22,29 @@ const code = [
 
 class Node {
   constructor(id = '') {
-    this.id = id; this.value = ''; this.textContent = ''; this.children = [];
+    this.id = id; this.value = ''; this.children = []; this.textContent = '';
     this.style = {}; this.disabled = false; this.open = false; this.listeners = {};
+    this.attributes = new Map();
     const classes = new Set();
     this.classList = { add: x => classes.add(x), remove: x => classes.delete(x), contains: x => classes.has(x) };
   }
   appendChild(child) { this.children.push(child); return child; }
-  replaceChildren() { this.children = []; }
+  get textContent() { return this.text || ''; }
+  set textContent(value) { this.text = value; this.children = []; }
+  setAttribute(name, value) { this.attributes.set(name, value); if (name === 'open') this.open = true; }
+  removeAttribute(name) { this.attributes.delete(name); if (name === 'open') this.open = false; }
+  hasAttribute(name) { return this.attributes.has(name); }
   addEventListener(name, fn) { this.listeners[name] = fn; }
   focus() { this.focused = true; }
   scrollIntoView() { this.scrolled = true; }
-  showModal() { this.open = true; }
-  close() { this.open = false; this.listeners.close?.(); }
+  showModal() { this.setAttribute('open', ''); }
+  close() { this.removeAttribute('open'); this.listeners.close?.(); }
   get innerHTML() { return ''; }
   set innerHTML(_) { throw new Error('review must render text, not HTML'); }
 }
 function textOf(node) { return node.textContent + node.children.map(textOf).join('\n'); }
 
-function harness({ payment = 'bank', address = '福岡県確認市', points = 0 } = {}) {
+function harness({ payment = 'bank', address = '福岡県確認市', points = 0, nativeDialog = true } = {}) {
   const nodes = new Map();
   const node = id => { if (!nodes.has(id)) nodes.set(id, new Node(id)); return nodes.get(id); };
   const log = { orders: [], payments: 0, mounts: 0, preparations: 0, alerts: [], success: [], errors: [] };
@@ -58,6 +63,10 @@ function harness({ payment = 'bank', address = '福岡県確認市', points = 0 
   node('orderForm').reportValidity = () => { node('orderForm').reported = true; return valid; };
   const document = { getElementById: node, createElement: () => new Node(),
     querySelectorAll: () => [row], body: new Node('body') };
+  if (!nativeDialog) {
+    node('orderReviewDialog').showModal = undefined;
+    node('orderReviewDialog').close = undefined;
+  }
   const context = { document, customerPoints: 1000, MIN_POINT_USE: 50, TEA_PIECES_PER_BAG: 30,
     PAYMENT_RETURN_URL: 'http://127.0.0.1/order-complete/',
     alert: msg => log.alerts.push(msg), updateFloatingCart() {}, applyPointDiscount() {}, scheduleCardRemount() {},
@@ -118,6 +127,7 @@ test('戻る・Escapeでは内容を保持し、再度確定を呼んでも送�
   h.node('orderReviewDialog').listeners.cancel({ preventDefault() {} });
   assert.equal(h.node('orderReviewDialog').open, false);
   assert.equal(h.context.document.body.classList.contains('order-review-open'), false);
+  assert.equal(h.context.document.body.classList.contains('order-review-inline-open'), false);
   h.confirm(); assert.equal(h.log.orders.length, 0);
 });
 test('最終確定だけが確認した内容を1回送り、連打やEnterを止める', async () => {
@@ -212,4 +222,41 @@ test('確認後にカード請求額が変わっても旧内容で支払えな�
 test('別途送料の地域でカード決済を確定しない', () => {
   const h = harness({ payment: 'credit', address: '沖縄県確認市' }); h.readyCard(); h.open();
   assert.equal(h.node('orderReviewDialog').open, false); assert.equal(h.log.payments, 0);
+});
+
+test('showModalとcloseがない端末でも確認画面を開くだけでは送信しない', () => {
+  const h = harness({ nativeDialog: false }); h.open();
+  assert.equal(h.node('orderReviewDialog').hasAttribute('open'), true);
+  assert.equal(h.node('orderReviewDialog').classList.contains('order-review-inline'), true);
+  assert.equal(h.context.document.body.classList.contains('order-review-open'), false);
+  assert.equal(h.context.document.body.classList.contains('order-review-inline-open'), true);
+  assert.match(h.summary(), /確認商品 × 3/);
+  assert.match(h.summary(), /¥4,200/);
+  assert.equal(h.log.orders.length, 0); assert.equal(h.log.payments, 0);
+});
+test('未対応端末でも戻る操作は入力を残し、確定を呼んでも送信しない', () => {
+  const h = harness({ nativeDialog: false }); h.open(); h.back(); h.confirm();
+  assert.equal(h.node('orderReviewDialog').hasAttribute('open'), false);
+  assert.equal(h.context.document.body.classList.contains('order-review-inline-open'), false);
+  assert.equal(h.node('orderSubmitBtn').focused, true);
+  assert.equal(h.node('orderName').value, '確認用のお客様');
+  assert.equal(h.log.orders.length, 0);
+});
+test('未対応端末でも最終確定だけが1回送信し、連打を止める', () => {
+  const h = harness({ nativeDialog: false }); h.open(); h.confirm(); h.confirm(); h.open();
+  assert.equal(h.log.orders.length, 1); assert.equal(h.log.payments, 0);
+  assert.equal(h.log.orders[0].payload.total, '¥4,200');
+});
+test('未対応端末でもカードの確認後にだけ1回支払いを確定する', () => {
+  const h = harness({ nativeDialog: false, payment: 'credit' }); h.readyCard(); h.open();
+  assert.equal(h.log.payments, 0); assert.equal(h.log.orders.length, 0);
+  h.confirm(); h.confirm(); assert.equal(h.log.payments, 1); assert.equal(h.log.orders.length, 0);
+});
+test('未対応端末でも金額変更後は再確認し、古い明細を重複表示しない', () => {
+  const h = harness({ nativeDialog: false }); h.open(); h.node('qty').textContent = '4'; h.confirm();
+  assert.equal(h.log.orders.length, 0);
+  assert.match(h.node('orderReviewChanged').textContent, /変わりました/);
+  assert.doesNotMatch(h.summary(), /確認商品 × 3/);
+  assert.match(h.summary(), /確認商品 × 4/);
+  h.confirm(); assert.equal(h.log.orders.length, 1);
 });

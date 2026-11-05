@@ -49,7 +49,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="styles.css?v=20261105b">
+<link rel="stylesheet" href="styles.css?v=20261105c">
 </head>
 <body>
 
@@ -853,6 +853,18 @@
     </div>
   </form>
 
+  <!-- 対応端末はモーダル、dialog未対応の端末はフォーム直下で同じ内容を確認する。 -->
+  <dialog class="order-review-dialog" id="orderReviewDialog" aria-labelledby="orderReviewTitle" aria-describedby="orderReviewIntro">
+    <h2 id="orderReviewTitle" tabindex="-1">ご注文内容の確認</h2>
+    <p id="orderReviewIntro">まだ注文・お支払いは確定していません。内容をご確認ください。</p>
+    <p id="orderReviewChanged" role="alert"></p>
+    <div id="orderReviewSummary"></div>
+    <div class="order-review-actions">
+      <button type="button" class="order-review-back" onclick="closeOrderReview()">戻って修正する</button>
+      <button type="button" class="order-review-confirm" id="orderConfirmBtn" onclick="confirmReviewedOrder()">この内容で注文を確定する</button>
+    </div>
+  </dialog>
+
   <div class="point-check-box fade-up">
     <h3>ポイント残高を確認する</h3>
     <p style="color:#aaa;font-size:0.8rem;margin-bottom:12px;">催事・HPで貯めたポイントをまとめて確認できます。</p>
@@ -1090,18 +1102,6 @@
   <script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
 </footer>
 
-<!-- 注文内容の確認。注文フォームの外に置き、確定ボタンからの意図しないsubmitを防ぐ。 -->
-<dialog class="order-review-dialog" id="orderReviewDialog" aria-labelledby="orderReviewTitle" aria-describedby="orderReviewIntro">
-  <h2 id="orderReviewTitle" tabindex="-1">ご注文内容の確認</h2>
-  <p id="orderReviewIntro">まだ注文・お支払いは確定していません。内容をご確認ください。</p>
-  <p id="orderReviewChanged" role="alert"></p>
-  <div id="orderReviewSummary"></div>
-  <div class="order-review-actions">
-    <button type="button" class="order-review-back" onclick="closeOrderReview()">戻って修正する</button>
-    <button type="button" class="order-review-confirm" id="orderConfirmBtn" onclick="confirmReviewedOrder()">この内容で注文を確定する</button>
-  </div>
-</dialog>
-
 <!-- 送信中オーバーレイ（最終確定ボタンを押してから完了画面が出るまでの間に表示。
      ボタン文字の変化だけでは気付きにくい＝「何も起きていないように見える」対策 -->
 <div class="order-processing-overlay" id="orderProcessingOverlay">
@@ -1136,7 +1136,7 @@
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
-<script src="app.js?v=20261105d" defer></script>
+<script src="app.js?v=20261105e" defer></script>
 
 <!-- Google Analytics (GA4) 測定ID: G-H5MT5P6XZH（今津屋－愛華楼 プロパティ）2026-07-26 有効化 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-H5MT5P6XZH"></script>

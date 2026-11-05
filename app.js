@@ -1360,38 +1360,51 @@
 
   function closeOrderReview() {
     reviewedOrder = null;
-    document.getElementById('orderReviewDialog').close();
+    const inline = orderReviewDialog.classList.contains('order-review-inline');
+    if (inline) {
+      orderReviewDialog.removeAttribute('open');
+      orderReviewDialog.removeAttribute('role');
+      orderReviewDialog.classList.remove('order-review-inline');
+      document.getElementById('orderSubmitBtn').focus();
+    } else {
+      orderReviewDialog.close();
+    }
     document.body.classList.remove('order-review-open');
+    document.body.classList.remove('order-review-inline-open');
   }
 
   const orderReviewDialog = document.getElementById('orderReviewDialog');
+  function isOrderReviewOpen() {
+    return orderReviewDialog.hasAttribute('open');
+  }
   orderReviewDialog.addEventListener('cancel', event => {
     event.preventDefault();
     closeOrderReview();
   });
   orderReviewDialog.addEventListener('close', () => {
-    if (!orderReviewDialog.open) {
+    if (!isOrderReviewOpen()) {
       reviewedOrder = null;
       document.body.classList.remove('order-review-open');
+      document.body.classList.remove('order-review-inline-open');
     }
   });
 
   function getOrderReviewDetails() {
     const form = document.getElementById('orderForm');
     if (!form.checkValidity()) {
-      if (orderReviewDialog.open) closeOrderReview();
+      if (isOrderReviewOpen()) closeOrderReview();
       form.reportValidity();
       return null;
     }
     const subtotal = getOrderSubtotal();
     if (subtotal < MIN_ORDER_SUBTOTAL) {
-      if (orderReviewDialog.open) closeOrderReview();
+      if (isOrderReviewOpen()) closeOrderReview();
       alert('ご注文は税込2,000円から承っております。お手数ですが商品を追加してください。');
       return null;
     }
     const ship = calcShipping(subtotal);
     if (shippingAddressPending || !ship.pref) {
-      if (orderReviewDialog.open) closeOrderReview();
+      if (isOrderReviewOpen()) closeOrderReview();
       alert('郵便番号から住所が表示されたことをご確認ください。');
       document.getElementById('orderZip').focus();
       return null;
@@ -1407,7 +1420,7 @@
         || mountedPayloadJson !== JSON.stringify(payload) || !cardChargeQuote
         || cardChargeQuote.amount !== amount || cardChargeQuote.orderTotal !== total
         || cardChargeQuote.pointsUsed !== payload.use_points)) {
-      if (orderReviewDialog.open) closeOrderReview();
+      if (isOrderReviewOpen()) closeOrderReview();
       updateCardPaymentUI();
       showCardError(ship.separate
         ? '送料を別途ご案内するお届け先です。銀行振込など、別のお支払い方法をお選びください。'
@@ -1420,7 +1433,7 @@
 
   function renderOrderReview(details, changed = false) {
     const summary = document.getElementById('orderReviewSummary');
-    summary.replaceChildren();
+    summary.textContent = '';
     const add = (tag, text, parent = summary) => {
       const el = document.createElement(tag);
       el.textContent = text;
@@ -1464,12 +1477,23 @@
       ? 'ご注文内容が変わりました。変更後の内容をご確認のうえ、もう一度確定してください。' : '';
     reviewedOrder = details;
     summary.scrollTop = 0;
-    if (!orderReviewDialog.open) {
-      orderReviewDialog.showModal();
-      document.body.classList.add('order-review-open');
+    if (!isOrderReviewOpen()) {
+      if (typeof orderReviewDialog.showModal === 'function') {
+        orderReviewDialog.showModal();
+        document.body.classList.add('order-review-open');
+      } else {
+        // dialog未対応の端末でも即送信せず、フォーム直下で同じ内容を確認する。
+        orderReviewDialog.classList.add('order-review-inline');
+        orderReviewDialog.setAttribute('role', 'region');
+        orderReviewDialog.setAttribute('open', '');
+        document.body.classList.add('order-review-inline-open');
+      }
     }
     orderReviewDialog.scrollTop = 0;
     document.getElementById('orderReviewTitle').focus({ preventScroll: true });
+    if (orderReviewDialog.classList.contains('order-review-inline')) {
+      orderReviewDialog.scrollIntoView({ block: 'start' });
+    }
   }
 
   function handleOrderSubmit(e) {
@@ -1481,7 +1505,7 @@
   }
 
   function confirmReviewedOrder() {
-    if (!reviewedOrder || orderSubmissionInProgress || !orderReviewDialog.open) return;
+    if (!reviewedOrder || orderSubmissionInProgress || !isOrderReviewOpen()) return;
     updateTotal();
     const current = getOrderReviewDetails();
     if (!current) return;

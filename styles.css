@@ -1876,6 +1876,19 @@
     overflow-wrap: anywhere;
   }
   .order-review-dialog::backdrop { background: rgba(0,0,0,0.85); }
+  .order-review-dialog:not([open]) { display: none; }
+  .order-review-inline-open .floating-cart,
+  .order-review-inline-open .ig-float,
+  .order-review-inline-open .line-float { visibility: hidden; }
+  .order-review-dialog.order-review-inline[open] {
+    display: block;
+    position: static;
+    margin: 24px auto;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    scroll-margin-top: 88px;
+  }
   .order-review-dialog h2 { color: var(--gold); font-size: 1.3rem; margin-bottom: 8px; }
   .order-review-dialog h3 { color: var(--gold); font-size: 1rem; margin: 20px 0 8px; }
   .order-review-dialog ul { padding-left: 20px; }
