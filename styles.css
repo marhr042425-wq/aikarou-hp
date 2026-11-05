@@ -1857,6 +1857,70 @@
     margin-top: 16px;
   }
 
+  /* 送信前の確認画面。固定カートより上に表示し、背景の操作を防ぐ。 */
+  body.order-review-open { overflow: hidden; }
+  .order-review-dialog {
+    margin: auto;
+    width: calc(100% - 24px);
+    max-width: 620px;
+    max-height: 90vh;
+    max-height: 90dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 24px;
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    background: var(--dark-bg);
+    color: var(--white);
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+  }
+  .order-review-dialog::backdrop { background: rgba(0,0,0,0.85); }
+  .order-review-dialog:not([open]) { display: none; }
+  .order-review-inline-open .floating-cart,
+  .order-review-inline-open .ig-float,
+  .order-review-inline-open .line-float { visibility: hidden; }
+  .order-review-dialog.order-review-inline[open] {
+    display: block;
+    position: static;
+    margin: 24px auto;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    scroll-margin-top: 88px;
+  }
+  .order-review-dialog h2 { color: var(--gold); font-size: 1.3rem; margin-bottom: 8px; }
+  .order-review-dialog h3 { color: var(--gold); font-size: 1rem; margin: 20px 0 8px; }
+  .order-review-dialog ul { padding-left: 20px; }
+  .order-review-dialog li { margin-bottom: 8px; }
+  .order-review-dialog dl {
+    display: grid;
+    grid-template-columns: minmax(85px, 0.7fr) minmax(0, 1.3fr);
+    gap: 10px 12px;
+    margin-top: 12px;
+  }
+  .order-review-dialog dt { color: #bbb; font-size: 0.8rem; }
+  .order-review-dialog dd { white-space: pre-wrap; }
+  #orderReviewChanged { color: var(--light-gold); font-weight: 700; }
+  .order-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .order-review-actions button {
+    flex: 1 1 220px;
+    min-height: 48px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .order-review-back { border: 1px solid var(--gold); color: var(--gold); background: transparent; }
+  .order-review-confirm { border: 1px solid var(--red); color: white; background: var(--red); }
+  .order-review-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+
   /* 注文完了オーバーレイ */
   .order-complete-overlay {
     display: none;

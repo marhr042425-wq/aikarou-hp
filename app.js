@@ -419,6 +419,8 @@
   let shippingConfettiActive = false;
   let shippingConfettiReady;
   let shippingAddressPending = false;
+  let reviewedOrder = null;
+  let orderSubmissionInProgress = false;
 
   function prefersReducedMotion() {
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -828,6 +830,7 @@
   let currentClientSecret = null;
   let mountedPayloadJson = ''; // いま表示中のカード入力欄（PaymentIntent）が対応している注文内容
   let cardRemountTimer = null; // 注文内容変更時の再マウント用（連打・入力中対策のデバウンス）
+  let cardChargeQuote = null; // 確認画面でもサーバーが返した請求額を照合する
 
   function getStripe() {
     if (!stripeInstance && window.Stripe) {
@@ -851,6 +854,7 @@
 
   // カードに実際に請求される金額の表示（サーバーが確定した金額をそのまま出す）
   function showCardChargeAmount(amount, orderTotal, pointsUsed) {
+    cardChargeQuote = { amount, orderTotal, pointsUsed };
     const el = document.getElementById('cardChargeAmount');
     if (!el) return;
     let html = 'このカードへのご請求額: ¥' + Number(amount).toLocaleString();
@@ -869,6 +873,7 @@
   }
 
   function unmountCardPaymentElement() {
+    cardChargeQuote = null;
     if (stripePaymentElement) {
       stripePaymentElement.unmount();
       stripePaymentElement = null;
@@ -1122,7 +1127,7 @@
     function stopWithCardError(msg) {
       hideOrderProcessingOverlay();
       submitBtn.disabled = false;
-      submitBtn.textContent = '注文内容を送信する';
+      submitBtn.textContent = '注文内容を確認する';
       if (cardError) {
         cardError.style.display = '';
         cardError.textContent = msg;
@@ -1281,7 +1286,7 @@
     const total = subtotal + (ship.fee || 0) + (codFee || 0);
     document.getElementById('orderTotal').textContent = '¥' + total.toLocaleString();
     // 最低注文金額（税込¥2,000）未満の間は送信ボタンを押せない
-    document.getElementById('orderSubmitBtn').disabled = subtotal < MIN_ORDER_SUBTOTAL;
+    document.getElementById('orderSubmitBtn').disabled = orderSubmissionInProgress || subtotal < MIN_ORDER_SUBTOTAL;
 
     const shippingEl = document.getElementById('orderShipping');
     shippingEl.classList.remove('free');
@@ -1347,10 +1352,176 @@
   function hideOrderProcessingOverlay() {
     const el = document.getElementById('orderProcessingOverlay');
     if (el) el.classList.remove('show');
+    orderSubmissionInProgress = false;
+    const submitBtn = document.getElementById('orderSubmitBtn');
+    submitBtn.disabled = getOrderSubtotal() < MIN_ORDER_SUBTOTAL;
+    submitBtn.textContent = '注文内容を確認する';
+  }
+
+  function closeOrderReview() {
+    reviewedOrder = null;
+    const inline = orderReviewDialog.classList.contains('order-review-inline');
+    if (inline) {
+      orderReviewDialog.removeAttribute('open');
+      orderReviewDialog.removeAttribute('role');
+      orderReviewDialog.classList.remove('order-review-inline');
+      document.getElementById('orderSubmitBtn').focus();
+    } else {
+      orderReviewDialog.close();
+    }
+    document.body.classList.remove('order-review-open');
+    document.body.classList.remove('order-review-inline-open');
+  }
+
+  const orderReviewDialog = document.getElementById('orderReviewDialog');
+  function isOrderReviewOpen() {
+    return orderReviewDialog.hasAttribute('open');
+  }
+  orderReviewDialog.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeOrderReview();
+  });
+  orderReviewDialog.addEventListener('close', () => {
+    if (!isOrderReviewOpen()) {
+      reviewedOrder = null;
+      document.body.classList.remove('order-review-open');
+      document.body.classList.remove('order-review-inline-open');
+    }
+  });
+
+  function getOrderReviewDetails() {
+    const form = document.getElementById('orderForm');
+    if (!form.checkValidity()) {
+      if (isOrderReviewOpen()) closeOrderReview();
+      form.reportValidity();
+      return null;
+    }
+    const subtotal = getOrderSubtotal();
+    if (subtotal < MIN_ORDER_SUBTOTAL) {
+      if (isOrderReviewOpen()) closeOrderReview();
+      alert('ご注文は税込2,000円から承っております。お手数ですが商品を追加してください。');
+      return null;
+    }
+    const ship = calcShipping(subtotal);
+    if (shippingAddressPending || !ship.pref) {
+      if (isOrderReviewOpen()) closeOrderReview();
+      alert('郵便番号から住所が表示されたことをご確認ください。');
+      document.getElementById('orderZip').focus();
+      return null;
+    }
+    const payload = buildOrderPayload();
+    const online = document.getElementById('orderPayment').value === 'credit'
+      || payload.payment === 'クレジットカード';
+    const cod = document.getElementById('orderPayment').value === 'cod';
+    const codFee = cod ? calcCodFee(subtotal, ship.fee) : 0;
+    const total = getOrderTotalNum();
+    const amount = Math.max(total - payload.use_points, 0);
+    if (online && (ship.separate || !stripePaymentElement
+        || mountedPayloadJson !== JSON.stringify(payload) || !cardChargeQuote
+        || cardChargeQuote.amount !== amount || cardChargeQuote.orderTotal !== total
+        || cardChargeQuote.pointsUsed !== payload.use_points)) {
+      if (isOrderReviewOpen()) closeOrderReview();
+      updateCardPaymentUI();
+      showCardError(ship.separate
+        ? '送料を別途ご案内するお届け先です。銀行振込など、別のお支払い方法をお選びください。'
+        : 'お支払い欄の準備と金額をご確認のうえ、もう一度「注文内容を確認する」を押してください。金額が一致しない場合はページを再読み込みしてください。');
+      document.getElementById('cardPaymentBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return null;
+    }
+    return { payload, subtotal, ship, codFee, cod, total, amount, online };
+  }
+
+  function renderOrderReview(details, changed = false) {
+    const summary = document.getElementById('orderReviewSummary');
+    summary.textContent = '';
+    const add = (tag, text, parent = summary) => {
+      const el = document.createElement(tag);
+      el.textContent = text;
+      parent.appendChild(el);
+      return el;
+    };
+    const yen = value => '¥' + value.toLocaleString();
+    add('h3', 'ご注文の明細');
+    const items = add('ul', '');
+    details.payload.items.forEach(item => add('li', item, items));
+    const totals = add('dl', '');
+    const row = (parent, label, value) => {
+      add('dt', label, parent);
+      add('dd', value, parent);
+    };
+    row(totals, '商品小計（税込）', yen(details.subtotal));
+    row(totals, '送料', details.ship.separate ? '別途ご案内' : yen(details.ship.fee));
+    if (details.cod) row(totals, '代引き手数料', details.codFee === null ? '別途ご案内' : yen(details.codFee));
+    row(totals, 'ポイント利用', details.payload.use_points > 0
+      ? details.payload.use_points.toLocaleString() + 'pt（−' + yen(details.payload.use_points) + '）' : '利用なし');
+    row(totals, details.ship.separate ? '現時点の金額（税込）' : 'お支払い金額（税込）', yen(details.amount));
+    if (details.ship.separate) {
+      add('p', '送料' + (details.cod ? '・代引き手数料' : '') + 'は上記金額に含まれていません。最終金額は別途ご案内します。');
+    }
+    add('h3', 'お届け先・お支払い');
+    const info = add('dl', '');
+    row(info, 'お名前', details.payload.name);
+    row(info, '電話番号', details.payload.phone);
+    row(info, 'メールアドレス', details.payload.email || '未入力');
+    row(info, 'お届け先', details.payload.address);
+    row(info, '配送方法', details.payload.delivery);
+    row(info, 'お支払い方法', details.online ? 'クレジットカード・PayPay' : details.payload.payment);
+    row(info, '希望日（目安）', details.payload.date);
+    if (details.payload.member_id) row(info, '会員番号', details.payload.member_id);
+    row(info, '備考', details.payload.note);
+    const finalBtn = document.getElementById('orderConfirmBtn');
+    finalBtn.textContent = details.online ? yen(details.amount) + 'を支払う'
+      : details.ship.separate ? '送料別途で注文を確定する' : 'この内容で注文を確定する';
+    finalBtn.disabled = false;
+    document.getElementById('orderReviewChanged').textContent = changed
+      ? 'ご注文内容が変わりました。変更後の内容をご確認のうえ、もう一度確定してください。' : '';
+    reviewedOrder = details;
+    summary.scrollTop = 0;
+    if (!isOrderReviewOpen()) {
+      if (typeof orderReviewDialog.showModal === 'function') {
+        orderReviewDialog.showModal();
+        document.body.classList.add('order-review-open');
+      } else {
+        // dialog未対応の端末でも即送信せず、フォーム直下で同じ内容を確認する。
+        orderReviewDialog.classList.add('order-review-inline');
+        orderReviewDialog.setAttribute('role', 'region');
+        orderReviewDialog.setAttribute('open', '');
+        document.body.classList.add('order-review-inline-open');
+      }
+    }
+    orderReviewDialog.scrollTop = 0;
+    document.getElementById('orderReviewTitle').focus({ preventScroll: true });
+    if (orderReviewDialog.classList.contains('order-review-inline')) {
+      orderReviewDialog.scrollIntoView({ block: 'start' });
+    }
   }
 
   function handleOrderSubmit(e) {
     e.preventDefault();
+    if (orderSubmissionInProgress) return;
+    updateTotal();
+    const details = getOrderReviewDetails();
+    if (details) renderOrderReview(details);
+  }
+
+  function confirmReviewedOrder() {
+    if (!reviewedOrder || orderSubmissionInProgress || !isOrderReviewOpen()) return;
+    updateTotal();
+    const current = getOrderReviewDetails();
+    if (!current) return;
+    // 価格同期・郵便番号照会などで確認中に変わった内容を、未確認のまま送らない。
+    if (JSON.stringify(current) !== JSON.stringify(reviewedOrder)) {
+      renderOrderReview(current, true);
+      return;
+    }
+    const orderData = reviewedOrder.payload;
+    document.getElementById('orderConfirmBtn').disabled = true;
+    closeOrderReview();
+    submitReviewedOrder(orderData);
+  }
+
+  function submitReviewedOrder(orderData) {
+    if (orderSubmissionInProgress) return;
     const submitBtn = document.getElementById('orderSubmitBtn');
 
     // 最低注文金額（税込¥2,000）未満は受け付けない
@@ -1360,6 +1531,7 @@
       return;
     }
 
+    orderSubmissionInProgress = true;
     submitBtn.disabled = true;
     submitBtn.textContent = '送信中...';
     showOrderProcessingOverlay();
@@ -1367,8 +1539,6 @@
     // 前回のエラー表示が残っていたら消す
     const orderErrorBox = document.getElementById('orderErrorBox');
     if (orderErrorBox) orderErrorBox.style.display = 'none';
-
-    const orderData = buildOrderPayload();
 
     // クレジットカードの場合：Stripe決済（このページ内で完結）を実行し、
     // 既存の /orders/api/hp-order には送らない（入金確定後、Webhook経由でサーバーが記録する）。
@@ -1395,7 +1565,7 @@
       // 入力内容は消さずに残し、そのまま再送信できるようにする。
       hideOrderProcessingOverlay();
       submitBtn.disabled = false;
-      submitBtn.textContent = '注文内容を送信する';
+      submitBtn.textContent = '注文内容を確認する';
       if (orderErrorBox) {
         orderErrorBox.style.display = '';
         orderErrorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1448,7 +1618,7 @@
     });
     // フォームリセット（住所も消えるので送料込みの合計・内訳表示も作り直す）
     document.getElementById('orderForm').reset();
-    document.getElementById('orderSubmitBtn').textContent = '注文内容を送信する';
+    document.getElementById('orderSubmitBtn').textContent = '注文内容を確認する';
     updateTotal();
     updateFloatingCart();
   }
