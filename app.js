@@ -411,6 +411,75 @@
     }
   }
 
+  // 送料無料達成のお祝い。離島の自動判定は別対応とし、既存の送料判定に合わせる
+  // （2026-11-05 管理人確認：北海道・沖縄のみ除外）。住所未確定では出さない。
+  // 金額を下げても再演出せず、注文完了後の resetOrderForm() で次の注文に戻す。
+  let freeShippingCelebrated = false;
+  let shippingCelebrationRequest = 0;
+  let shippingConfettiActive = false;
+  let shippingConfettiReady;
+  let shippingAddressPending = false;
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function loadShippingConfetti() {
+    if (typeof window.confetti === 'function') return Promise.resolve(window.confetti);
+    if (!shippingConfettiReady) {
+      shippingConfettiReady = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        // 催事アプリと同じ版。必要な時だけ読み込み、改変された配信ファイルは拒否する。
+        script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js';
+        script.integrity = 'sha384-sPwMflxqfAN+Q5mvlkLmHiX3PORGbZSXHiSGPTXT9VHCD/AB+b+r+vJWsqprv+7k';
+        script.crossOrigin = 'anonymous';
+        script.referrerPolicy = 'no-referrer';
+        script.onload = () => resolve(window.confetti);
+        script.onerror = () => reject(new Error('Confetti unavailable'));
+        document.head.appendChild(script);
+      });
+    }
+    return shippingConfettiReady;
+  }
+
+  function stopShippingConfetti() {
+    shippingCelebrationRequest += 1; // 読込待ちの間に数量・住所が変わった場合も取り消す
+    if (shippingConfettiActive && typeof window.confetti === 'function') window.confetti.reset();
+    shippingConfettiActive = false;
+  }
+
+  function updateShippingCelebration(subtotal, ship) {
+    const eligible = !shippingAddressPending && subtotal >= FREE_SHIPPING_LINE
+      && ship.pref && !ship.separate && ship.fee === 0;
+    if (!eligible) {
+      stopShippingConfetti();
+      return false;
+    }
+    if (!freeShippingCelebrated) {
+      freeShippingCelebrated = true;
+      const requestId = ++shippingCelebrationRequest;
+      if (!prefersReducedMotion()) {
+        loadShippingConfetti().then(confetti => {
+          // 読み込み中の変更や注文完了で、古い注文のお祝いを遅れて出さない。
+          const currentSubtotal = getOrderSubtotal();
+          const currentShip = calcShipping(currentSubtotal);
+          if (requestId !== shippingCelebrationRequest || shippingAddressPending
+              || document.hidden || prefersReducedMotion()
+              || currentSubtotal < FREE_SHIPPING_LINE || !currentShip.pref
+              || currentShip.separate || currentShip.fee !== 0) return;
+          shippingConfettiActive = true;
+          confetti({
+            particleCount: 55, spread: 65, startVelocity: 25, ticks: 125,
+            scalar: 0.75, origin: { x: 0.5, y: 0.72 },
+            colors: ['#c74332', '#c9a84c'], zIndex: 1050,
+            disableForReducedMotion: true,
+          });
+        }).catch(() => {}); // 演出の失敗で注文・送料表示を止めない
+      }
+    }
+    return true;
+  }
+
   function updateFloatingCart() {
     let totalQty = 0;
     let totalPrice = 0;
@@ -424,13 +493,14 @@
     document.getElementById('floatingCartTotal').textContent = '¥' + totalPrice.toLocaleString();
     // 送料無料の判定は既存の送料計算と同じ商品小計・お届け先を使う。
     const ship = calcShipping(totalPrice);
+    const freeShipping = updateShippingCelebration(totalPrice, ship);
     const shippingMessage = totalQty === 0 ? ''
       : totalPrice < MIN_ORDER_SUBTOTAL
         ? 'ご注文は税込¥' + MIN_ORDER_SUBTOTAL.toLocaleString() + 'から（あと¥' + (MIN_ORDER_SUBTOTAL - totalPrice).toLocaleString() + '）'
       : ship.separate ? '送料は別途ご案内します'
       : totalPrice < FREE_SHIPPING_LINE
         ? '送料無料まで あと¥' + (FREE_SHIPPING_LINE - totalPrice).toLocaleString()
-        : ship.fee === 0 ? '送料無料です'
+        : freeShipping ? '🎉 送料無料になりました'
         : '対象地域は送料無料です';
     const shippingEl = document.getElementById('floatingCartShipping');
     if (shippingEl.textContent !== shippingMessage) shippingEl.textContent = shippingMessage;
@@ -578,6 +648,9 @@
   const zipInput = document.getElementById('orderZip');
   const addressInput = document.getElementById('orderAddress');
   zipInput.addEventListener('input', function() {
+    // 郵便番号の変更中は前の住所を使ってお祝いしない（送料計算自体は従来どおり）。
+    shippingAddressPending = true;
+    updateFloatingCart();
     let zip = this.value.replace(/[^0-9]/g, '');
     if (zip.length >= 3 && zip.length <= 7 && !this.value.includes('-')) {
       this.value = zip.slice(0, 3) + (zip.length > 3 ? '-' + zip.slice(3) : '');
@@ -589,6 +662,7 @@
           if (data.results) {
             const r = data.results[0];
             addressInput.value = r.address1 + r.address2 + r.address3;
+            shippingAddressPending = zipInput.value.replace(/[^0-9]/g, '') !== zip;
             addressInput.focus();
             // 住所（都道府県）が決まったので送料を再計算して合計に反映する
             updateTotal();
@@ -1305,6 +1379,9 @@
   }
 
   function resetOrderForm() {
+    stopShippingConfetti();
+    freeShippingCelebrated = false;
+    shippingAddressPending = false;
     // 数量・小計をリセット
     document.querySelectorAll('.order-product-row').forEach(row => {
       row.querySelector('.order-qty-num').textContent = '0';
