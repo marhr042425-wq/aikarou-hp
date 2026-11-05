@@ -518,6 +518,33 @@
   }
   window.addEventListener('resize', updateFloatingCart);
 
+  // 固定バーは注文を送信せず、入力の続き・最後の送信ボタンへ案内する。
+  function getOrderProgressTarget() {
+    if (getOrderSubtotal() < MIN_ORDER_SUBTOTAL) {
+      return document.getElementById('orderTotalBox');
+    }
+    const form = document.getElementById('orderForm');
+    for (const field of form.querySelectorAll('input, select, textarea')) {
+      // 自動入力専用の住所が空なら、編集できる郵便番号欄へ戻す。
+      if (field.id === 'orderAddress' && !field.value.trim()) {
+        return document.getElementById('orderZip');
+      }
+      if (field.willValidate && !field.validity.valid) return field;
+    }
+    return document.getElementById('orderSubmitBtn');
+  }
+
+  function proceedToOrder(event) {
+    event.preventDefault();
+    const target = getOrderProgressTarget();
+    if (!target) return;
+    // 長い入力フォームへ直接移動しても、フェードイン待ちで隠れないようにする。
+    const animated = target.closest('.fade-up');
+    if (animated) animated.classList.add('visible');
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'center' });
+  }
+
   // Order form logic
   function changeQty(btn, delta) {
     const row = btn.closest('.order-product-row');
