@@ -1,0 +1,551 @@
+{
+  "note": "aikarou-hp tests/test_line_items.cjs が作る。手で直さない",
+  "cases": [
+    {
+      "id": "焼売4個入を3袋・銀行振込・福岡",
+      "payload": {
+        "items": [
+          "肉焼売【生冷凍】 4個入 × 3袋（計12個）¥2,280",
+          "送料（福岡県宛） ¥1,200"
+        ],
+        "total": "¥3,480",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "肉焼売【生冷凍】",
+            "qty": 3,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "8個入と12個入の混在・東京",
+      "payload": {
+        "items": [
+          "肉焼売【調理済み冷凍】 8個入 × 1袋（計8個）¥1,520",
+          "海老焼売【生冷凍】 12個入 × 1袋（計12個）¥2,280",
+          "送料（東京都宛） ¥1,200"
+        ],
+        "total": "¥5,000",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 東京都確認区1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "肉焼売【調理済み冷凍】",
+            "qty": 1,
+            "multiplier": 2,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "海老焼売【生冷凍】",
+            "qty": 1,
+            "multiplier": 3,
+            "size": null,
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "8000円以上で送料無料・大阪",
+      "payload": {
+        "items": [
+          "焼き小籠包 4個入 × 10袋（計40個）¥8,550",
+          "送料 無料（税込¥8,000以上）"
+        ],
+        "total": "¥8,550",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 大阪府確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "焼き小籠包",
+            "qty": 10,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "まん類とちまきのサイズ違い",
+      "payload": {
+        "items": [
+          "肉にら饅頭【生冷凍】 4個入 × 1袋（計4個）¥760",
+          "ちまき 4個入 × 1袋（計4個）¥1,488",
+          "肉まん 3個入 × 1袋（計3個）¥1,539",
+          "角煮バーガー 1個入 × 2袋（計2個）¥1,026",
+          "チャーシューまん 6個入 × 1袋（計6個）¥2,232",
+          "送料（愛知県宛） ¥1,200"
+        ],
+        "total": "¥8,245",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 愛知県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "肉にら饅頭【生冷凍】",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "ちまき",
+            "qty": 1,
+            "multiplier": 2,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "肉まん",
+            "qty": 1,
+            "multiplier": 3,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "角煮バーガー",
+            "qty": 2,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "チャーシューまん",
+            "qty": 1,
+            "multiplier": 3,
+            "size": null,
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "ザーサイ140gを3つ",
+      "payload": {
+        "items": [
+          "ザーサイ 140g × 3 ¥2,280",
+          "送料（福岡県宛） ¥1,200"
+        ],
+        "total": "¥3,480",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "ザーサイ",
+            "qty": 3,
+            "multiplier": null,
+            "size": "140g",
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "ザーサイ280gを2つ・代引き（手数料330円）",
+      "payload": {
+        "items": [
+          "ザーサイ 280g × 2 ¥3,040",
+          "送料（福岡県宛） ¥1,200",
+          "代引き手数料 ¥330"
+        ],
+        "total": "¥4,570",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "代金引換（クロネコヤマト）",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "ザーサイ",
+            "qty": 2,
+            "multiplier": null,
+            "size": "280g",
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "モンゴル茶1袋",
+      "payload": {
+        "items": [
+          "モンゴル茶 1袋セット（計30個） ¥4,000",
+          "送料（福岡県宛） ¥1,200"
+        ],
+        "total": "¥5,200",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "モンゴル茶",
+            "qty": 1,
+            "multiplier": null,
+            "size": null,
+            "tea_bags": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "モンゴル茶2袋セット・代引き（手数料330円）",
+      "payload": {
+        "items": [
+          "モンゴル茶 2袋セット（計60個） ¥7,500",
+          "送料（福岡県宛） ¥1,200",
+          "代引き手数料 ¥330"
+        ],
+        "total": "¥9,030",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "代金引換（クロネコヤマト）",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "モンゴル茶",
+            "qty": 1,
+            "multiplier": null,
+            "size": null,
+            "tea_bags": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "モンゴル茶3袋セットを2つ・代引き・送料無料（手数料440円）",
+      "payload": {
+        "items": [
+          "モンゴル茶 3袋セット（計90個） × 2 ¥21,600",
+          "送料 無料（税込¥8,000以上）",
+          "代引き手数料 ¥440"
+        ],
+        "total": "¥22,040",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "代金引換（クロネコヤマト）",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "モンゴル茶",
+            "qty": 2,
+            "multiplier": null,
+            "size": null,
+            "tea_bags": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "モンゴル茶3袋セットを3つ・代引き（手数料660円）",
+      "payload": {
+        "items": [
+          "モンゴル茶 3袋セット（計90個） × 3 ¥32,400",
+          "送料 無料（税込¥8,000以上）",
+          "代引き手数料 ¥660"
+        ],
+        "total": "¥33,060",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "代金引換（クロネコヤマト）",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "モンゴル茶",
+            "qty": 3,
+            "multiplier": null,
+            "size": null,
+            "tea_bags": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "北海道宛は送料別途ご案内",
+      "payload": {
+        "items": [
+          "肉焼売【生冷凍】 4個入 × 3袋（計12個）¥2,280",
+          "送料 別途ご案内（北海道宛・実費送料を後日ご連絡）"
+        ],
+        "total": "¥2,280",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 北海道確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "肉焼売【生冷凍】",
+            "qty": 3,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "沖縄宛の代引きは手数料も別途",
+      "payload": {
+        "items": [
+          "海老焼売【調理済み冷凍】 4個入 × 3袋（計12個）¥2,280",
+          "送料 別途ご案内（沖縄県宛・実費送料を後日ご連絡）"
+        ],
+        "total": "¥2,280",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 沖縄県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "代金引換（クロネコヤマト）",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "海老焼売【調理済み冷凍】",
+            "qty": 3,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "カード決済・福岡",
+      "payload": {
+        "items": [
+          "肉にら饅頭【調理済み冷凍】 8個入 × 2袋（計16個）¥3,040",
+          "送料（福岡県宛） ¥1,200"
+        ],
+        "total": "¥4,240",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 福岡県確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "クレジットカード",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "肉にら饅頭【調理済み冷凍】",
+            "qty": 2,
+            "multiplier": 2,
+            "size": null,
+            "tea_bags": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "全商品を1つずつ（サイズは初期のまま）",
+      "payload": {
+        "items": [
+          "焼き小籠包 4個入 × 1袋（計4個）¥855",
+          "肉焼売【生冷凍】 4個入 × 1袋（計4個）¥760",
+          "肉焼売【調理済み冷凍】 4個入 × 1袋（計4個）¥760",
+          "海老焼売【生冷凍】 4個入 × 1袋（計4個）¥760",
+          "海老焼売【調理済み冷凍】 4個入 × 1袋（計4個）¥760",
+          "肉にら饅頭【生冷凍】 4個入 × 1袋（計4個）¥760",
+          "肉にら饅頭【調理済み冷凍】 4個入 × 1袋（計4個）¥760",
+          "ちまき 2個入 × 1袋（計2個）¥744",
+          "肉まん 1個入 × 1袋（計1個）¥513",
+          "角煮バーガー 1個入 × 1袋（計1個）¥513",
+          "チャーシューまん 2個入 × 1袋（計2個）¥744",
+          "ザーサイ 140g × 1 ¥760",
+          "モンゴル茶 1袋セット（計30個） ¥4,000",
+          "送料 無料（税込¥8,000以上）"
+        ],
+        "total": "¥12,689",
+        "name": "確認用のお客様",
+        "phone": "00000000000",
+        "email": "",
+        "address": "〒000-0000 京都府確認市1-2-3",
+        "delivery": "クロネコヤマト（冷凍便）",
+        "payment": "銀行振込",
+        "date": "指定なし",
+        "note": "なし",
+        "member_id": "",
+        "use_points": 0,
+        "line_items": [
+          {
+            "name": "焼き小籠包",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "肉焼売【生冷凍】",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "肉焼売【調理済み冷凍】",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "海老焼売【生冷凍】",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "海老焼売【調理済み冷凍】",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "肉にら饅頭【生冷凍】",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "肉にら饅頭【調理済み冷凍】",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "ちまき",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "肉まん",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "角煮バーガー",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "チャーシューまん",
+            "qty": 1,
+            "multiplier": 1,
+            "size": null,
+            "tea_bags": null
+          },
+          {
+            "name": "ザーサイ",
+            "qty": 1,
+            "multiplier": null,
+            "size": "140g",
+            "tea_bags": null
+          },
+          {
+            "name": "モンゴル茶",
+            "qty": 1,
+            "multiplier": null,
+            "size": null,
+            "tea_bags": 1
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -967,12 +967,25 @@
 
   function buildOrderPayload() {
     const items = [];
+    // サーバーが金額を計算し直すための明細（2026-11 PR-4）。
+    // 送るのは「どの商品を・どのサイズで・いくつ」だけで、値段は入れない
+    // （値段と送料はサーバーが自分の台帳から計算し、items・total と突き合わせる）。
+    // 形を変えるときは催事アプリ側 order_mgmt/hp_pricing.py と
+    // tests/test_line_items.cjs（黄金テスト）も一緒に直すこと。
+    const lineItems = [];
     document.querySelectorAll('.order-product-row').forEach(row => {
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
       if (qty > 0) {
         const name = row.querySelector('.order-product-name').textContent;
         const price = getRowPrice(row);
         const subtotal = '¥' + (price * qty).toLocaleString();
+        lineItems.push({
+          name: name,
+          qty: qty,
+          multiplier: row.classList.contains('has-size') ? getRowMultiplier(row) : null,
+          size: row.classList.contains('has-unit-size') ? (row.dataset.unit || '') : null,
+          tea_bags: row.classList.contains('has-tea-size') ? (parseInt(row.dataset.teaBags) || 1) : null,
+        });
         if (row.classList.contains('has-tea-size')) {
           const bags = parseInt(row.dataset.teaBags) || 1;
           const pieces = bags * TEA_PIECES_PER_BAG;
@@ -1039,7 +1052,7 @@
     const validUsePoints = resolveUsablePoints(
       document.getElementById('pointUseAmount').value
     );
-    return { items, total, name, phone, email, address, delivery, payment, date, note, member_id, use_points: validUsePoints };
+    return { items, total, name, phone, email, address, delivery, payment, date, note, member_id, use_points: validUsePoints, line_items: lineItems };
   }
 
   function showOrderCompleteScreen(orderData, respData) {
@@ -1556,7 +1569,17 @@
       body: JSON.stringify(orderData)
     }).then(r => {
       // サーバーがエラーを返した場合（500等）も「失敗」として扱う
-      if (!r.ok) throw new Error('HTTP ' + r.status);
+      if (!r.ok) {
+        // 400＝サーバーが理由つきで断った（金額が合わない・最低金額など）。
+        // その案内文（「ページを再読み込みして…」等）をお客様に見せる。
+        return r.json().catch(() => ({})).then(errBody => {
+          const httpErr = new Error('HTTP ' + r.status);
+          if (r.status === 400 && errBody && errBody.error) {
+            httpErr.serverMessage = String(errBody.error);
+          }
+          throw httpErr;
+        });
+      }
       return r.json();
     }).then(data => {
       showOrderCompleteScreen(orderData, data);
@@ -1567,6 +1590,11 @@
       submitBtn.disabled = false;
       submitBtn.textContent = '注文内容を確認する';
       if (orderErrorBox) {
+        // サーバーの案内文があればそれを、無ければ従来どおりの固定文を出す
+        // （前回の案内文が残らないよう、毎回入れ直す）。
+        orderErrorBox.textContent = err && err.serverMessage
+          ? err.serverMessage + '（ご注文はまだ送信されていません）'
+          : '送信できませんでした。お手数ですが、時間をおいて再度お試しいただくか、LINEでご注文ください。';
         orderErrorBox.style.display = '';
         orderErrorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else {
