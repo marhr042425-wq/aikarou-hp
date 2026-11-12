@@ -69,7 +69,7 @@
         const nameEl = row.querySelector('.order-product-name');
         if (!nameEl) return;
         // 「肉焼売【生冷凍】」「肉焼売【調理済み冷凍】」も「肉焼売」にマッチ
-        const rawName = nameEl.textContent.trim();
+        const rawName = getRowProductName(row).trim();
         const baseName = rawName.replace(/【[^】]+】/g, '').trim();
         const p = map[rawName] || map[baseName];
         if (!p) return;
@@ -132,6 +132,16 @@
   // その行の「1袋あたりの価格」（基準価格×倍率）
   function getRowPrice(row) {
     return parseInt(row.dataset.price) * getRowMultiplier(row);
+  }
+  // その行の商品名（サーバーへ送る・台帳と突き合わせる日本語の正式名）。
+  // 画面の文字（.order-product-name）はブラウザの「ページを翻訳」で訳されてしまうので、
+  // 翻訳されない data-product-name を正とする。無い行だけ従来どおり画面の文字を使う。
+  // （2026-11-12 PR-4：訳された名前を送るとサーバーが「確認できない商品」と断るため）
+  function getRowProductName(row) {
+    const fixed = row.dataset ? row.dataset.productName : '';
+    if (fixed) return fixed;
+    const nameEl = row.querySelector('.order-product-name');
+    return nameEl ? nameEl.textContent : '';
   }
   // その行の「1袋あたりの個数」（基準個数×倍率）。サイズ非対応行は0を返す。
   function getRowPieces(row) {
@@ -363,7 +373,7 @@
     }
     const rows = document.querySelectorAll('.order-product-row');
     for (const row of rows) {
-      const name = row.querySelector('.order-product-name').textContent;
+      const name = getRowProductName(row);
       if (name === productName) {
         // 内容量サイズ商品（ザーサイ）なら、カードで選んだ内容量を注文行に反映
         if (selectedUnitLabel && row.classList.contains('has-unit-size')) {
@@ -976,7 +986,8 @@
     document.querySelectorAll('.order-product-row').forEach(row => {
       const qty = parseInt(row.querySelector('.order-qty-num').textContent);
       if (qty > 0) {
-        const name = row.querySelector('.order-product-name').textContent;
+        // 画面の文字ではなく data-product-name から（翻訳されても元の日本語を送る）
+        const name = getRowProductName(row);
         const price = getRowPrice(row);
         const subtotal = '¥' + (price * qty).toLocaleString();
         lineItems.push({

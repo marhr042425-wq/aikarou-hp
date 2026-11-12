@@ -448,7 +448,11 @@
   </div>
 
   <div class="order-product-list fade-up">
-    <div class="order-product-row has-size" data-price="855" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="900">
+    <!-- data-product-name＝サーバーへ送る商品名（日本語の正式名）。ブラウザの「ページを翻訳」で
+         画面の商品名が訳されても注文が通るように、翻訳されないこの場所から送る（app.js getRowProductName）。
+         画面の商品名（.order-product-name）を変える／行を足すときは、ここも同じ文字にすること
+         （tests/test_line_items.cjs が食い違いを検出する）。 -->
+    <div class="order-product-row has-size" data-product-name="焼き小籠包" data-price="855" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="900">
       <div class="order-product-info">
         <div class="order-product-name">焼き小籠包</div>
         <div class="order-product-price"><span class="order-original-price">¥900</span> → ¥855 / 4個入（税込）</div>
@@ -466,7 +470,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
+    <div class="order-product-row has-size" data-product-name="肉焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉焼売【生冷凍】</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
@@ -488,7 +492,7 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
+    <div class="order-product-row has-size" data-product-name="肉焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉焼売【調理済み冷凍】</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
@@ -511,7 +515,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
+    <div class="order-product-row has-size" data-product-name="海老焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">海老焼売【生冷凍】</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
@@ -533,7 +537,7 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
+    <div class="order-product-row has-size" data-product-name="海老焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">海老焼売【調理済み冷凍】</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
@@ -556,7 +560,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
+    <div class="order-product-row has-size" data-product-name="肉にら饅頭【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉にら饅頭【生冷凍】</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
@@ -578,7 +582,7 @@
       </div>
       <div class="order-subtotal">-</div>
     </div>
-    <div class="order-product-row has-size" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
+    <div class="order-product-row has-size" data-product-name="肉にら饅頭【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">肉にら饅頭【調理済み冷凍】</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 4個入（税込）</div>
@@ -601,7 +605,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-size" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784">
+    <div class="order-product-row has-size" data-product-name="ちまき" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784">
       <div class="order-product-info">
         <div class="order-product-name">ちまき</div>
         <div class="order-product-price"><span class="order-original-price">¥784</span> → ¥744 / 2個入（税込）</div>
@@ -619,7 +623,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-size" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540">
+    <div class="order-product-row has-size" data-product-name="肉まん" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540">
       <div class="order-product-info">
         <div class="order-product-name">肉まん</div>
         <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個入（税込）</div>
@@ -637,7 +641,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-size" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540">
+    <div class="order-product-row has-size" data-product-name="角煮バーガー" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540">
       <div class="order-product-info">
         <div class="order-product-name">角煮バーガー</div>
         <div class="order-product-price"><span class="order-original-price">¥540</span> → ¥513 / 1個入（税込）</div>
@@ -655,7 +659,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-size" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784">
+    <div class="order-product-row has-size" data-product-name="チャーシューまん" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784">
       <div class="order-product-info">
         <div class="order-product-name">チャーシューまん</div>
         <div class="order-product-price"><span class="order-original-price">¥784</span> → ¥744 / 2個入（税込）</div>
@@ -673,7 +677,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-unit-size" data-price="760" data-unit="140g" data-orig-price="800">
+    <div class="order-product-row has-unit-size" data-product-name="ザーサイ" data-price="760" data-unit="140g" data-orig-price="800">
       <div class="order-product-info">
         <div class="order-product-name">ザーサイ</div>
         <div class="order-product-price"><span class="order-original-price">¥800</span> → ¥760 / 140g（税込）</div>
@@ -690,7 +694,7 @@
       <div class="order-subtotal">-</div>
     </div>
 
-    <div class="order-product-row has-tea-size" data-price="4000" data-tea-bags="1" data-unit="1袋30個入">
+    <div class="order-product-row has-tea-size" data-product-name="モンゴル茶" data-price="4000" data-tea-bags="1" data-unit="1袋30個入">
       <div class="order-product-info">
         <div class="order-product-name">モンゴル茶</div>
         <div class="order-product-price">¥4,000 / 1袋30個入（税込）</div>
@@ -1136,7 +1140,7 @@
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
-<script src="app.js?v=20261110a" defer></script>
+<script src="app.js?v=20261112a" defer></script>
 
 <!-- Google Analytics (GA4) 測定ID: G-H5MT5P6XZH（今津屋－愛華楼 プロパティ）2026-07-26 有効化 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-H5MT5P6XZH"></script>

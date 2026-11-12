@@ -250,3 +250,48 @@ test('成功したときは従来どおり完了画面へ進む', async () => {
   assert.equal(h.log.success.length, 1);
   assert.deepEqual(h.log.success[0], payload);
 });
+
+// ── ブラウザの「ページを翻訳」対策（2026-11-12 巨匠レビュー指摘 I）──────────
+// 翻訳をかけると画面の商品名（.order-product-name の文字）が訳される。
+// サーバーは日本語の商品名で台帳を引くので、訳された名前を送ると注文が断られる。
+// 注文行の data-product-name（翻訳されない場所）に元の名前を持たせ、そこから送る。
+function translateScreen(rows) {
+  // 翻訳ソフトがやること＝画面の文字だけを書き換える（data- 属性は触らない）
+  rows.forEach((row, i) => { row.querySelector('.order-product-name').textContent = 'Translated product ' + (i + 1); });
+}
+
+test('注文行13行すべてに data-product-name があり、画面の商品名と同じ文字', () => {
+  const rows = parseOrderRows();
+  assert.equal(rows.length, 13);
+  for (const row of rows) {
+    assert.equal(row.dataset.productName, row.querySelector('.order-product-name').textContent);
+  }
+});
+
+test('画面の商品名が翻訳されていても、line_items の name は元の日本語のまま', () => {
+  const h = harness({ payment: 'cod' });
+  h.pick('肉焼売【生冷凍】', 2, '8個'); h.pick('ザーサイ', 1, '280g'); h.pick('モンゴル茶', 1, '3袋');
+  const before = h.payload();
+  translateScreen(h.rows);
+  const after = h.payload();
+  assert.deepEqual(after.line_items.map(item => item.name), ['肉焼売【生冷凍】', 'ザーサイ', 'モンゴル茶']);
+  // 明細の文面・合計も含め、翻訳の前後で注文データが1文字も変わらない
+  assert.deepEqual(after, before);
+  assert.doesNotMatch(JSON.stringify(after), /Translated/);
+});
+
+test('全13行を翻訳された状態で注文しても、黄金データ（全商品を1つずつ）と一致する', () => {
+  const h = harness({ address: '京都府確認市' });
+  translateScreen(h.rows);
+  for (const row of h.rows) { row.querySelector('.order-qty-num').textContent = '1'; }
+  const golden = JSON.parse(fs.readFileSync(GOLDEN_PATH, 'utf8'));
+  const expected = golden.cases.find(c => c.id === '全商品を1つずつ（サイズは初期のまま）');
+  assert.deepEqual(h.payload(), expected.payload);
+});
+
+test('data-product-name の無い行は従来どおり画面の文字を送る（古い形の行でも動く）', () => {
+  const h = harness(); h.pick('肉焼売【生冷凍】', 3, '4個');
+  const row = h.rows.find(r => r.dataset.productName === '肉焼売【生冷凍】') || h.rows[1];
+  delete row.dataset.productName;
+  assert.equal(h.payload().line_items[0].name, '肉焼売【生冷凍】');
+});
