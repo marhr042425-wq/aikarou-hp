@@ -158,7 +158,7 @@ PRODUCTS = [
         "name_en": "Pork Bun",
         "image": "/images/nikuman.jpg",
         "tagline": "ふっくら生地に具がぎっしり、ボリューム満点",
-        "description": "手作りの皮にこだわったふっくら生地に合う餡が絶妙な肉まん。具がぎっしり入ってボリューム感たっぷり！1度食べると味が忘れられない一品。",
+        "description": "ふっくら生地に合う餡が絶妙な肉まん。具がぎっしり入ってボリューム感たっぷり！1度食べると味が忘れられない一品。",
         "weight": "1個 120g",
         "price_original": 540,
         "price_hp": 513,
