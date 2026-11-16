@@ -36,6 +36,7 @@ class Node {
   hasAttribute(name) { return this.attributes.has(name); }
   addEventListener(name, fn) { this.listeners[name] = fn; }
   focus() { this.focused = true; }
+  select() { this.selected = true; }
   scrollIntoView() { this.scrolled = true; }
   showModal() { this.setAttribute('open', ''); }
   close() { this.removeAttribute('open'); this.listeners.close?.(); }
@@ -44,7 +45,8 @@ class Node {
 }
 function textOf(node) { return node.textContent + node.children.map(textOf).join('\n'); }
 
-function harness({ payment = 'bank', address = '福岡県確認市', points = 0, nativeDialog = true } = {}) {
+function harness({ payment = 'bank', address = '福岡県確認市', points = 0, nativeDialog = true,
+  balance = 1000, pointBoxShown = true } = {}) {
   const nodes = new Map();
   const node = id => { if (!nodes.has(id)) nodes.set(id, new Node(id)); return nodes.get(id); };
   const log = { orders: [], payments: 0, mounts: 0, preparations: 0, alerts: [], success: [], errors: [] };
@@ -58,6 +60,8 @@ function harness({ payment = 'bank', address = '福岡県確認市', points = 0,
     orderDelivery: 'yamato', orderPayment: payment, orderDate: '', orderNote: '',
     orderMemberId: '', pointUseAmount: String(points) };
   for (const [id, value] of Object.entries(values)) node(id).value = value;
+  // ポイントの枠は、照会で残高が見つかったときだけ表示される（lookupPoints / hidePointUseBox と同じ状態）。
+  node('pointUseBox').style.display = pointBoxShown ? '' : 'none';
   let valid = true;
   node('orderForm').checkValidity = () => valid;
   node('orderForm').reportValidity = () => { node('orderForm').reported = true; return valid; };
@@ -67,7 +71,7 @@ function harness({ payment = 'bank', address = '福岡県確認市', points = 0,
     node('orderReviewDialog').showModal = undefined;
     node('orderReviewDialog').close = undefined;
   }
-  const context = { document, customerPoints: 1000, MIN_POINT_USE: 50, TEA_PIECES_PER_BAG: 30,
+  const context = { document, customerPoints: balance, MIN_POINT_USE: 50, TEA_PIECES_PER_BAG: 30,
     PAYMENT_RETURN_URL: 'http://127.0.0.1/order-complete/',
     alert: msg => log.alerts.push(msg), updateFloatingCart() {}, applyPointDiscount() {}, scheduleCardRemount() {},
     showCardError: msg => log.errors.push(msg),
@@ -99,6 +103,13 @@ function harness({ payment = 'bank', address = '福岡県確認市', points = 0,
     valid(value) { valid = value; },
     pending(value) { context.pending = value; vm.runInContext('shippingAddressPending = pending;', context); },
     summary() { return textOf(node('orderReviewSummary')); },
+    // 確認画面の中のボタン（＝ポイント案内のボタン）を全部拾う
+    guideButtons() {
+      const found = [];
+      (function walk(n) { if (n.listeners.click) found.push(n); n.children.forEach(walk); })(node('orderReviewSummary'));
+      return found;
+    },
+    pressGuide() { this.guideButtons()[0].listeners.click(); },
     busy() { return vm.runInContext('orderSubmissionInProgress', context); },
     resolveOrder(value = {}) { resolveOrder({ ok: true, json: async () => value }); },
     failOrder() { rejectOrder(new Error('simulated network failure')); },
@@ -259,4 +270,130 @@ test('未対応端末でも金額変更後は再確認し、古い明細を重�
   assert.doesNotMatch(h.summary(), /確認商品 × 3/);
   assert.match(h.summary(), /確認商品 × 4/);
   h.confirm(); assert.equal(h.log.orders.length, 1);
+});
+
+// ===== 確認画面の「ポイントを使う」案内（2026-11-16 案1） =====
+const GUIDE_TEXT = /ポイントが 1,000pt あります（50ptからご利用いただけます）/;
+test('ポイント案内：未利用で残高が50pt以上なら、残高つきの案内とボタンを1つ出す', () => {
+  const h = harness(); h.open();
+  assert.match(h.summary(), /利用なし/);
+  assert.match(h.summary(), GUIDE_TEXT);
+  assert.equal(h.guideButtons().length, 1);
+  assert.equal(h.guideButtons()[0].textContent, 'ポイントを使う');
+  assert.equal(h.guideButtons()[0].type, 'button');
+  assert.equal(h.log.orders.length, 0); assert.equal(h.log.payments, 0);
+});
+test('ポイント案内：ちょうど50ptは出す・49ptは出さない', () => {
+  const at = harness({ balance: 50 }); at.open();
+  assert.match(at.summary(), /ポイントが 50pt あります（50ptからご利用いただけます）/);
+  assert.equal(at.guideButtons().length, 1);
+  const below = harness({ balance: 49 }); below.open();
+  assert.doesNotMatch(below.summary(), /あります/);
+  assert.equal(below.guideButtons().length, 0);
+});
+for (const [label, options] of [
+  ['未照会・照会失敗・該当なし（残高0・枠は非表示）', { balance: 0, pointBoxShown: false }],
+  ['残高はあるが枠が出ていない', { balance: 1000, pointBoxShown: false }],
+  ['すでにポイントを使っている', { points: 200 }],
+  ['すでにポイントを使っている（代引き）', { points: 200, payment: 'cod' }],
+]) test(`ポイント案内：${label}ときは何も出さない`, () => {
+  const h = harness(options); h.open();
+  assert.equal(h.node('orderReviewDialog').open, true);
+  assert.doesNotMatch(h.summary(), /あります/);
+  assert.doesNotMatch(h.summary(), /ポイントを使う/);
+  assert.equal(h.guideButtons().length, 0);
+});
+test('ポイント案内：案内を出しても金額と送る内容は変わらない', () => {
+  const shown = harness(); shown.open();
+  const hidden = harness({ balance: 0, pointBoxShown: false }); hidden.open();
+  assert.match(shown.summary(), /¥4,200/);
+  assert.equal(shown.node('orderConfirmBtn').textContent, hidden.node('orderConfirmBtn').textContent);
+  shown.confirm(); hidden.confirm();
+  assert.deepEqual(shown.log.orders, hidden.log.orders);
+  assert.equal(shown.log.orders[0].payload.use_points, 0);
+});
+test('ポイント案内：ボタンは「戻って修正する」と同じ閉じ方をして、ポイントの枠へ案内する', () => {
+  const viaBack = harness(); viaBack.open(); viaBack.back();
+  const h = harness(); h.open(); h.pressGuide();
+  for (const id of ['orderReviewDialog']) assert.equal(h.node(id).open, viaBack.node(id).open);
+  assert.equal(h.node('orderReviewDialog').open, false);
+  assert.equal(h.context.document.body.classList.contains('order-review-open'), false);
+  assert.equal(h.context.document.body.classList.contains('order-review-inline-open'), false);
+  // 入力はそのまま・ポイント数は勝手に入れない
+  assert.equal(h.node('orderName').value, '確認用のお客様');
+  assert.equal(h.node('qty').textContent, '3');
+  assert.equal(h.node('pointUseAmount').value, '0');
+  // ポイントの枠を見える位置に出し、入力欄にカーソルを置く
+  assert.equal(h.node('pointUseBox').scrolled, true);
+  assert.equal(h.node('pointUseAmount').focused, true);
+  // 入っている「0」を選んだ状態にする（打った数字がそのまま入るように）。値は変えない
+  assert.equal(h.node('pointUseAmount').selected, true);
+  assert.equal(h.node('pointUseAmount').value, '0');
+  // 閉じたあとは確定を呼んでも何も送らない（戻るボタンと同じ）
+  h.confirm(); viaBack.confirm();
+  assert.equal(h.log.orders.length, 0); assert.equal(h.log.payments, 0);
+  assert.equal(viaBack.log.orders.length, 0);
+});
+test('ポイント案内：ボタンの処理は既存の closeOrderReview をそのまま呼ぶ', () => {
+  const body = segment('  function goToPointUseFromReview()', '  const orderReviewDialog');
+  assert.match(body, /function goToPointUseFromReview\(\) \{\n\s+closeOrderReview\(\);/);
+  // 金額・送信・決済・Stripeの入力欄には触れない
+  assert.doesNotMatch(body, /fetch|updateTotal|applyPointDiscount|useAllPoints|\.value\s*=|mountCard|unmountCard|confirmPayment|submitReviewedOrder/);
+});
+test('ポイント案内：戻ってポイントを入れると、再確認に割引が出て案内は消える', () => {
+  const h = harness(); h.open(); h.pressGuide();
+  h.node('pointUseAmount').value = '200'; h.open();
+  assert.match(h.summary(), /200pt/); assert.match(h.summary(), /¥4,000/);
+  assert.doesNotMatch(h.summary(), /あります/);
+  assert.equal(h.guideButtons().length, 0);
+  h.confirm();
+  assert.equal(h.log.orders.length, 1);
+  assert.equal(h.log.orders[0].payload.use_points, 200);
+});
+test('ポイント案内：未対応端末（フォーム直下の確認）でも同じ動き', () => {
+  const h = harness({ nativeDialog: false }); h.open();
+  assert.match(h.summary(), GUIDE_TEXT);
+  h.pressGuide();
+  assert.equal(h.node('orderReviewDialog').hasAttribute('open'), false);
+  assert.equal(h.node('orderReviewDialog').classList.contains('order-review-inline'), false);
+  assert.equal(h.context.document.body.classList.contains('order-review-inline-open'), false);
+  assert.equal(h.node('pointUseBox').scrolled, true);
+  assert.equal(h.node('pointUseAmount').focused, true);
+  h.confirm(); assert.equal(h.log.orders.length, 0);
+});
+test('ポイント案内：入力欄を選べない端末でも止まらず、カーソルは置く', () => {
+  const h = harness(); h.open();
+  h.node('pointUseAmount').select = () => { throw new Error('select unsupported'); };
+  h.pressGuide();
+  assert.equal(h.node('orderReviewDialog').open, false);
+  assert.equal(h.node('pointUseAmount').focused, true);
+});
+test('ポイント案内：開いている間に枠が消えていたら、閉じるだけで飛ばない', () => {
+  const h = harness(); h.open();
+  h.node('pointUseBox').style.display = 'none';
+  h.pressGuide();
+  assert.equal(h.node('orderReviewDialog').open, false);
+  assert.equal(h.node('pointUseBox').scrolled, undefined);
+  assert.equal(h.node('pointUseAmount').focused, undefined);
+});
+test('ポイント案内（カード）：戻ってポイントを入れたら、請求額を取り直すまで支払えない', () => {
+  const h = harness({ payment: 'credit' }); h.readyCard(); h.open();
+  assert.match(h.summary(), GUIDE_TEXT);
+  assert.equal(h.node('orderConfirmBtn').textContent, '¥4,200を支払う');
+  h.pressGuide();
+  assert.equal(h.log.payments, 0);
+  h.node('pointUseAmount').value = '200';
+  // 古い請求額（ポイントなし¥4,200）のままでは確認画面を開かず、お支払い欄の作り直しへ回す（既存の守り）
+  h.open();
+  assert.equal(h.node('orderReviewDialog').open, false);
+  assert.equal(h.log.preparations, 1);
+  assert.equal(h.log.errors.length, 1);
+  h.confirm(); assert.equal(h.log.payments, 0);
+  // 請求額を取り直したあとは、割引後の金額で確認→支払い
+  h.readyCard(); h.open();
+  assert.equal(h.node('orderReviewDialog').open, true);
+  assert.equal(h.node('orderConfirmBtn').textContent, '¥4,000を支払う');
+  assert.equal(h.guideButtons().length, 0);
+  h.confirm(); h.confirm();
+  assert.equal(h.log.payments, 1); assert.equal(h.log.orders.length, 0);
 });

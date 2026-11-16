@@ -1891,6 +1891,32 @@
   }
   .order-review-dialog dt { color: #bbb; font-size: 0.8rem; }
   .order-review-dialog dd { white-space: pre-wrap; }
+  /* 確認画面の「ポイントを使う」案内。入力画面のポイントの枠と同じ赤系の囲みにそろえ、文字は白。 */
+  .order-review-dialog dd.order-review-point-guide {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+    padding: 12px;
+    border: 1px solid rgba(232,64,64,0.3);
+    border-radius: 8px;
+    background: rgba(232,64,64,0.08);
+    white-space: normal;
+  }
+  .order-review-point-guide span { flex: 1 1 200px; line-height: 1.6; }
+  .order-review-point-guide-btn {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 8px 16px;
+    border: 1px solid rgba(232,64,64,0.6);
+    border-radius: 6px;
+    background: rgba(232,64,64,0.2);
+    color: var(--white);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
   #orderReviewChanged { color: var(--light-gold); font-weight: 700; }
   .order-review-actions {
     display: flex;

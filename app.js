@@ -1397,6 +1397,33 @@
     document.body.classList.remove('order-review-inline-open');
   }
 
+  // 確認画面の「ポイントを使う」案内を出すかどうか。
+  // 出すのは「今回ポイントを使っていない」かつ「照会済みの残高が利用条件（50pt）以上」のときだけ。
+  // 残高は照会結果の変数から読む（画面の文字からは読まない＝ブラウザの翻訳で壊れない）。
+  // 未照会・照会失敗・該当なしは hidePointUseBox() で残高 0・枠は非表示になっている。
+  function shouldShowReviewPointGuide(usePoints) {
+    if (usePoints > 0) return false;
+    if (!(customerPoints >= MIN_POINT_USE)) return false;
+    const box = document.getElementById('pointUseBox');
+    return !!box && box.style.display !== 'none';
+  }
+
+  // 確認画面の「ポイントを使う」ボタン。
+  // 戻り方は「戻って修正する」と同じ closeOrderReview() をそのまま使い、
+  // そのあと入力画面のポイントの枠を見える位置に出して入力欄にカーソルを置くだけ。
+  // ポイント数は入れない（お客様が決める）。金額・送信・決済の流れには触れない。
+  function goToPointUseFromReview() {
+    closeOrderReview();
+    const box = document.getElementById('pointUseBox');
+    const input = document.getElementById('pointUseAmount');
+    if (!box || !input || box.style.display === 'none') return;
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.focus({ preventScroll: true });
+    // 入っている「0」を選んだ状態にして、打った数字がそのまま入るようにする
+    // （選ばないと「0」の前に打ち込まれて 100 のつもりが 1000 になる端末がある）。数字そのものは変えない。
+    try { input.select(); } catch (e) { /* 選べない端末ではカーソルを置くだけ */ }
+  }
+
   const orderReviewDialog = document.getElementById('orderReviewDialog');
   function isOrderReviewOpen() {
     return orderReviewDialog.hasAttribute('open');
@@ -1478,6 +1505,17 @@
     if (details.cod) row(totals, '代引き手数料', details.codFee === null ? '別途ご案内' : yen(details.codFee));
     row(totals, 'ポイント利用', details.payload.use_points > 0
       ? details.payload.use_points.toLocaleString() + 'pt（−' + yen(details.payload.use_points) + '）' : '利用なし');
+    if (shouldShowReviewPointGuide(details.payload.use_points)) {
+      // 「ポイント利用」の行のすぐ下に、表の幅いっぱいで案内を出す。
+      const guide = add('dd', '', totals);
+      guide.className = 'order-review-point-guide';
+      add('span', 'ポイントが ' + customerPoints.toLocaleString() + 'pt あります（'
+        + MIN_POINT_USE + 'ptからご利用いただけます）', guide);
+      const guideBtn = add('button', 'ポイントを使う', guide);
+      guideBtn.type = 'button';
+      guideBtn.className = 'order-review-point-guide-btn';
+      guideBtn.addEventListener('click', goToPointUseFromReview);
+    }
     row(totals, details.ship.separate ? '現時点の金額（税込）' : 'お支払い金額（税込）', yen(details.amount));
     if (details.ship.separate) {
       add('p', '送料' + (details.cod ? '・代引き手数料' : '') + 'は上記金額に含まれていません。最終金額は別途ご案内します。');
