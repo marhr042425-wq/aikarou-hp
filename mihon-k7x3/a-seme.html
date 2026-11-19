@@ -1027,6 +1027,63 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
 .cook-hd .steam path.yw{opacity:0}
 @media (prefers-reduced-motion:reduce){.steam path.yw,.cook-hd .steam path.yw{animation:none;opacity:.55;transform:none}}
 
+/* =====================================================================
+   7周目の重ね（r7.css）：A案の仕上げ（2026-11-19 社長がA案に決定）
+   字は 16px 以上、押す所は 48px（44px以上）、色は今までの金・朱・紙・墨だけ。
+   ===================================================================== */
+
+/* ---------- スマホ・タブレット縦：上の帯を透かさない（後ろの見出しの字が店名に重なって見えていた） ---------- */
+@media (max-width:820px){.hd{background:var(--night,#0D0D0F)}}
+
+/* ---------- 入数ボタン：選んでも幅が変わらないようにする ----------
+   選ぶと字が太くなって数px広がり、ぎりぎり1段に収まっていた幅（PC 1280 の焼売・にら饅頭など）で「12個」を選ぶと2段に折れていた。
+   どのボタンも「太字の時の幅」を先に取っておく（見えない写しを高さ0で持つ）ので、選んでも並びが動かない。
+   その分は左右の余白の下限を詰めて吸収する（余った幅はボタンが均等に広がって埋めるので、見た目の余白はほぼ今までどおり。
+   2px＝スマホで今まで1段に収まっていた幅（360 など）が、写しを足しても1段のままになる値） */
+.sz{padding:0 2px}
+.sz::after{content:attr(data-t);display:block;height:0;overflow:hidden;visibility:hidden;font-weight:700;pointer-events:none}
+.sz[data-b]::after{content:attr(data-t) attr(data-b);padding-right:24px}
+
+/* ---------- ご注文方法の3つのボタン：字を途中で折らない（幅821で「ご注文フォームへ」の最後の1字だけ次の行へ落ちていた） ---------- */
+@media (min-width:821px){
+  .hw .btn{white-space:nowrap}
+}
+@media (min-width:821px) and (max-width:1100px){
+  .hw .btn{padding:0 18px;letter-spacing:.08em}
+}
+
+/* ---------- 注文フォーム：ポイントを使う枠（照会できた時だけ出る）と、割引の知らせ ---------- */
+.pt-use[hidden],.pt-use-i[hidden],.rev dl.tot dd.rev-pt[hidden]{display:none}
+.pt-use-i{margin-top:10px;padding:10px 14px;border-left:2px solid var(--gold);font-size:16px;line-height:1.7;color:var(--gold)}
+.pt-use-i.low{border-left-color:var(--edge);color:var(--mut)}
+
+/* ---------- 確認画面：「ポイントを使う」の案内（今のHPと同じ文・同じ出し方。紙の上なので、墨の字に朱の細い囲み） ---------- */
+.rev dl.tot dd.rev-pt{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:10px 0;padding:12px 14px;
+  border:1px solid var(--red);border-radius:3px;text-align:left;font-weight:400;font-family:inherit;font-size:16px;line-height:1.7;color:var(--ink)}
+.rev-pt span{flex:1 1 200px}
+/* 朱の塗りは下の「確定」のボタンだけに残す（主役を2つにしない）。こちらは朱の線と字 */
+.rev-pt-b{flex:0 0 auto;min-height:48px;padding:0 20px;border:1px solid var(--red);border-radius:2px;color:var(--red);
+  font-size:16px;font-weight:700;letter-spacing:.06em;white-space:nowrap;touch-action:manipulation;transition:background .3s,color .3s}
+.rev-pt-b:hover{background:var(--red);color:#fff}
+@media (max-width:389px){.rev-pt-b{flex:1 1 100%}}
+@media print{
+  .rev dl.tot dd.rev-pt{display:none}
+}
+
+/* ---------- 送料無料の紙吹雪（今のHPにある演出。朱と金の小さな紙片が、下の帯の上あたりから1回だけ舞う） ----------
+   帯（z60）より上・確認画面（z200）より下。押す物の邪魔をしない。印刷には出さない */
+.kami{position:fixed;left:0;top:0;width:100%;height:100%;z-index:70;pointer-events:none}
+@media print{.kami{display:none}}
+
+/* ---------- 小さいスマホ：一番上で題字に掛かる間だけ、下の帯を引っ込める（r7_shiage.py 6-3b。押せない・読み上げない状態にして隠す） ---------- */
+.cart.lo{transform:translateY(110%);visibility:hidden;transition:transform .5s var(--ease),visibility 0s .5s}
+
+/* ---------- 確認画面：幅の狭いスマホで「お支払い金額」の数字が1字ずつ折れていた（¥3,67／0）→ 見出しの下の段に、折らずに出す ---------- */
+@media (max-width:420px){
+  .rev dl.tot dt:last-of-type{grid-column:1/-1;padding-right:0;padding-bottom:0}
+  .rev dl.tot dd:last-of-type{grid-column:1/-1;padding-top:0;white-space:nowrap;overflow-wrap:normal}
+}
+
 /* ---- ここから共有用のコピーにだけ足した表示（見本です／入口へ戻る） ---- */
 .mihon-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0 16px;min-height:44px;padding:0 12px;
   background:#FBF7EE;color:#1A1A1A;border-bottom:1px solid #1A1A1A;font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
@@ -1141,12 +1198,12 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
   <!-- 短冊のお品書き：商品名と値段だけ（新しい言葉は足していない）。押すとその商品へ飛ぶ -->
   <nav aria-label="メニューの一覧" id="oshinagaki">
     <ul class="tzs rv">
-      <li><a class="tz sel" href="#p01"><span class="tz-no" aria-hidden="true">01</span><span class="tz-name">焼き小籠包</span><span class="tz-price">¥855</span></a></li>
+      <li><a class="tz" href="#p01"><span class="tz-no" aria-hidden="true">01</span><span class="tz-name">焼き小籠包</span><span class="tz-price">¥855</span></a></li>
       <li><a class="tz" href="#p02"><span class="tz-no" aria-hidden="true">02</span><span class="tz-name">肉焼売</span><span class="tz-price">¥760</span></a></li>
-      <li><a class="tz sel" href="#p03"><span class="tz-no" aria-hidden="true">03</span><span class="tz-name">海老焼売</span><span class="tz-price">¥760</span></a></li>
-      <li><a class="tz sel" href="#p04"><span class="tz-no" aria-hidden="true">04</span><span class="tz-name">肉にら饅頭</span><span class="tz-price">¥760</span></a></li>
+      <li><a class="tz" href="#p03"><span class="tz-no" aria-hidden="true">03</span><span class="tz-name">海老焼売</span><span class="tz-price">¥760</span></a></li>
+      <li><a class="tz" href="#p04"><span class="tz-no" aria-hidden="true">04</span><span class="tz-name">肉にら饅頭</span><span class="tz-price">¥760</span></a></li>
       <li><a class="tz" href="#p05"><span class="tz-no" aria-hidden="true">05</span><span class="tz-name">ちまき</span><span class="tz-price">¥744</span></a></li>
-      <li><a class="tz sel" href="#p06"><span class="tz-no" aria-hidden="true">06</span><span class="tz-name">肉まん</span><span class="tz-price">¥513</span></a></li>
+      <li><a class="tz" href="#p06"><span class="tz-no" aria-hidden="true">06</span><span class="tz-name">肉まん</span><span class="tz-price">¥513</span></a></li>
       <li><a class="tz" href="#p07"><span class="tz-no" aria-hidden="true">07</span><span class="tz-name">角煮バーガー</span><span class="tz-price">¥513</span></a></li>
       <li><a class="tz" href="#p08"><span class="tz-no" aria-hidden="true">08</span><span class="tz-name">チャーシューまん</span><span class="tz-price">¥744</span></a></li>
       <li><a class="tz" href="#p09"><span class="tz-no" aria-hidden="true">09</span><span class="tz-name">ザーサイ</span><span class="tz-price">¥760</span></a></li>
@@ -1165,7 +1222,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck4"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>焼き小籠包の温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・大豆・豚肉・鶏肉・ゼラチン・ごま</p></div>
           <div class="price"><s>¥900</s> <b>¥855</b> <small>/ 4個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="焼き小籠包のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="855" data-o="900" data-n="4">4個 ¥855</button><button type="button" class="sz" aria-pressed="false" data-p="1710" data-o="1800" data-n="8">8個 ¥1,710</button><button type="button" class="sz" aria-pressed="false" data-p="2565" data-o="2700" data-n="12">12個 ¥2,565</button></div>
+          <div class="sizes" role="group" aria-label="焼き小籠包のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="855" data-o="900" data-n="4" data-t="4個 ¥855">4個 ¥855</button><button type="button" class="sz" aria-pressed="false" data-p="1710" data-o="1800" data-n="8" data-t="8個 ¥1,710">8個 ¥1,710</button><button type="button" class="sz" aria-pressed="false" data-p="2565" data-o="2700" data-n="12" data-t="12個 ¥2,565">12個 ¥2,565</button></div>
           <div class="adds"><div class="ad" data-add="焼き小籠包"><button type="button" class="add" data-add="焼き小籠包" aria-label="焼き小籠包をカートに追加">＋ カートに追加</button></div></div>
           <p class="incart" hidden></p>
         </div>
@@ -1183,7 +1240,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck3"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉焼売・海老焼売の蒸し方</a><a href="#ck1"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>調理済商品の温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・ごま・大豆・豚肉</p></div>
           <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="肉焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-n="4" data-h="4個入：お弁当に・1人前の目安">4個 ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安">8個 ¥1,520</button><button type="button" class="sz" aria-pressed="false" data-p="2280" data-o="2400" data-n="12" data-h="12個入：家族で・3人前の目安">12個 ¥2,280</button></div>
+          <div class="sizes" role="group" aria-label="肉焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-n="4" data-h="4個入：お弁当に・1人前の目安" data-t="4個 ¥760">4個 ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安" data-t="8個 ¥1,520">8個 ¥1,520</button><button type="button" class="sz" aria-pressed="false" data-p="2280" data-o="2400" data-n="12" data-h="12個入：家族で・3人前の目安" data-t="12個 ¥2,280">12個 ¥2,280</button></div>
           <p class="sz-hint">4個入：お弁当に・1人前の目安</p>
           <div class="adds two"><div class="ad" data-add="肉焼売【生冷凍】"><button type="button" class="add" data-add="肉焼売【生冷凍】" aria-label="肉焼売【生冷凍】をカートに追加">＋ 生冷凍</button></div><div class="ad" data-add="肉焼売【調理済み冷凍】"><button type="button" class="add" data-add="肉焼売【調理済み冷凍】" aria-label="肉焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div></div>
           <p class="incart" hidden></p>
@@ -1201,7 +1258,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck3"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉焼売・海老焼売の蒸し方</a><a href="#ck1"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>調理済商品の温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">えび</span><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>えび・小麦・卵・ごま・大豆・豚肉</p></div>
           <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="海老焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-n="4" data-h="4個入：お弁当に・1人前の目安">4個 ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安">8個 ¥1,520</button><button type="button" class="sz" aria-pressed="false" data-p="2280" data-o="2400" data-n="12" data-h="12個入：家族で・3人前の目安">12個 ¥2,280</button></div>
+          <div class="sizes" role="group" aria-label="海老焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-n="4" data-h="4個入：お弁当に・1人前の目安" data-t="4個 ¥760">4個 ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安" data-t="8個 ¥1,520">8個 ¥1,520</button><button type="button" class="sz" aria-pressed="false" data-p="2280" data-o="2400" data-n="12" data-h="12個入：家族で・3人前の目安" data-t="12個 ¥2,280">12個 ¥2,280</button></div>
           <p class="sz-hint">4個入：お弁当に・1人前の目安</p>
           <div class="adds two"><div class="ad" data-add="海老焼売【生冷凍】"><button type="button" class="add" data-add="海老焼売【生冷凍】" aria-label="海老焼売【生冷凍】をカートに追加">＋ 生冷凍</button></div><div class="ad" data-add="海老焼売【調理済み冷凍】"><button type="button" class="add" data-add="海老焼売【調理済み冷凍】" aria-label="海老焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div></div>
           <p class="incart" hidden></p>
@@ -1219,7 +1276,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck2"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉にら饅頭の焼き方</a><a href="#ck1"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>調理済商品の温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・ごま・大豆・豚肉</p></div>
           <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="肉にら饅頭のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-n="4" data-h="4個入：お弁当に・1人前の目安">4個 ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安">8個 ¥1,520</button><button type="button" class="sz" aria-pressed="false" data-p="2280" data-o="2400" data-n="12" data-h="12個入：家族で・3人前の目安">12個 ¥2,280</button></div>
+          <div class="sizes" role="group" aria-label="肉にら饅頭のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-n="4" data-h="4個入：お弁当に・1人前の目安" data-t="4個 ¥760">4個 ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安" data-t="8個 ¥1,520">8個 ¥1,520</button><button type="button" class="sz" aria-pressed="false" data-p="2280" data-o="2400" data-n="12" data-h="12個入：家族で・3人前の目安" data-t="12個 ¥2,280">12個 ¥2,280</button></div>
           <p class="sz-hint">4個入：お弁当に・1人前の目安</p>
           <div class="adds two"><div class="ad" data-add="肉にら饅頭【生冷凍】"><button type="button" class="add" data-add="肉にら饅頭【生冷凍】" aria-label="肉にら饅頭【生冷凍】をカートに追加">＋ 生冷凍</button></div><div class="ad" data-add="肉にら饅頭【調理済み冷凍】"><button type="button" class="add" data-add="肉にら饅頭【調理済み冷凍】" aria-label="肉にら饅頭【調理済み冷凍】をカートに追加">＋ 調理済み</button></div></div>
           <p class="incart" hidden></p>
@@ -1237,7 +1294,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck6"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>ちまきの温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">えび</span><span class="alg-ic">かに</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・えび・かに・豚肉・大豆・鶏肉・りんご・ゼラチン・ごま</p></div>
           <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="ちまきのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="744" data-o="784" data-n="2">2個 ¥744</button><button type="button" class="sz" aria-pressed="false" data-p="1488" data-o="1568" data-n="4">4個 ¥1,488</button><button type="button" class="sz" aria-pressed="false" data-p="2232" data-o="2352" data-n="6">6個 ¥2,232</button></div>
+          <div class="sizes" role="group" aria-label="ちまきのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="744" data-o="784" data-n="2" data-t="2個 ¥744">2個 ¥744</button><button type="button" class="sz" aria-pressed="false" data-p="1488" data-o="1568" data-n="4" data-t="4個 ¥1,488">4個 ¥1,488</button><button type="button" class="sz" aria-pressed="false" data-p="2232" data-o="2352" data-n="6" data-t="6個 ¥2,232">6個 ¥2,232</button></div>
           <div class="adds"><div class="ad" data-add="ちまき"><button type="button" class="add" data-add="ちまき" aria-label="ちまきをカートに追加">＋ カートに追加</button></div></div>
           <p class="incart" hidden></p>
         </div>
@@ -1254,7 +1311,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck5"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉まん・角煮まん・叉焼まんの温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">乳</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・大豆・乳・豚肉・ごま・ゼラチン</p></div>
           <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="肉まんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="513" data-o="540" data-n="1">1個 ¥513</button><button type="button" class="sz" aria-pressed="false" data-p="1026" data-o="1080" data-n="2">2個 ¥1,026</button><button type="button" class="sz" aria-pressed="false" data-p="1539" data-o="1620" data-n="3">3個 ¥1,539</button></div>
+          <div class="sizes" role="group" aria-label="肉まんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="513" data-o="540" data-n="1" data-t="1個 ¥513">1個 ¥513</button><button type="button" class="sz" aria-pressed="false" data-p="1026" data-o="1080" data-n="2" data-t="2個 ¥1,026">2個 ¥1,026</button><button type="button" class="sz" aria-pressed="false" data-p="1539" data-o="1620" data-n="3" data-t="3個 ¥1,539">3個 ¥1,539</button></div>
           <div class="adds"><div class="ad" data-add="肉まん"><button type="button" class="add" data-add="肉まん" aria-label="肉まんをカートに追加">＋ カートに追加</button></div></div>
           <p class="incart" hidden></p>
         </div>
@@ -1271,7 +1328,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck5"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉まん・角煮まん・叉焼まんの温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span><span class="alg-ic">かに</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・かに・豚肉・大豆・ゼラチン</p></div>
           <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="角煮バーガーのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="513" data-o="540" data-n="1">1個 ¥513</button><button type="button" class="sz" aria-pressed="false" data-p="1026" data-o="1080" data-n="2">2個 ¥1,026</button><button type="button" class="sz" aria-pressed="false" data-p="1539" data-o="1620" data-n="3">3個 ¥1,539</button></div>
+          <div class="sizes" role="group" aria-label="角煮バーガーのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="513" data-o="540" data-n="1" data-t="1個 ¥513">1個 ¥513</button><button type="button" class="sz" aria-pressed="false" data-p="1026" data-o="1080" data-n="2" data-t="2個 ¥1,026">2個 ¥1,026</button><button type="button" class="sz" aria-pressed="false" data-p="1539" data-o="1620" data-n="3" data-t="3個 ¥1,539">3個 ¥1,539</button></div>
           <div class="adds"><div class="ad" data-add="角煮バーガー"><button type="button" class="add" data-add="角煮バーガー" aria-label="角煮バーガーをカートに追加">＋ カートに追加</button></div></div>
           <p class="incart" hidden></p>
         </div>
@@ -1288,7 +1345,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="heat"><a href="#ck5"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉まん・角煮まん・叉焼まんの温め方</a></p>
           <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・豚肉・大豆・ごま</p></div>
           <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
-          <div class="sizes" role="group" aria-label="チャーシューまんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="744" data-o="784" data-n="2">2個 ¥744</button><button type="button" class="sz" aria-pressed="false" data-p="1488" data-o="1568" data-n="4">4個 ¥1,488</button><button type="button" class="sz" aria-pressed="false" data-p="2232" data-o="2352" data-n="6">6個 ¥2,232</button></div>
+          <div class="sizes" role="group" aria-label="チャーシューまんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="744" data-o="784" data-n="2" data-t="2個 ¥744">2個 ¥744</button><button type="button" class="sz" aria-pressed="false" data-p="1488" data-o="1568" data-n="4" data-t="4個 ¥1,488">4個 ¥1,488</button><button type="button" class="sz" aria-pressed="false" data-p="2232" data-o="2352" data-n="6" data-t="6個 ¥2,232">6個 ¥2,232</button></div>
           <div class="adds"><div class="ad" data-add="チャーシューまん"><button type="button" class="add" data-add="チャーシューまん" aria-label="チャーシューまんをカートに追加">＋ カートに追加</button></div></div>
           <p class="incart" hidden></p>
         </div>
@@ -1304,7 +1361,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="card-desc">中華のお漬物、食物繊維が豊富でお酒の肴に！ご飯のお供！1度食べるとやみつきになる事間違いなし！ラーメンにも相性抜群！</p>
           <div class="alg"><p class="alg-tx"><strong>アレルゲン</strong>大豆・ごま<span class="alg-note">※特定原材料8品目には該当なし</span></p></div>
           <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 140g（税込）</small></div>
-          <div class="sizes" role="group" aria-label="ザーサイのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-l="140g">140g ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-l="280g">280g ¥1,520</button></div>
+          <div class="sizes" role="group" aria-label="ザーサイのサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="760" data-o="800" data-l="140g" data-t="140g ¥760">140g ¥760</button><button type="button" class="sz" aria-pressed="false" data-p="1520" data-o="1600" data-l="280g" data-t="280g ¥1,520">280g ¥1,520</button></div>
           <div class="adds"><div class="ad" data-add="ザーサイ"><button type="button" class="add" data-add="ザーサイ" aria-label="ザーサイをカートに追加">＋ カートに追加</button></div></div>
           <p class="incart" hidden></p>
         </div>
@@ -1320,7 +1377,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <p class="card-desc">モンゴル伝統のお茶。1袋30個入り。まとめ買いがお得です。</p>
           
           <div class="price"><b>¥4,000</b> <small>/ 1袋30個入（税込）</small></div>
-          <div class="sizes" role="group" aria-label="モンゴル茶のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="4000" data-n="1">1袋 ¥4,000</button><button type="button" class="sz" aria-pressed="false" data-p="7500" data-n="2">2袋 ¥7,500<span class="sz-badge">お得</span></button><button type="button" class="sz" aria-pressed="false" data-p="10800" data-n="3">3袋 ¥10,800<span class="sz-badge">最安</span></button></div>
+          <div class="sizes" role="group" aria-label="モンゴル茶のサイズ"><button type="button" class="sz on" aria-pressed="true" data-p="4000" data-n="1" data-t="1袋 ¥4,000">1袋 ¥4,000</button><button type="button" class="sz" aria-pressed="false" data-p="7500" data-n="2" data-t="2袋 ¥7,500" data-b="お得">2袋 ¥7,500<span class="sz-badge">お得</span></button><button type="button" class="sz" aria-pressed="false" data-p="10800" data-n="3" data-t="3袋 ¥10,800" data-b="最安">3袋 ¥10,800<span class="sz-badge">最安</span></button></div>
           <div class="adds"><div class="ad" data-add="モンゴル茶"><button type="button" class="add" data-add="モンゴル茶" aria-label="モンゴル茶をカートに追加">＋ カートに追加</button></div></div>
           <p class="incart" hidden></p>
         </div>
@@ -1348,19 +1405,15 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     <div class="ord-main">
       <h3 class="step" id="orderItems">商品と数量</h3>
       <div class="pks" id="orderRows">
-        <div class="pk" data-name="焼き小籠包" data-si="0"><div class="pk-info"><div class="pk-name"><a href="#p01"><span class="row-no" aria-hidden="true">01</span>焼き小籠包</a></div><div class="pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥900</s> → <b>¥855</b>（税込）</span></div></div><div class="stp" role="group" aria-label="焼き小籠包 4個入の数量"><button type="button" class="sb" data-d="-1" aria-label="焼き小籠包 4個入を1つ減らす">−</button><span class="sn"><b>2</b></span><button type="button" class="sb" data-d="1" aria-label="焼き小籠包 4個入を1つ増やす">＋</button></div><div class="pk-sub">¥1,710</div><button type="button" class="pk-x" aria-label="焼き小籠包 4個入を取り消す">取り消す</button></div>
-        <div class="pk" data-name="海老焼売【生冷凍】" data-si="1"><div class="pk-info"><div class="pk-name"><a href="#p03"><span class="row-no" aria-hidden="true">03</span>海老焼売<wbr>【生冷凍】</a></div><div class="pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div><div class="stp" role="group" aria-label="海老焼売【生冷凍】 8個入の数量"><button type="button" class="sb" data-d="-1" aria-label="海老焼売【生冷凍】 8個入を取り消す">−</button><span class="sn"><b>1</b></span><button type="button" class="sb" data-d="1" aria-label="海老焼売【生冷凍】 8個入を1つ増やす">＋</button></div><div class="pk-sub">¥1,520</div><button type="button" class="pk-x" aria-label="海老焼売【生冷凍】 8個入を取り消す">取り消す</button></div>
-        <div class="pk" data-name="肉にら饅頭【調理済み冷凍】" data-si="0"><div class="pk-info"><div class="pk-name"><a href="#p04"><span class="row-no" aria-hidden="true">04</span>肉にら饅頭<wbr>【調理済み冷凍】</a></div><div class="pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div><div class="stp" role="group" aria-label="肉にら饅頭【調理済み冷凍】 4個入の数量"><button type="button" class="sb" data-d="-1" aria-label="肉にら饅頭【調理済み冷凍】 4個入を1つ減らす">−</button><span class="sn"><b>2</b></span><button type="button" class="sb" data-d="1" aria-label="肉にら饅頭【調理済み冷凍】 4個入を1つ増やす">＋</button></div><div class="pk-sub">¥1,520</div><button type="button" class="pk-x" aria-label="肉にら饅頭【調理済み冷凍】 4個入を取り消す">取り消す</button></div>
-        <div class="pk" data-name="肉まん" data-si="0"><div class="pk-info"><div class="pk-name"><a href="#p06"><span class="row-no" aria-hidden="true">06</span>肉まん</a></div><div class="pk-price"><span class="pk-size">1個入</span><span class="nw"><s>¥540</s> → <b>¥513</b>（税込）</span></div></div><div class="stp" role="group" aria-label="肉まん 1個入の数量"><button type="button" class="sb" data-d="-1" aria-label="肉まん 1個入を1つ減らす">−</button><span class="sn"><b>2</b></span><button type="button" class="sb" data-d="1" aria-label="肉まん 1個入を1つ増やす">＋</button></div><div class="pk-sub">¥1,026</div><button type="button" class="pk-x" aria-label="肉まん 1個入を取り消す">取り消す</button></div>
       </div>
       <!-- 何も選んでいない時だけ出る案内（品が入っている間は隠れている） -->
-      <div class="pk-empty" id="orderEmpty" hidden>
+      <div class="pk-empty" id="orderEmpty">
         <p>メニューから品をお選びください</p>
         <a class="btn btn-line" href="#menu">メニューへ戻る</a>
       </div>
     </div>
 
-    <!-- 伝票＝今のHPの「合計金額」の帯。見本では下の数量と同じ中身を最初から書いてある（JSが動けば数量に合わせて書き直す） -->
+    <!-- 伝票＝今のHPの「合計金額」の帯。最初は空（JSが動けばカートに合わせて書き直す） -->
     <aside class="slip" id="orderTotalBox" aria-label="合計金額">
       <div class="slip-paper">
         <div class="slip-head">
@@ -1368,20 +1421,15 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <span class="seal" aria-hidden="true">愛華楼</span>
         </div>
         <div class="slip-scroll" id="slipScroll">
-        <ul class="slip-items" id="slipItems">
-          <li><span>焼き小籠包 <span class="nw">4個入 × 2袋</span><span class="nw">（計8個）</span></span><span>¥1,710</span></li>
-          <li><span>海老焼売【生冷凍】 <span class="nw">8個入 × 1袋</span><span class="nw">（計8個）</span></span><span>¥1,520</span></li>
-          <li><span>肉にら饅頭【調理済み冷凍】 <span class="nw">4個入 × 2袋</span><span class="nw">（計8個）</span></span><span>¥1,520</span></li>
-          <li><span>肉まん <span class="nw">1個入 × 2袋</span><span class="nw">（計2個）</span></span><span>¥1,026</span></li>
-        </ul>
+        <ul class="slip-items" id="slipItems"></ul>
         <dl class="slip-sum">
-          <dt>商品小計（税込）</dt><dd id="slipSub">¥5,776</dd>
-          <dt>送料</dt><dd id="slipShip">¥1,200</dd>
+          <dt>商品小計（税込）</dt><dd id="slipSub">¥0</dd>
+          <dt>送料</dt><dd id="slipShip">-</dd>
         </dl>
         </div>
-        <div class="slip-total"><span>合計金額</span><b id="orderTotal">¥6,976</b></div>
+        <div class="slip-total"><span>合計金額</span><b id="orderTotal">¥0</b></div>
         <div class="meter" aria-hidden="true"><i></i></div>
-        <p class="slip-note" id="orderShipping">商品小計 ¥5,776 ＋ 送料 ¥1,200（福岡県宛）／ あと¥2,224で送料無料</p>
+        <p class="slip-note" id="orderShipping">※ 送料 全国一律¥1,200（税込・冷凍便／常温便とも）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から</p>
       </div>
     </aside>
 
@@ -1390,20 +1438,20 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
       <fieldset class="fs">
         <legend>お届け先・お支払い</legend>
         <div class="fr one">
-          <div class="f"><label for="orderName">お名前<b>*</b></label><input class="in" type="text" id="orderName" required placeholder="山田 太郎" value="山田 太郎" autocomplete="name"></div>
+          <div class="f"><label for="orderName">お名前<b>*</b></label><input class="in" type="text" id="orderName" required placeholder="山田 太郎" autocomplete="name"></div>
         </div>
         <div class="fr">
-          <div class="f"><label for="orderPhone">電話番号<b>*</b></label><input class="in" type="tel" id="orderPhone" required placeholder="090-1234-5678" value="090-1234-5678" autocomplete="tel"></div>
+          <div class="f"><label for="orderPhone">電話番号<b>*</b></label><input class="in" type="tel" id="orderPhone" required placeholder="090-1234-5678" autocomplete="tel"></div>
           <div class="f"><label for="orderEmail">メールアドレス</label><input class="in" type="email" id="orderEmail" placeholder="example@email.com" autocomplete="email">
             <p class="fnote">※ お持ちでない方は空欄で大丈夫です。LINE登録済みのお客様にはLINEで発送のご連絡をいたします。</p></div>
         </div>
         <div class="fr zip">
-          <div class="f"><label for="orderZip">郵便番号<b>*</b></label><input class="in" type="text" id="orderZip" required placeholder="000-0000" value="810-0001" maxlength="8" inputmode="numeric" autocomplete="postal-code"></div>
-          <div class="f"><label for="orderAddress">住所（自動入力）<b>*</b></label><input class="in" type="text" id="orderAddress" required placeholder="郵便番号を入力すると自動入力されます" value="福岡県福岡市中央区天神" readonly>
+          <div class="f"><label for="orderZip">郵便番号<b>*</b></label><input class="in" type="text" id="orderZip" required placeholder="000-0000" maxlength="8" inputmode="numeric" autocomplete="postal-code"></div>
+          <div class="f"><label for="orderAddress">住所（自動入力）<b>*</b></label><input class="in" type="text" id="orderAddress" required placeholder="郵便番号を入力すると自動入力されます" readonly>
             <p class="fnote">※ 送料は冷凍便・常温便とも全国一律¥1,200（税込）。住所の入力後、合計金額に自動で加算されます。北海道・沖縄・離島へのお届けは、実費送料を別途ご案内いたします。</p></div>
         </div>
         <div class="fr">
-          <div class="f"><label for="orderBanchi">番地<b>*</b></label><input class="in" type="text" id="orderBanchi" required placeholder="例: 1-2-3" value="1-2-3"></div>
+          <div class="f"><label for="orderBanchi">番地<b>*</b></label><input class="in" type="text" id="orderBanchi" required placeholder="例: 1-2-3"></div>
           <div class="f"><label for="orderBuilding">建物名・部屋番号</label><input class="in" type="text" id="orderBuilding" placeholder="例: ○○マンション 101号室"></div>
         </div>
         <div class="fr">
@@ -1435,8 +1483,8 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <div>
             <div class="f"><label for="orderMemberId">ポイント会員番号（お持ちの方）</label><input class="in short" type="text" id="orderMemberId" placeholder="例: 0001" maxlength="6" inputmode="numeric">
               <p class="fnote">会員番号がなくてもお電話番号でポイントが自動付与されます</p></div>
-            <!-- ポイントを使う枠（今のHPでは会員が見つかった時だけ出る。見本では出した状態。残高は見本の数字） -->
-            <div class="pt-use" id="pointUseBox">
+            <!-- ポイントを使う枠（今のHPと同じく、電話番号で会員が見つかった時だけ出る。見本では10桁以上の電話番号を入れると出る。残高は見本の数字） -->
+            <div class="pt-use" id="pointUseBox" hidden>
               <div class="pt-use-h"><b>ポイントを使う</b><span id="pointAvailable">残高: 120pt（山田 太郎様）</span></div>
               <div class="pt-use-r">
                 <input class="in" type="number" id="pointUseAmount" min="0" step="1" value="0" placeholder="0" aria-label="利用するポイント数">
@@ -1444,6 +1492,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
                 <button type="button" class="mini">全額使う</button>
               </div>
               <p class="fnote">※ 50pt以上からご利用いただけます</p>
+              <p class="pt-use-i" id="pointDiscountInfo" role="status" hidden></p>
             </div>
           </div>
           <div>
@@ -1472,7 +1521,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
       <!-- お支払い情報の入力（「クレジットカード・PayPay」を選んだ時だけ出る枠） -->
       <div class="pay" id="cardPaymentBox">
         <h4>お支払い情報の入力</h4>
-        <div class="pay-amt" id="cardChargeAmount">このカードへのご請求額:<b id="payAmt">¥6,976</b></div>
+        <div class="pay-amt" id="cardChargeAmount">このカードへのご請求額:<b id="payAmt">¥0</b></div>
         <div class="pay-el" id="payment-element">（見本）ここに、カード番号・PayPay などを入れる<br>決済会社の入力欄が表示されます</div>
         <p class="fnote">※ カード情報はStripe（決済代行会社）に直接送信され、当店のサーバーには保存されません。<br>※ PayPayをお選びの場合は、PayPayのお支払い画面に移動し、お支払い後この画面に戻ります。</p>
       </div>
@@ -1521,6 +1570,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
           <dt>商品小計（税込）</dt><dd>¥5,776</dd>
           <dt>送料</dt><dd>¥1,200</dd>
           <dt>ポイント利用</dt><dd>利用なし</dd>
+          <dd class="rev-pt" id="revPtGuide" hidden><span></span><button type="button" class="rev-pt-b" id="revPtBtn">ポイントを使う</button></dd>
           <dt>お支払い金額（税込）</dt><dd>¥6,976</dd>
         </dl>
         <h3>お届け先・お支払い</h3>
@@ -1745,14 +1795,14 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
 </footer>
 
 <!-- 画面に張り付くカートの帯（今のHPでは商品を1つ以上選ぶと出る。見本では上の数量どおり最初から出ている） -->
-<div class="cart" id="floatingCart" role="region" aria-label="カート">
+<div class="cart off" id="floatingCart" role="region" aria-label="カート">
   <!-- 読み上げ用：数量や入数を変えるたび、変えた品・合計・送料の案内をここ1か所で伝える（画面には出ない） -->
   <p class="sr" id="srLive" role="status" aria-live="polite" aria-atomic="true"></p>
   <div class="cart-in">
     <svg class="cart-ic" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 5h5l4 17h15l3-12H10"/><circle cx="14" cy="27.5" r="2"/><circle cx="25" cy="27.5" r="2"/></svg>
     <div class="cart-sum">
-      <span class="cart-info"><b id="floatingCartCount">7</b>点 ・ 商品小計 <b id="floatingCartTotal">¥5,776</b></span>
-      <span class="cart-ship" id="floatingCartShipping">送料無料まで あと¥2,224</span>
+      <span class="cart-info"><b id="floatingCartCount">0</b>点 ・ 商品小計 <b id="floatingCartTotal">¥0</b></span>
+      <span class="cart-ship" id="floatingCartShipping"></span>
       <span class="cart-shipnote">※北海道・沖縄・離島は別途送料</span>
     </div>
     <a class="btn btn-red" href="#orderItems">注文へ進む<svg class="ar" viewBox="0 0 22 10" aria-hidden="true"><path d="M0 8h20l-7-7"/></svg></a>
@@ -1937,6 +1987,32 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     ic.hidden=!n;
   }
 
+  /* --- 7周目：送料無料の紙吹雪（今のHPと同じ出し方。外の部品は読まず、自前の小さな絵） --- */
+  var cfDone=false, cfC=null, cfR=0;
+  function cfStop(){ if(cfC){ cancelAnimationFrame(cfR); cfC.parentNode.removeChild(cfC); cfC=null; } }
+  function cfGo(){
+    if(calm || document.hidden || cfC) return;
+    var c=document.createElement('canvas'), x=c.getContext && c.getContext('2d'); if(!x) return;
+    var W=innerWidth, H=innerHeight, r=Math.min(window.devicePixelRatio||1,2), ps=[], i, a, t=0, T=125, last=0;
+    c.className='kami'; c.setAttribute('aria-hidden','true'); c.width=W*r; c.height=H*r; x.scale(r,r);
+    document.body.appendChild(c); cfC=c;
+    for(i=0;i<55;i++){ a=(-90+(Math.random()-.5)*65)*Math.PI/180;
+      ps.push({x:W/2, y:H*.72, vx:Math.cos(a), vy:Math.sin(a), v:25*(.5+Math.random()*.5), w:Math.random()*6.28, s:.1+Math.random()*.2, c:i%2?'#FFD27A':'#B02A26', k:4+Math.random()*3}); }
+    function step(now){
+      if(!cfC) return;
+      if(now-last<15){ cfR=requestAnimationFrame(step); return; }   /* 1秒60コマより速い画面でも同じ速さ */
+      last=now; t++; x.clearRect(0,0,W,H);
+      ps.forEach(function(p){
+        p.x+=p.vx*p.v; p.y+=p.vy*p.v+3; p.v*=.9; p.w+=p.s;
+        x.globalAlpha=Math.max(1-t/T,0); x.fillStyle=p.c;
+        x.save(); x.translate(p.x,p.y); x.rotate(p.w); x.fillRect(-p.k/2,-p.k*Math.abs(Math.cos(p.w*1.7))/2,p.k,Math.max(p.k*Math.abs(Math.cos(p.w*1.7)),1)); x.restore();
+      });
+      if(t<T) cfR=requestAnimationFrame(step); else cfStop();
+    }
+    cfR=requestAnimationFrame(step);
+  }
+  document.addEventListener('visibilitychange',function(){ if(document.hidden) cfStop(); });
+
   var state={items:[],sub:0,fee:0,total:0};
   /* first＝開いた時の1回目（動きも読み上げもしない）／chg＝いま変えた組み合わせ {it,i}（読み上げ用） */
   function calc(first,chg){
@@ -1990,6 +2066,8 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     d.style.setProperty('--cb',(count?cart_.offsetHeight:0)+'px');
     if(!first && !calm){cart_.classList.remove('bump'); void cart_.offsetWidth; cart_.classList.add('bump');}
     barSync();
+    ptApply();
+    if(sub>=FREE){ if(!cfDone){ cfDone=true; if(!first) cfGo(); } } else cfStop();
   }
   /* --- 下の帯のボタン：注文フォームの中（選んだ品の確認の場所を見ている・過ぎた）にいる間は、文字を「注文内容を確認する」に変える。
          押すと何が起きるかを先に見せるため。フォームより上へ戻れば「注文へ進む」に戻る。合計が足りない間は変えない（押しても確認へは進めないので） --- */
@@ -1999,6 +2077,8 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
   function barDeep(){ var g=$('#orderItems'); return !!g && g.getBoundingClientRect().top<=$('#floatingCart').getBoundingClientRect().top-120; }
   function barSync(){
     barTick=false;
+    var hb=Math.max($('.hero-title .name').getBoundingClientRect().bottom,$('.hero-cta a').getBoundingClientRect().bottom), fc=$('#floatingCart');
+    fc.classList.toggle('lo', innerWidth<=820 && hb>0 && hb>innerHeight-fc.offsetHeight);
     var on=barDeep() && state.sub>=MIN, c=$('#floatingCart'); if(on===barOn) return; barOn=on;
     /* 幅の狭い画面では「注文内容を／確認する」の2行に組む（r6.css）。言葉の途中では折れない */
     if(on) barTx.innerHTML='<span class="nw">注文内容を</span><span class="nw">確認する</span>'; else barTx.textContent='注文へ進む';
@@ -2032,10 +2112,13 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     return q;
   }
   /* 選んだ品の行で数を変える。行が消える時は、キーボードの位置を隣の行（無ければ「メニューへ戻る」）へ渡す */
+  var pkHold=0;
   function rowSet(r,q,sel){
+    if(!byKey && Date.now()<pkHold) return;
     var it=BY[r.getAttribute('data-name')], i=+r.getAttribute('data-si'), had=r.contains(document.activeElement);
     var nb=r.nextElementSibling||r.previousElementSibling;
-    if(setQ(it,i,q)===0 && had){ var f=nb&&nb.parentNode===pkBox?$(sel,nb):$('a',pkEmpty); if(f) f.focus({preventScroll:true}); }
+    var z=setQ(it,i,q)===0; if(z) pkHold=Date.now()+450;
+    if(z && had){ var f=nb&&nb.parentNode===pkBox?$(sel,nb):$('a',pkEmpty); if(f) f.focus({preventScroll:true}); }
   }
 
   document.addEventListener('click',function(ev){
@@ -2051,6 +2134,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     if((b=t.closest('.add'))){
       /* カードで選んである入数のまま1つ足す → その場で「− 数 ＋」に変わる */
       ad=b.closest('.ad'); it=BY[ad.dataset.add]; i=cardSi(it.card);
+      if(!byKey && Date.now()<(ad._hold||0)) return;
       setQ(it,i,(cart[key(it.name,i)]||0)+1);
       var pl=$('.sb[data-d="1"]',ad); if(pl) pl.focus({preventScroll:true});
       return;
@@ -2059,7 +2143,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
       if((ad=b.closest('.ad'))){
         it=BY[ad.dataset.add]; i=cardSi(it.card);
         q=setQ(it,i,(cart[key(it.name,i)]||0)+(+b.dataset.d));
-        if(q===0) $('.add',ad).focus({preventScroll:true});
+        if(q===0){ ad._hold=Date.now()+450; $('.add',ad).focus({preventScroll:true}); }
       } else if((c=b.closest('.pk'))){
         rowSet(c,(+$('.sn b',c).textContent||0)+(+b.dataset.d),'.sb');
       }
@@ -2094,6 +2178,32 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
   function payUI(){ box.hidden = pay.value!=='credit'; }
   pay.addEventListener('change',payUI); payUI();
 
+  /* --- 7周目：ポイント（今のHPと同じ決まり。照会は外へ送らず、見本の決まった答えを出す） ---
+     電話番号が10桁以上入ると、0.6秒後に「残高 120pt の会員が見つかった」ことにして、使う枠を出す（今のHPは同じ間合いでサーバーに尋ねる）。
+     使えるのは 50pt 以上・残高まで・合計金額まで。合計金額の表示は割引前のまま、枠の中に「お支払い金額」を出す */
+  var PT=0, PMIN=50, ptBox=$('#pointUseBox'), ptIn=$('#pointUseAmount'), ptInfo=$('#pointDiscountInfo'), ptT=0;
+  function ptUse(){ var n=parseInt(ptIn.value)||0; if(n<PMIN) return 0; n=Math.min(n,PT,state.total); return n>=PMIN?n:0; }
+  function ptApply(){
+    var n=parseInt(ptIn.value)||0, up=state.total>0?Math.min(PT,state.total):PT;
+    if(n>up){ n=up; ptIn.value=up; }
+    var a=ptUse();
+    ptInfo.textContent='';
+    if(n>0 && n<PMIN){ ptInfo.className='pt-use-i low'; ptInfo.textContent='※ 50pt以上から利用可能です'; ptInfo.hidden=false; }
+    else if(a){ ptInfo.className='pt-use-i'; ptInfo.appendChild(document.createTextNode('−'+yen(a)+' ポイント割引適用')); ptInfo.appendChild(document.createElement('br')); ptInfo.appendChild(document.createTextNode('お支払い金額: '+yen(state.total-a))); ptInfo.hidden=false; }
+    else ptInfo.hidden=true;
+    $('#payAmt').textContent=yen(state.total-a);
+  }
+  function ptFound(){ PT=120; ptIn.max=PT; ptIn.value=0; ptBox.hidden=false; $('#orderMemberId').value='0001'; ptApply(); }
+  function ptHide(){ PT=0; ptBox.hidden=true; ptIn.value=0; ptApply(); }
+  $('#orderPhone').addEventListener('input',function(){
+    clearTimeout(ptT);
+    if(this.value.replace(/[\s\-\(\)]/g,'').length>=10) ptT=setTimeout(ptFound,600); else ptHide();
+  });
+  ptIn.addEventListener('input',ptApply);
+  $('.mini',ptBox).addEventListener('click',function(){ var m=Math.min(PT,state.total); ptIn.value=m>=PMIN?m:0; ptApply(); });
+  /* 郵便番号 → 住所：今のHPは外の郵便番号の台帳に尋ねる。見本は外へ送らないので、7桁入ったら見本の住所を入れる（どの番号でも同じ） */
+  $('#orderZip').addEventListener('input',function(){ $('#orderAddress').value=this.value.replace(/[^0-9]/g,'').length===7?'福岡県福岡市中央区天神':''; });
+
   /* --- 確認画面（伝票の清書） --- */
   var dlg=$('#orderReviewDialog'), flow=$('#orderFlowDialog'), snd=$('#orderProcessingOverlay'), done=$('#orderCompleteOverlay'), sending=false, timer=0;
   var v=function(id){return $('#'+id).value}, sel=function(id){var s=$('#'+id);return s.options[s.selectedIndex].text};
@@ -2105,10 +2215,15 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
   }
   function fill(){
     list($('#revItems'));
-    var dd=$$('#revTot dd'); dd[0].textContent=yen(state.sub); dd[1].textContent=yen(state.fee); dd[3].textContent=yen(state.total);
+    var dd=$$('#revTot dd:not(.rev-pt)'), up=ptUse(), g=$('#revPtGuide');
+    dd[0].textContent=yen(state.sub); dd[1].textContent=yen(state.fee);
+    dd[2].textContent=up?up.toLocaleString('ja-JP')+'pt（−'+yen(up)+'）':'利用なし';
+    dd[3].textContent=yen(state.total-up);
+    g.hidden=!(up===0 && PT>=PMIN && !ptBox.hidden);
+    $('span',g).textContent='ポイントが '+PT.toLocaleString('ja-JP')+'pt あります（'+PMIN+'ptからご利用いただけます）';
     var info=[v('orderName'),v('orderPhone'),v('orderEmail')||'未入力',addr(),sel('orderDelivery'),sel('orderPayment'),v('orderDate')||'指定なし',v('orderNote')||'なし'];
     $$('#revInfo dd').forEach(function(e,i){e.textContent=info[i]});
-    $('#orderConfirmBtn').textContent = pay.value==='credit' ? yen(state.total)+'を支払う' : 'この内容で注文を確定する';
+    $('#orderConfirmBtn').textContent = pay.value==='credit' ? yen(state.total-up)+'を支払う' : 'この内容で注文を確定する';
   }
   /* 古いブラウザ（確認画面の部品 dialog を知らない物）では、同じ紙を暗幕の上に重ねて出す。
      確かめる時は、住所の末尾に ?nodialog を付ける。開いている間は html に dlg-open の印（印刷で、その紙だけを出すため） */
@@ -2135,6 +2250,11 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
   function openRev(){ fill(); show(dlg); var t=$('#orderReviewTitle'); if(t) t.focus({preventScroll:true}); dlg.scrollTop=0; }
   $('#orderForm').addEventListener('submit',function(e){ e.preventDefault(); openRev(); });
   $('#revBack').addEventListener('click',function(){ shut(dlg); $('#orderSubmitBtn').focus(); });
+  $('#revPtBtn').addEventListener('click',function(){
+    shut(dlg); if(ptBox.hidden) return;
+    barBring(ptIn);
+    try{ ptIn.select(); }catch(e){}
+  });
   /* Esc で閉じた時も印を外す（close の知らせが遅れる・届かない場合に備えて cancel でも拾う） */
   dlg.addEventListener('close',mark);
   dlg.addEventListener('cancel',function(){ setTimeout(mark,0); });
@@ -2145,14 +2265,15 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     $('#doneItemsH').textContent=card?'ご注文内容':'注文内容';
     list($('#doneItems'));
     var dd=$$('#doneInfo dd');
-    dd[0].textContent=yen(state.total);
+    var up=ptUse();
+    dd[0].textContent=yen(state.total-up);
     dd[1].textContent=''; dd[1].appendChild(document.createTextNode(v('orderName')+'様')); dd[1].appendChild(document.createElement('br')); dd[1].appendChild(document.createTextNode(addr()));
     dd[2].textContent=sel('orderDelivery'); dd[3].textContent=sel('orderPayment');
     /* カード・PayPay は「決済を確認しています」の案内、銀行振込・代金引換はポイント付与とLINE連携の案内（今のHPと同じ出し分け） */
     $('#donePend').hidden=!card;
     var earned=Math.floor(state.sub/200);
     $('#orderPointEarned').textContent=earned;
-    $('#orderPointBalance').textContent='残高: '+(120+earned)+'pt（会員番号: #0001）';
+    $('#orderPointBalance').textContent='残高: '+(120-up+earned)+'pt（会員番号: #0001）';
     $('#orderCompletePoint').hidden=card; $('#orderCompleteLineLink').hidden=card;
   }
   function showDone(){
@@ -2171,7 +2292,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
      閉じた後は「ご注文フォーム」の題へ戻る（読み上げでも、いまどこにいるかが分かる） */
   function reset(){
     if(done.hidden) return;
-    done.hidden=true; clearTimeout(timer); sending=false; cart={}; calc(true);
+    done.hidden=true; clearTimeout(timer); sending=false; cart={}; cfDone=false; calc(true);
     var h=$('#orderform h2'); if(h){ h.setAttribute('tabindex','-1'); h.focus(); }
   }
   flow.addEventListener('close',function(){ mark(); reset(); });
@@ -2193,8 +2314,13 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     else if(r.top<hb+4 && r.top>-innerHeight) scrollBy({top:r.top-hb-16,behavior:'instant'});
   });
 
-  /* 見本の確かめ用の入口：住所の末尾に ?empty で、何も選んでいない状態から始まる */
-  if(/[?&]empty\b/.test(location.search)) cart={};
+  /* 見本は空から始まる（7周目）。確かめ・撮影用の入口：住所の末尾に ?sample（または #review などの撮影用の入口）で、
+     品4つ・お客様情報入り・ポイント照会済みの「にぎやかな見本の状態」から始まる */
+  if(/[?&]sample\b/.test(location.search) || /^#(review|sending|done|done-bank)$/.test(location.hash)){
+    cart={"焼き小籠包|0":2,"海老焼売【生冷凍】|1":1,"肉にら饅頭【調理済み冷凍】|0":2,"肉まん|0":2};
+    var SV={"orderName":"山田 太郎","orderPhone":"090-1234-5678","orderZip":"810-0001","orderAddress":"福岡県福岡市中央区天神","orderBanchi":"1-2-3"}; Object.keys(SV).forEach(function(k){ $('#'+k).value=SV[k]; });
+    ptFound();
+  }
   calc(true);
   d.setAttribute('data-h',d.scrollHeight); /* 見本の撮影用（ページの高さの控え） */
   /* 見本の撮影用の入口：#review＝確認画面 ／ #sending＝送信中 ／ #done＝完了（カード）／ #done-bank＝完了（銀行振込） */
