@@ -1,0 +1,1134 @@
+/* 愛華楼HP トップページ（A案・夜の店先）の見た目。
+   今の styles.css は商品ページ・催事ページ・特商法・お支払い確認ページが読んでいるので触らない。こちらは index-a.html（掛け替え後は index.html）だけが読む。
+   前半＝見本（a-seme.html 2026-11-19 仕上げ7周目）の <style> をそのまま取り出したもの。
+   後半「本番用に足したもの」＝見本に置き場所の無かった部品（カード欄の案内・代引き手数料・ポイント残高の結果・LINE連携 など）。
+   書体「Aika Mincho」は しっぽり明朝B1 から画面の字だけを抜いたもの（fonts/・ライセンスは fonts/OFL-shipporiminchob1.txt）。 */
+@font-face{font-family:"Aika Mincho";font-weight:500;font-style:normal;font-display:swap;src:url(fonts/smb1-500.woff2) format("woff2")}
+@font-face{font-family:"Aika Mincho";font-weight:800;font-style:normal;font-display:swap;src:url(fonts/smb1-800.woff2) format("woff2")}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0}
+img{display:block;max-width:100%}
+h1,h2,h3,h4,p,ul,ol,dl,dd,fieldset,legend{margin:0;padding:0}
+ul,ol{list-style:none}
+fieldset{border:0;min-width:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;background:none;border:0;padding:0}
+input,select,textarea{font:inherit;color:inherit}
+s{text-decoration-thickness:1px;text-decoration-color:currentColor}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+summary{cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+[hidden]{display:none!important}
+/* スクロールで現れる演出：開いた時に画面の下に隠れている物だけ、JSが「待ち」の印を付けてふわっと出す。
+   JSが動かない時・最初から見えている物は、何もせずそのまま見える */
+.rv{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.rv.wait{opacity:0;transform:translateY(22px)}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv.wait{opacity:1;transform:none}
+}
+
+:root{
+  --night:#0D0D0F; --panel:#16161C; --gold:#FFD27A; --red:#B02A26; --red-d:#7E1B1B;
+  --tx:#EDEBE6; --mut:#B4B2BA; --old:#D2D0D6; --hl:rgba(255,210,122,.24); --edge:#7C7A83;
+  --paper:#FBF6EE; --ink:#1A1A1A; --ink2:#55504A;
+  --serif:"Aika Mincho","Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;
+  --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;
+  --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  --m:clamp(20px,5.5vw,88px);
+  --sec:clamp(88px,11vw,168px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+h1,h2,h3,h4,p,li,dd,legend{word-break:auto-phrase;line-break:strict}
+body{background:var(--night);color:var(--tx);font-family:var(--sans);font-size:16px;line-height:1.9;overflow-x:clip}
+
+/* ---------- ヘッダー ---------- */
+.hd{position:sticky;top:0;z-index:50;background:rgba(13,13,15,.92);border-bottom:1px solid var(--hl)}
+.hd-in{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 var(--m)}
+.brand{font-family:var(--serif);font-weight:800;font-size:22px;letter-spacing:.32em;color:var(--gold);display:flex;align-items:center;min-height:44px}
+.nav-pc{display:flex;gap:clamp(14px,2vw,30px);font-size:16px}
+.nav-pc a{display:flex;align-items:center;min-height:44px;position:relative;white-space:nowrap}
+.nav-pc a::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.nav-pc a:hover::after,.nav-pc a.now::after{transform:scaleX(1)}
+.nav-pc a.now{color:var(--gold)}
+.mnav{display:none}
+.mnav summary{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 4px 0 12px;font-size:16px;color:var(--gold)}
+.mnav summary i{display:block;width:22px;height:9px;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
+.mnav ul{position:absolute;left:0;right:0;top:64px;background:var(--night);border-bottom:1px solid var(--hl);padding:8px var(--m) 20px}
+.mnav li a{display:flex;align-items:center;min-height:52px;border-bottom:1px solid rgba(255,210,122,.12);font-size:17px}
+@media (max-width:1100px){.nav-pc{display:none}.mnav{display:block}}
+/* 読み進んだ分だけ、ヘッダーの下の線が金色になる（提灯の出ない幅でも道しるべになる） */
+.hd-prog{position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--gold);transform-origin:left;transform:scaleX(var(--p,0))}
+
+/* ---------- 提灯の道しるべ（仕掛け1）：軒先の提灯が、読み進むにつれて下りてきて、いまの章の番号を灯す ---------- */
+.lamp{display:none}
+.lamp-str,.lamp-b{display:block}
+@media (min-width:1101px){
+  .js .lamp{display:block;position:fixed;z-index:40;top:64px;left:calc(var(--m) / 2 - 19px);width:38px;pointer-events:none;transform-origin:50% 0}
+  .js .lamp.sway{animation:sway1 1.6s var(--ease)}
+  .lamp-str{transition:height .8s var(--ease);display:block;width:1px;margin:0 auto;height:var(--lpx,14px);background:linear-gradient(180deg,rgba(255,210,122,.1),rgba(255,210,122,.7))}
+}
+.lamp-b{position:relative;display:grid;place-items:center;width:38px;height:52px;border:1px solid var(--gold);border-radius:50%/36%;
+  background:radial-gradient(ellipse at 50% 58%,rgba(255,210,122,.36),rgba(255,210,122,.07) 72%),var(--night);
+  box-shadow:0 0 34px 8px rgba(255,210,122,.14);font-family:var(--serif);font-size:19px;line-height:1;color:var(--gold)}
+.lamp-b::before,.lamp-b::after{content:"";position:absolute;left:50%;width:42%;height:4px;margin-left:-21%;background:var(--gold)}
+.lamp-b::before{top:-3px}.lamp-b::after{bottom:-3px}
+.lamp-b span{transition:opacity .45s}
+.lamp-b.sw span{opacity:0}
+@keyframes sway1{0%{transform:rotate(0)}22%{transform:rotate(3.2deg)}48%{transform:rotate(-2.2deg)}74%{transform:rotate(1deg)}100%{transform:rotate(0)}}
+
+/* ---------- ボタン ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:54px;padding:0 34px;font-family:var(--serif);font-size:17px;letter-spacing:.14em;border-radius:2px;transition:background .3s,color .3s,border-color .3s,transform .15s}
+.btn:active,.add:active,.submit:active{transform:translateY(1px) scale(.99)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-d)}
+.btn-line{border:1px solid var(--gold);color:var(--gold)}
+.btn-line:hover{background:var(--gold);color:var(--night)}
+.btn svg{width:22px;height:10px;flex:none}
+.ar{fill:none;stroke:currentColor;stroke-width:1.2}
+
+/* ---------- 最初の画面：夜の店先 ---------- */
+.hero{position:relative;height:clamp(640px,calc(100vh - 64px),820px);overflow:hidden}
+.hero-ph{position:absolute;top:0;right:0;bottom:0;left:36%}
+.hero-ph img{width:100%;height:100%;object-fit:cover;object-position:58% 50%}
+.hero-ph::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,#0D0D0F 0%,rgba(13,13,15,.82) 14%,rgba(13,13,15,0) 50%),
+  linear-gradient(0deg,#0D0D0F 0%,rgba(13,13,15,0) 26%),
+  linear-gradient(180deg,rgba(13,13,15,.55) 0%,rgba(13,13,15,0) 18%)}
+.hero-in{position:relative;z-index:2;height:100%;display:flex;align-items:flex-end;gap:clamp(28px,4vw,64px);padding:56px var(--m) 72px}
+.hero-title{writing-mode:vertical-rl;font-family:var(--serif);align-self:flex-start;margin-top:8px;display:block;line-height:1}
+.hero-title .pre{display:block;font-size:clamp(17px,1.5vw,21px);font-weight:500;letter-spacing:.62em;color:var(--tx);padding-top:.5em;margin-left:18px}
+.hero-title .name{display:block;font-size:clamp(104px,11.6vw,170px);font-weight:800;color:var(--gold);letter-spacing:.03em;line-height:1.04}
+.hero-side{padding-bottom:6px}
+.hero-tag{font-family:var(--serif);font-size:clamp(22px,2.2vw,30px);line-height:1.75;letter-spacing:.14em;margin-bottom:34px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.hero-rule{width:1px;height:72px;background:var(--gold);margin-bottom:26px;opacity:.7}
+/* 湯気：写真の上には重ねない（料理を盛って見せないため）。文字のそばを昇る線の絵 */
+.steam{position:absolute;z-index:1;left:calc(var(--m) + clamp(150px,15vw,230px));top:7%;width:clamp(90px,10vw,150px);height:52%;pointer-events:none}
+.steam path{fill:none;stroke:var(--gold);stroke-width:1;stroke-linecap:round;opacity:.38;stroke-dasharray:14 520;animation:steam 9s linear infinite}
+.steam path:nth-child(2){animation-duration:12s;animation-delay:-4s;opacity:.26}
+.steam path:nth-child(3){animation-duration:10.5s;animation-delay:-7s;opacity:.3}
+.steam path.still{stroke-dasharray:none;animation:none;opacity:.3}
+@keyframes steam{from{stroke-dashoffset:0}to{stroke-dashoffset:534}}
+.js .hero-title .name{animation:rise 1.4s var(--ease) both}
+.js .hero-side{animation:rise 1.4s .25s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.scrolldown{position:absolute;z-index:2;right:var(--m);bottom:104px;writing-mode:vertical-rl;font-family:var(--serif);font-size:16px;letter-spacing:.4em;color:var(--tx);opacity:.85}
+
+/* ---------- 章のしるし ---------- */
+.mark{font-family:var(--serif);font-size:16px;letter-spacing:.34em;color:var(--gold);display:flex;align-items:center;gap:16px}
+.mark::after{content:"";width:56px;height:1px;background:var(--gold);opacity:.6}
+.h-big{font-family:var(--serif);font-weight:800;font-size:clamp(44px,6.4vw,96px);line-height:1.12;letter-spacing:.06em;color:var(--gold);margin-top:22px}
+.h-v{writing-mode:vertical-rl;font-family:var(--serif);font-weight:800;font-size:clamp(38px,4.4vw,62px);letter-spacing:.2em;line-height:1.2;color:var(--gold)}
+
+/* ---------- 愛華楼について ---------- */
+.about{position:relative;padding:clamp(96px,12vw,184px) var(--m) clamp(88px,10vw,150px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
+.about .mark{grid-column:1/13;margin-bottom:40px}
+.about h2{grid-column:2/4;grid-row:2/5;justify-self:center}
+.about .lead{grid-column:5/13;font-family:var(--serif);font-weight:500;font-size:clamp(21px,1.9vw,28px);line-height:2.05;letter-spacing:.04em}
+.about .body{grid-column:5/12;margin-top:44px;font-size:17px;line-height:2.15;color:var(--tx)}
+.badges{grid-column:5/13;display:flex;gap:44px;flex-wrap:wrap;margin-top:60px;padding-top:36px;border-top:1px solid var(--hl)}
+.badge{display:flex;align-items:center;gap:16px;font-size:17px;letter-spacing:.1em}
+.badge i{font-style:normal;display:grid;place-items:center;width:60px;height:60px;border:1px solid var(--gold);border-radius:50%;font-family:var(--serif);font-size:27px;color:var(--gold)}
+
+/* ---------- 看板：海老焼売 ---------- */
+.feat{position:relative;border-top:1px solid var(--hl);padding:clamp(80px,10vw,150px) var(--m);display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:clamp(24px,4vw,72px);align-items:center}
+.feat-ph{position:relative;max-width:620px;justify-self:end;width:100%}
+.feat-ph img{width:100%;height:auto}
+.feat-ph::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 70px 46px var(--night);pointer-events:none}
+.feat-flag{position:absolute;z-index:2;top:-18px;left:0;writing-mode:vertical-rl;background:var(--red);color:#fff;font-family:var(--serif);font-size:17px;letter-spacing:.34em;padding:20px 11px 16px}
+.feat h2{font-family:var(--serif);font-weight:800;font-size:clamp(60px,7.4vw,112px);line-height:1.12;letter-spacing:.04em;color:var(--gold);margin:22px 0 30px}
+.feat p{font-size:17px;line-height:2.1}
+.feat-price{margin:34px 0 30px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.feat-price s{color:var(--old);font-size:24px}
+.feat-price b{font-family:var(--serif);font-weight:800;font-size:clamp(52px,5.4vw,76px);line-height:1;color:var(--gold)}
+.feat-price small{font-size:16px;color:var(--mut)}
+
+/* ---------- メニュー ---------- */
+.menu{border-top:1px solid var(--hl);padding:var(--sec) var(--m) clamp(88px,10vw,150px)}
+.menu-top{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,88px);align-items:end;margin-bottom:clamp(48px,6vw,88px)}
+.menu-top h2{white-space:nowrap}
+.note{border-top:1px solid var(--gold);border-bottom:1px solid var(--hl);padding:26px 0 24px}
+.note-main{font-family:var(--serif);font-size:clamp(18px,1.7vw,23px);line-height:1.7;letter-spacing:.04em}
+.note-main strong{font-size:1.9em;font-weight:800;color:var(--gold);letter-spacing:.02em;margin-left:.15em;white-space:nowrap}
+.note-sub{color:var(--mut);font-size:16px;margin-top:6px}
+
+/* 短冊のお品書き：店の壁に下がる品書きの札。10品をひと目で見渡して、押すとその品へ飛ぶ */
+.tzs{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));margin-bottom:clamp(64px,8vw,120px)}
+.tzs li{border-top:1px solid var(--gold);padding-top:20px;position:relative;display:flex;justify-content:center}
+.tzs li::before{content:"";position:absolute;top:0;left:50%;width:1px;height:20px;background:var(--gold);opacity:.7}
+.tz{display:flex;flex-direction:column;align-items:center;width:min(100% - 8px,78px);height:292px;padding:12px 2px 12px;background:var(--paper);color:var(--ink);transform-origin:50% -20px;transition:transform .7s var(--ease),box-shadow .5s}
+.tz:hover{transform:rotate(-2.2deg);box-shadow:0 14px 40px rgba(255,210,122,.16)}
+.tzs li:nth-child(even) .tz:hover{transform:rotate(2.2deg)}
+/* 伝票に入っている品の札には、朱の丸印が付く（札と伝票がつながる） */
+.tz{position:relative}
+.tz::after{content:"";position:absolute;left:50%;bottom:46px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--red);transform:scale(0);transition:transform .5s var(--ease)}
+.tz.sel::after{transform:scale(1)}
+.tz-no{font-family:var(--serif);font-size:16px;line-height:1.4;letter-spacing:.08em;color:var(--red-d)}
+.tz-name{flex:1;writing-mode:vertical-rl;font-family:var(--serif);font-weight:800;font-size:22px;line-height:1.2;letter-spacing:.14em;margin:10px 0 6px;white-space:nowrap}
+.tz-price{font-size:16px;font-weight:700;line-height:1.4;color:var(--red);letter-spacing:0;white-space:nowrap}
+
+/* 商品 */
+.card-ph{aspect-ratio:3/2;overflow:hidden;background:#000}
+.card-ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
+.card:hover .card-ph img{transform:scale(1.04)}
+picture{display:contents}
+.card-ph.plate{background:var(--night)}
+.card-ph.plate img{object-position:var(--px,50%) var(--py,50%);transform-origin:var(--px,50%) var(--py,50%);transform:scale(var(--z,1));
+  -webkit-mask-image:radial-gradient(ellipse 58% 74% at var(--px,50%) var(--py,50%),#000 46%,transparent 100%);mask-image:radial-gradient(ellipse 58% 74% at var(--px,50%) var(--py,50%),#000 46%,transparent 100%)}
+.card:hover .card-ph.plate img{transform:scale(calc(var(--z,1) * 1.04))}
+.card-head{display:flex;align-items:baseline;gap:12px;margin-top:22px;flex-wrap:wrap}
+.card-no{font-family:var(--serif);font-size:16px;letter-spacing:.12em;color:var(--gold)}
+.card-name{font-family:var(--serif);font-weight:500;font-size:clamp(25px,2.1vw,30px);line-height:1.3;letter-spacing:.07em;color:var(--gold);flex:1 1 auto}
+.tag{font-size:16px;line-height:1.5;padding:2px 14px;border:1px solid var(--hl);border-radius:999px;white-space:nowrap}
+.tag-hot{background:var(--red);border-color:var(--red);color:#fff}
+.tag-cold{border-color:var(--mut)}
+.card-desc{margin-top:12px;font-size:16px;line-height:1.9}
+.alg{margin-top:16px;padding-top:14px;border-top:1px solid var(--hl)}
+.alg-ics{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.alg-ic{font-size:16px;font-weight:700;line-height:1.5;padding:1px 10px;border:1px solid var(--mut);border-radius:3px}
+.alg-tx{font-size:16px;line-height:1.75;color:var(--tx)}
+.alg-tx strong{color:var(--gold);font-size:16px;font-weight:400;margin-right:.8em;letter-spacing:.06em}
+.alg-note{display:block;font-size:16px;color:var(--mut)}
+.price{margin-top:18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.price s{color:var(--old);font-size:20px}
+.price b{font-family:var(--serif);font-weight:800;font-size:38px;line-height:1;color:var(--gold)}
+.price small{font-size:16px;color:var(--mut)}
+.sizes{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.sz{flex:1 1 auto;min-height:48px;padding:0 10px;border:1px solid var(--edge);border-radius:3px;font-size:16px;white-space:nowrap;transition:background .25s,color .25s,border-color .25s}
+.sz:hover,.os:hover{border-color:var(--gold)}
+.sz.on,.os.on{background:var(--gold);border-color:var(--gold);color:var(--night);font-weight:700}
+.sz-badge{font-size:16px;font-weight:700;line-height:1.3;background:var(--red);color:#fff;border-radius:999px;padding:0 9px;margin-left:6px}
+.adds{display:flex;gap:8px;margin-top:10px}
+.add{flex:1;min-height:54px;border-radius:3px;background:var(--red);color:#fff;font-size:16px;font-weight:700;letter-spacing:.06em;transition:background .25s,transform .15s}
+.add:hover{background:var(--red-d)}
+.add.done{background:var(--red-d)}
+.card-top{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,64px);align-items:end;margin-bottom:clamp(64px,7vw,112px)}
+.card-top .card-head{margin-top:0}
+.card-top .card-name{font-size:clamp(34px,3.6vw,52px)}
+.card-top .card-desc{font-size:17px;line-height:2}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(24px,3.4vw,56px);row-gap:clamp(48px,5vw,80px)}
+.grid .card:nth-child(3n+2){margin-top:72px}
+
+/* ---------- ご注文フォーム（仕掛け2）：選ぶたびに、右の伝票に一行ずつ書き足される ---------- */
+.ord{border-top:1px solid var(--hl);padding:var(--sec) var(--m) clamp(88px,10vw,150px)}
+.ord-top{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,5vw,88px);align-items:end;margin-bottom:clamp(40px,5vw,72px)}
+.ord-top h2{white-space:nowrap;font-size:clamp(40px,5.2vw,78px)}
+.ord-lead{font-family:var(--serif);font-size:clamp(18px,1.6vw,22px);line-height:2;letter-spacing:.04em}
+.ship{display:grid;grid-template-columns:auto auto;justify-content:space-between;align-items:baseline;gap:6px 40px;border-top:1px solid var(--gold);border-bottom:1px solid var(--hl);padding:22px 0 20px;margin-bottom:clamp(48px,6vw,88px);font-family:var(--serif);font-size:clamp(18px,1.6vw,22px);letter-spacing:.04em;line-height:1.7}
+.ship strong{font-weight:800;color:var(--gold)}
+.ship .big{font-size:1.75em;font-weight:800;color:var(--gold);margin-left:.2em;white-space:nowrap;line-height:1.2}
+.ship-note{grid-column:1/-1;font-family:var(--sans);font-size:16px;letter-spacing:0;color:var(--mut)}
+.ord-grid{display:grid;grid-template-columns:minmax(0,1.66fr) minmax(0,1fr);column-gap:clamp(32px,4.4vw,72px);align-items:start}
+.ord-main{grid-column:1;grid-row:1}
+.ord-form{grid-column:1;grid-row:2;margin-top:clamp(56px,6vw,88px)}
+.slip{grid-column:2;grid-row:1/3;position:sticky;top:92px}
+.step{font-family:var(--serif);font-weight:500;font-size:24px;letter-spacing:.14em;color:var(--gold);padding-bottom:14px;border-bottom:1px solid var(--gold);display:block;width:100%}
+
+/* 伝票（生成りの紙。紙の上では金を使わず、墨と朱だけ） */
+.slip-paper{position:relative;background:var(--paper);color:var(--ink);padding:34px 28px 26px;box-shadow:0 0 90px rgba(255,210,122,.13),0 24px 50px rgba(0,0,0,.5);transform:rotate(-.5deg)}
+.slip-paper::before{content:"";position:absolute;left:0;right:0;top:-7px;height:8px;background:radial-gradient(circle at 8px 0,transparent 5px,var(--paper) 5.5px) 0 0/16px 8px repeat-x}
+.slip-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:2px solid var(--ink)}
+.slip-head h3{font-family:var(--serif);font-weight:800;font-size:25px;letter-spacing:.16em;line-height:1.4}
+.slip-head p{font-size:16px;line-height:1.5;color:var(--ink2);margin-top:2px}
+.seal{flex:none;writing-mode:vertical-rl;font-family:var(--serif);font-weight:800;font-size:16px;line-height:1;letter-spacing:.06em;color:var(--red);border:2px solid var(--red);border-radius:3px;padding:7px 6px;transform:rotate(3deg)}
+.slip-items li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px dotted #A79F92;font-size:16px;line-height:1.6}
+.slip-items li span:last-child{font-family:var(--serif);font-weight:800;font-size:18px;white-space:nowrap}
+.js .slip-items li.new{animation:write .8s var(--ease) both}
+@keyframes write{from{clip-path:inset(0 100% 0 0);opacity:.2}to{clip-path:inset(0 0 0 0);opacity:1}}
+.slip-sum{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:14px 0 12px;font-size:16px;line-height:1.6}
+.slip-sum dd{text-align:right;font-family:var(--serif);font-weight:800;font-size:18px}
+.slip-total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:2px solid var(--ink);padding-top:14px}
+.slip-total span{font-family:var(--serif);font-weight:800;font-size:19px;letter-spacing:.14em}
+.slip-total b{font-family:var(--serif);font-weight:800;font-size:44px;line-height:1.1;color:var(--red);white-space:nowrap}
+.meter{margin-top:18px}
+.meter i{display:block;height:4px;background:#E2D9C8;position:relative}
+.meter i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--free,0) * 100%);background:var(--red);transition:width .6s var(--ease)}
+.slip-note{margin-top:10px;font-size:16px;line-height:1.7;color:var(--ink2)}
+
+/* 入力欄 */
+.fs{margin-top:44px}
+.fs legend{font-family:var(--serif);font-size:20px;letter-spacing:.12em;color:var(--tx);display:flex;align-items:center;gap:16px;width:100%;margin-bottom:22px}
+.fs legend::after{content:"";flex:1;height:1px;background:var(--hl)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:22px 22px;margin-bottom:22px}
+.fr.zip{grid-template-columns:200px 1fr}
+.fr.one{grid-template-columns:1fr}
+.f{display:flex;flex-direction:column;gap:8px;min-width:0}
+.f label{font-size:16px;line-height:1.6;letter-spacing:.04em}
+.f label b{color:var(--gold);font-weight:400;margin-left:.3em}
+.in{width:100%;min-height:56px;padding:0 16px;background:var(--panel);border:1px solid var(--edge);border-radius:2px;font-size:17px;line-height:1.6;color:var(--tx);color-scheme:dark;transition:border-color .25s,box-shadow .25s}
+textarea.in{padding:14px 16px;min-height:120px;resize:vertical}
+select.in{-webkit-appearance:none;appearance:none;padding-right:44px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' fill='none' stroke='%23FFD27A' stroke-width='1.4'%3E%3Cpath d='M1 1l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.in::placeholder{color:#93919A}
+.in:hover{border-color:var(--mut)}
+.in:focus{outline:0;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,210,122,.28)}
+.in[readonly]{background:transparent;border-style:dashed}
+.in.short{max-width:200px}
+.fnote{font-size:16px;line-height:1.7;color:var(--mut)}
+
+/* ポイント */
+.pt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.pt-use{margin-top:22px;border:1px solid var(--hl);padding:18px 18px 16px}
+.pt-use-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.pt-use-h b{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:.1em;color:var(--gold)}
+.pt-use-r{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.pt-use-r .in{width:110px;text-align:right}
+.mini{min-height:48px;padding:0 18px;border:1px solid var(--gold);border-radius:2px;color:var(--gold);font-size:16px;transition:background .25s,color .25s}
+.mini:hover{background:var(--gold);color:var(--night)}
+/* ポイントカード（紙の札） */
+.ptcard{background:var(--paper);color:var(--ink);border-radius:10px;padding:22px 22px 20px;box-shadow:0 0 60px rgba(255,210,122,.1)}
+.ptcard-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.ptcard h4{font-family:var(--serif);font-weight:800;font-size:21px;letter-spacing:.1em;line-height:1.5}
+.ptcard>p{font-size:16px;line-height:1.7;margin:6px 0 12px}
+.ptcard dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;border-top:1px solid #CFC6B5;padding-top:12px;font-size:16px;line-height:1.7}
+.ptcard dt{font-weight:700;color:var(--red)}
+.pt-line{margin-top:18px;border-left:2px solid var(--gold);padding-left:16px}
+.pt-line b{display:block;font-weight:400;color:var(--gold);letter-spacing:.06em}
+.pt-line strong{color:var(--gold);font-weight:700}
+
+/* お支払い情報 */
+.pay{margin-top:28px;border:1px solid var(--gold);padding:22px 22px 20px}
+.pay h4{font-family:var(--serif);font-weight:500;font-size:20px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+.pay-amt{font-family:var(--serif);font-size:20px;border-top:1px solid var(--hl);border-bottom:1px solid var(--hl);padding:10px 0;margin-bottom:14px}
+.pay-amt b{font-weight:800;font-size:28px;color:var(--gold);margin-left:.3em}
+.pay-el{min-height:132px;display:grid;place-items:center;text-align:center;border:1px dashed var(--edge);padding:16px;margin-bottom:12px;color:var(--mut)}
+.submit{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;min-height:72px;margin-top:32px;background:var(--red);color:#fff;border-radius:2px;font-family:var(--serif);font-size:21px;letter-spacing:.2em;transition:background .3s,transform .15s}
+.submit:hover{background:var(--red-d)}
+.submit svg{width:28px;height:10px}
+.submit[disabled]{background:#3A3A40;color:var(--mut);cursor:not-allowed}
+.err{margin-top:14px;padding:14px 18px;border:1px solid var(--red);background:rgba(176,42,38,.18);color:#fff;font-weight:700;text-align:center}
+.ord-note{margin-top:14px;text-align:center;color:var(--mut)}
+
+/* ポイント残高を確認する */
+.ptcheck{margin-top:clamp(64px,7vw,104px);border-top:1px solid var(--hl);padding-top:40px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px clamp(24px,5vw,88px);align-items:start}
+.ptcheck h3{font-family:var(--serif);font-weight:500;font-size:24px;letter-spacing:.12em;color:var(--gold);line-height:1.5}
+.ptcheck-row{display:flex;gap:10px}
+.ptcheck-row .in{flex:1;min-width:0}
+.ptcheck-row .mini{min-height:56px;padding:0 28px}
+.ptcheck .fnote{margin-top:12px}
+
+/* 確認画面（伝票の清書） */
+.rev{width:min(680px,calc(100vw - 24px));max-height:calc(100vh - 32px);padding:0;border:0;background:var(--paper);color:var(--ink);overflow:auto;box-shadow:0 0 120px rgba(255,210,122,.2)}
+.rev::backdrop{background:rgba(13,13,15,.84)}
+.rev[open]{animation:revin .5s var(--ease) both}
+@keyframes revin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.rev-in{padding:36px clamp(20px,5vw,44px) 30px}
+.rev h2{font-family:var(--serif);font-weight:800;font-size:clamp(25px,4vw,31px);letter-spacing:.14em;line-height:1.4}
+.rev-intro{margin-top:8px;font-size:16px;line-height:1.8;color:var(--red);font-weight:700}
+.rev h3{font-family:var(--serif);font-weight:800;font-size:19px;letter-spacing:.14em;margin-top:26px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.rev ul li{padding:10px 0;border-bottom:1px dotted #A79F92;font-size:16px;line-height:1.7}
+.rev h2:focus{outline:0}
+.rev dl{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:0;font-size:16px;line-height:1.7}
+.rev dt,.rev dd{padding:9px 0;border-bottom:1px dotted #A79F92}
+.rev dt{color:var(--ink2);padding-right:16px}
+.rev dd{text-align:right;overflow-wrap:anywhere}
+.rev dl.tot{margin-top:18px;border-top:1px solid var(--ink)}
+.rev dl.tot dt:last-of-type,.rev dl.tot dd:last-of-type{border-bottom:0;padding-top:14px;font-weight:700;color:var(--ink)}
+.rev dl.tot dd:last-of-type{font-family:var(--serif);font-weight:800;font-size:34px;line-height:1.2;color:var(--red)}
+.rev-act{position:sticky;bottom:0;display:grid;grid-template-columns:auto 1fr;gap:10px;padding:14px clamp(20px,5vw,44px) 18px;background:var(--paper);border-top:1px solid #CFC6B5}
+.rev-back{min-height:60px;padding:0 20px;border:1px solid var(--ink);border-radius:2px;font-size:16px;color:var(--ink)}
+.rev-back:hover{background:var(--ink);color:var(--paper)}
+.rev-ok{min-height:60px;padding:0 16px;background:var(--red);color:#fff;border-radius:2px;font-family:var(--serif);font-weight:800;font-size:19px;letter-spacing:.1em;transition:background .3s}
+.rev-ok:hover{background:var(--red-d)}
+
+/* ---------- 温め方（台所の灯り：ここだけ少し温かい黒。湯気がもう一度立つ） ---------- */
+.cook{position:relative;background:#14110D;border-top:1px solid var(--hl);padding:var(--sec) var(--m) clamp(88px,10vw,150px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
+.cook-hd{grid-column:1/5;position:sticky;top:120px;align-self:start}
+.cook-hd .steam path{opacity:.6}
+.cook-hd .steam path.still{opacity:.34}
+.cook-hd .steam{position:relative;left:auto;top:auto;display:block;width:120px;height:300px;margin:40px 0 0 6px}
+.cook-list{grid-column:5/13;display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(28px,3.4vw,56px)}
+.ck{border-top:1px solid var(--gold);padding:0 0 44px}
+.ck summary{display:block;position:relative;padding-top:26px}
+.ck h3{font-family:var(--serif);font-weight:500;font-size:clamp(22px,1.9vw,26px);line-height:1.5;letter-spacing:.06em;color:var(--gold)}
+.ck-for{display:inline-block;margin-top:8px;font-family:var(--sans);padding:1px 14px;border:1px solid var(--edge);border-radius:999px;font-size:16px;line-height:1.7;color:var(--tx)}
+.ck ol{margin-top:18px;counter-reset:s}
+.ck ol li{counter-increment:s;position:relative;padding:9px 0 9px 46px;font-size:16px;line-height:1.85;border-bottom:1px solid rgba(255,210,122,.12)}
+.ck ol li::before{content:counter(s);position:absolute;left:0;top:9px;width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:17px;line-height:1;color:var(--gold)}
+.ck strong{color:#fff;font-weight:700}
+.ck strong.t{color:var(--gold);font-family:var(--serif);font-weight:800;font-size:1.2em;line-height:1;letter-spacing:.02em}
+.ck-note{margin-top:12px;color:var(--mut);line-height:1.75}
+
+/* ---------- 催事スケジュール ---------- */
+.sch{border-top:1px solid var(--hl);padding:var(--sec) var(--m) clamp(88px,10vw,150px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
+.sch .mark{grid-column:1/13;margin-bottom:40px}
+.sch h2{grid-column:2/4;grid-row:2;justify-self:center}
+.sch-body{grid-column:5/13;grid-row:2}
+.evs{border-top:1px solid var(--gold)}
+.ev{display:grid;grid-template-columns:clamp(190px,17vw,236px) minmax(0,1fr) auto;gap:16px;align-items:center;min-height:104px;padding:14px 0;border-bottom:1px solid var(--hl);position:relative;transition:padding .5s var(--ease)}
+.ev::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+a.ev:hover{padding-left:14px}
+a.ev:hover::after{transform:scaleX(1)}
+.ev-date{display:flex;align-items:baseline;gap:6px;font-family:var(--serif);white-space:nowrap}
+.ev-m{font-size:19px;letter-spacing:.06em}
+.ev-d{font-size:clamp(46px,4.4vw,60px);font-weight:800;line-height:1;color:var(--gold)}
+.ev-r{font-size:19px}
+.ev-venue{display:block;font-family:var(--mincho);font-weight:600;font-size:clamp(20px,1.9vw,26px);line-height:1.5;letter-spacing:.06em}
+.ev-area{display:block;font-size:16px;line-height:1.6;color:var(--mut)}
+.ev .ar{width:34px;height:10px;color:var(--gold);transition:transform .5s var(--ease)}
+a.ev:hover .ar{transform:translateX(6px)}
+.sch-more{margin-top:40px;text-align:right}
+
+/* ---------- ご注文方法 ---------- */
+.how{border-top:1px solid var(--hl);padding:var(--sec) var(--m) clamp(88px,10vw,150px)}
+.how-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:clamp(48px,6vw,88px);border-top:1px solid var(--gold)}
+.hw{padding:40px clamp(20px,3vw,48px) 8px;display:flex;flex-direction:column;align-items:flex-start}
+.hw+.hw{border-left:1px solid var(--hl)}
+.hw:first-child{padding-left:0}
+.hw svg.ic{width:52px;height:52px;fill:none;stroke:var(--gold);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+.hw h3{font-family:var(--serif);font-weight:500;font-size:clamp(24px,2.1vw,30px);letter-spacing:.08em;color:var(--gold);margin:22px 0 10px;line-height:1.4}
+.hw p{flex:1;line-height:2;margin-bottom:26px}
+
+/* ---------- お問い合わせ ---------- */
+.ct{border-top:1px solid var(--hl);padding:var(--sec) var(--m) clamp(88px,10vw,150px)}
+.ct-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,5vw,88px);margin-top:clamp(48px,6vw,88px)}
+.ct h3{font-family:var(--serif);font-weight:500;font-size:24px;letter-spacing:.14em;color:var(--gold);padding-bottom:14px;border-bottom:1px solid var(--gold)}
+.ct-info dl{display:grid;grid-template-columns:auto 1fr;gap:0}
+.ct-info dt,.ct-info dd{padding:20px 0;border-bottom:1px solid var(--hl);line-height:1.9}
+.ct-info dt{color:var(--gold);letter-spacing:.1em;white-space:nowrap;padding-right:32px}
+.ct-info dd{font-size:17px}
+.ct-form .fr{margin-top:22px;margin-bottom:0}
+.ct-form .btn{width:100%;margin-top:28px;min-height:64px;font-size:19px}
+
+/* ---------- フッター：灯りの入った看板で店じまい（最初の画面の題字と対になる） ---------- */
+.ft{border-top:1px solid var(--hl);padding:clamp(72px,9vw,136px) var(--m) 150px;text-align:center;overflow:hidden}
+.ft-brand{font-family:var(--serif);line-height:1;display:block}
+.ft-brand .pre{display:block;font-size:clamp(17px,1.5vw,21px);letter-spacing:.62em;margin-right:-.62em;color:var(--tx);margin-bottom:22px}
+.ft-brand .name{display:block;font-weight:800;font-size:clamp(88px,20vw,300px);letter-spacing:.1em;margin-right:-.1em;color:var(--gold);-webkit-text-stroke:1px var(--gold);transition:color 2.2s var(--ease),text-shadow 2.2s var(--ease);text-shadow:0 0 70px rgba(255,210,122,.22)}
+.ft-brand.unlit .name{color:transparent;text-shadow:none}
+.ft-tag{font-family:var(--serif);font-size:clamp(18px,1.6vw,22px);letter-spacing:.2em;margin-top:34px}
+.ft-links{margin-top:34px}
+.ft-links a{display:inline-flex;align-items:center;min-height:44px;color:var(--gold);border-bottom:1px solid var(--hl);transition:border-color .3s}
+.ft-links a:hover{border-color:var(--gold)}
+.ft-copy{margin-top:18px;color:var(--mut)}
+
+/* ---------- 画面に張り付く帯 ---------- */
+.cart{position:fixed;z-index:60;left:0;right:0;bottom:0;background:rgba(13,13,15,.96);border-top:1px solid var(--hl);transition:transform .5s var(--ease)}
+.cart.off{transform:translateY(110%)}
+.cart::before{content:"";position:absolute;left:0;top:-1px;height:2px;width:calc(var(--free,0) * 100%);background:var(--gold);transition:width .6s var(--ease)}
+.cart-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px 20px;padding:10px var(--m);min-height:76px}
+.cart-ic{width:34px;height:34px;fill:none;stroke:var(--gold);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.cart-sum{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 22px;line-height:1.6}
+.cart-info{font-family:var(--serif);font-size:19px;letter-spacing:.04em}
+.cart-info b{display:inline-block;font-weight:800;font-size:23px;line-height:1;color:var(--gold)}
+.cart-ship{color:var(--gold)}
+.cart-shipnote{color:var(--mut)}
+.cart .btn{min-height:56px;padding:0 28px}
+.cart.bump .cart-info b{animation:bump .5s var(--ease)}
+@keyframes bump{40%{transform:scale(1.18)}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+/* ---------- Instagram・LINE のボタン ----------
+   スマホ・タブレット：ヘッダーの中に並ぶ（中身の上に浮かせない＝注文欄の「＋」や金額に重ならない）
+   パソコン：右の余白の柱に付いてくる（左の提灯と対。余白の中なので中身に重ならない） */
+.hd-nav{display:flex;align-items:center;gap:8px}
+.fl{position:relative;flex:none;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--hl);border-radius:999px;color:var(--gold);transition:background .3s,color .3s,border-color .3s,bottom .5s var(--ease)}
+.fl:hover{background:var(--gold);border-color:var(--gold);color:var(--night)}
+.fl svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.fl span{display:none}
+@media (min-width:1101px){
+  .fl{position:fixed;z-index:55;right:calc((var(--m) - 44px) / 2);background:rgba(13,13,15,.94);border-color:var(--gold)}
+  .fl-line{bottom:calc(var(--cb,76px) + 16px)}
+  .fl-ig{bottom:calc(var(--cb,76px) + 72px)}
+  .fl span{display:block;position:absolute;right:54px;top:50%;transform:translate(8px,-50%);padding:4px 14px;background:var(--night);border:1px solid var(--hl);border-radius:999px;color:var(--tx);font-size:16px;line-height:1.6;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+  .fl:hover span,.fl:focus-visible span{opacity:1;transform:translate(0,-50%)}
+}
+
+/* ---------- 紙の上では、いまいる場所のしるしを墨色に ---------- */
+.rev :focus-visible,.done :focus-visible{outline-color:var(--ink)}
+.done-t:focus,.rev h2:focus{outline:0}
+
+/* ---------- 送信中・注文完了（提灯が灯って待つ → 清書に店の判が押される） ---------- */
+.flow{width:min(580px,calc(100vw - 24px));max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);padding:0;border:0;background:transparent;color:var(--tx);overflow:auto}
+.flow::backdrop{background:rgba(13,13,15,.93)}
+.snd{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 16px 56px}
+.snd-lamp{width:76px;transform-origin:50% 0}
+.snd-lamp .lamp-str{width:1px;height:72px;margin:0 auto;background:linear-gradient(180deg,rgba(255,210,122,0),rgba(255,210,122,.7))}
+.snd-lamp .lamp-b{width:76px;height:104px;font-size:38px;box-shadow:0 0 60px 16px rgba(255,210,122,.2)}
+.js .snd-lamp{animation:sway2 3.4s ease-in-out infinite alternate}
+.js .snd-lamp .lamp-b{animation:glow 1.7s ease-in-out infinite alternate}
+@keyframes sway2{from{transform:rotate(-2.6deg)}to{transform:rotate(2.6deg)}}
+@keyframes glow{from{box-shadow:0 0 36px 8px rgba(255,210,122,.1)}to{box-shadow:0 0 84px 26px rgba(255,210,122,.32)}}
+.snd-msg{margin-top:44px;font-family:var(--serif);font-weight:500;font-size:20px;line-height:2;letter-spacing:.12em}
+.done{position:relative;margin-top:8px;background:var(--paper);color:var(--ink);padding:38px clamp(20px,5vw,40px) 30px;box-shadow:0 0 120px rgba(255,210,122,.2)}
+.done::before{content:"";position:absolute;left:0;right:0;top:-7px;height:8px;background:radial-gradient(circle at 8px 0,transparent 5px,var(--paper) 5.5px) 0 0/16px 8px repeat-x}
+.js .done{animation:revin .6s var(--ease) both}
+.stamp{position:absolute;top:24px;right:clamp(14px,4vw,30px);display:grid;place-items:center;width:92px;height:92px;border:3px solid var(--red);border-radius:50%;
+  writing-mode:vertical-rl;font-family:var(--serif);font-weight:800;font-size:24px;line-height:1;letter-spacing:.02em;color:var(--red);transform:rotate(-9deg);opacity:.9}
+.stamp::after{content:"";position:absolute;inset:4px;border:1px solid var(--red);border-radius:50%}
+.js .stamp{animation:stamp .5s .6s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes stamp{0%{opacity:0;transform:rotate(-9deg) scale(1.9)}60%{opacity:.9;transform:rotate(-9deg) scale(.95)}100%{opacity:.9;transform:rotate(-9deg) scale(1)}}
+.done-t{font-family:var(--serif);font-weight:800;font-size:clamp(24px,5vw,30px);line-height:1.5;letter-spacing:.08em;padding-right:112px;word-break:keep-all}
+.done-m{margin-top:10px;padding-right:112px;font-size:16px;line-height:1.9}
+.done h3{font-family:var(--serif);font-weight:800;font-size:19px;letter-spacing:.14em;margin-top:28px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.done ul li{padding:10px 0;border-bottom:1px dotted #A79F92;font-size:16px;line-height:1.7}
+.done dl{display:grid;grid-template-columns:minmax(72px,auto) 1fr;font-size:16px;line-height:1.7}
+.done dt,.done dd{padding:9px 0;border-bottom:1px dotted #A79F92}
+.done dt{color:var(--ink2);padding-right:16px}
+.done dd{text-align:right;overflow-wrap:anywhere}
+.done dd.sum{font-family:var(--serif);font-weight:800;font-size:30px;line-height:1.2;color:var(--red)}
+.done-pend{margin-top:16px;font-size:16px;line-height:1.8;color:var(--ink2)}
+.done-pt{margin-top:24px;padding:16px 18px;border:1px solid var(--ink);display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 16px;font-size:16px;line-height:1.7}
+.done-pt .pt-title{font-family:var(--serif);font-weight:800;letter-spacing:.14em}
+.done-pt .pt-get{font-weight:700;color:var(--red);white-space:nowrap}
+.done-pt .pt-get b{font-family:var(--serif);font-weight:800;font-size:34px;line-height:1;margin-right:.1em}
+.done-pt .pt-bal{grid-column:1/-1;color:var(--ink2)}
+.done-line{margin-top:14px;padding:16px 18px;border:1px dashed var(--ink2);font-size:16px;line-height:1.8}
+.done-line b{display:block;font-weight:700;word-break:auto-phrase}
+.done-line button{width:100%;min-height:52px;margin-top:12px;border:1px solid var(--ink);border-radius:2px;font-weight:700;color:var(--ink);transition:background .3s,color .3s}
+.done-line button:hover{background:var(--ink);color:var(--paper)}
+.done-close{display:block;width:100%;min-height:60px;margin-top:26px;background:var(--ink);color:var(--paper);border-radius:2px;font-family:var(--serif);font-weight:800;font-size:19px;letter-spacing:.3em;transition:background .3s}
+.done-close:hover{background:var(--red-d)}
+
+p,li,dd{text-wrap:pretty}
+/* 「＋」を続けて押しても画面が拡大しないように／キーボードで進んだ時に、張り付く帯の下に隠れないように */
+a,button,summary,select,input{touch-action:manipulation}
+html{scroll-padding-bottom:120px}
+.in:focus-within{outline:0;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,210,122,.28)}
+/* ---------- 入数の目安：組の下に一度だけ ---------- */
+
+/* ---------- 中くらいの幅 ---------- */
+@media (max-width:1100px){
+  .ord-grid{display:block}
+  .slip{position:static;margin:48px auto 0;max-width:560px}
+  .slip-paper{transform:none}
+  .cook{display:block}
+  .cook-hd{position:static}
+  .cook-hd .steam{display:none}
+  .cook-list{margin-top:48px}
+  .scrolldown{display:none}
+}
+/* 商品の並び：広い画面は3列（まん中の列を下げる）、タブレットは2列（最後の1品は横長に）、スマホは1列 */
+@media (max-width:1100px){
+  .grid .card:nth-child(3n+2){margin-top:0}
+}
+@media (min-width:600px) and (max-width:1100px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:64px}
+  .grid .card:last-child{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(24px,3.4vw,56px);align-items:center}
+  .grid .card:last-child .card-head{margin-top:0}
+}
+@media (max-width:599px){
+  .grid{grid-template-columns:1fr;row-gap:52px}
+}
+@media (min-width:821px){
+  /* 温め方：広い画面ではいつも開いたまま（押しても閉じない） */
+  .ck summary{cursor:default}
+}
+
+/* ---------- スマホ ---------- */
+@media (max-width:820px){
+  br.pc{display:none}
+  .hd-in{padding:0 16px 0 var(--m)}
+  .hd-nav{gap:6px}
+  .hero{height:auto;padding-bottom:56px}
+  .hero-ph{position:relative;left:auto;height:clamp(280px,74vw,560px)}
+  .hero-ph::after{background:linear-gradient(0deg,#0D0D0F 0%,rgba(13,13,15,0) 46%)}
+  .hero-in{height:auto;padding:0 var(--m);margin-top:-44px;align-items:flex-end;gap:24px}
+  .hero-title{margin-top:0}
+  .hero-title .name{font-size:92px}
+  .hero-title .pre{font-size:16px;margin-left:10px;padding-top:.3em}
+  .hero-side{flex:1;min-width:0}
+  .hero-rule{height:44px;margin-bottom:18px}
+  .hero-tag{font-size:21px;letter-spacing:.08em;margin-bottom:24px}
+  .hero-cta{flex-direction:column;gap:10px}
+  .hero-cta .btn{padding:0 10px;font-size:16px;letter-spacing:.08em}
+  .steam{display:none}
+  .scrolldown{display:none}
+  .about{display:block;padding-top:80px;padding-bottom:72px}
+  .h-v{writing-mode:horizontal-tb;font-size:34px;letter-spacing:.12em}
+  .about h2,.sch h2{justify-self:start}
+  .about h2{margin-bottom:28px}
+  .mark{letter-spacing:.2em;gap:12px;white-space:nowrap}
+  .mark::after{width:32px}
+  .about .lead{font-size:22px;line-height:1.9}
+  .about .body{margin-top:28px}
+  .badges{gap:20px 28px;margin-top:40px}
+  .feat{display:block;padding-top:72px;padding-bottom:72px}
+  .feat-ph{margin:0 calc(-1 * var(--m));width:auto;max-width:none}
+  .feat-flag{left:var(--m);top:-12px}
+  .feat h2{margin:8px 0 20px}
+  .feat .btn{width:100%}
+  .menu,.ord,.cook,.sch,.how,.ct{padding-top:76px;padding-bottom:76px}
+  .menu-top,.ord-top{display:block}
+  .menu-top h2,.ord-top h2{margin-bottom:28px}
+  .tzs{grid-template-columns:repeat(5,minmax(0,1fr));row-gap:26px;margin-bottom:56px}
+  .tz{height:262px;width:calc(100% - 6px)}
+  .tz-name{font-size:20px;letter-spacing:.1em}
+  .tz-price{font-family:var(--serif);font-weight:800;font-size:16px;letter-spacing:-.02em}
+  .card-top{display:block;margin-bottom:52px}
+  .card-top .card-head{margin-top:22px}
+  .ship{display:block}
+  .ship>p+p{margin-top:8px}
+  /* 注文の行：1段目＝品名と数量、2段目＝値段、3段目＝入数と小計。
+     まだ選んでいない品は、入数のボタンをたたんで短く（「＋」を押すと開く。JSなしでは全部開いている） */
+  .sz{padding:0 4px}
+  .slip-paper{padding:30px 20px 22px}
+  .fr,.fr.zip,.pt{grid-template-columns:1fr}
+  .ptcheck{display:block}
+  .ptcheck h3{margin-bottom:8px}
+  .ptcheck-row{margin-top:16px}
+  /* 温め方：品ごとの見出しが並び、押すと開く */
+  .cook-list{grid-template-columns:1fr;border-bottom:1px solid var(--gold)}
+  .ck{padding-bottom:0}
+  .ck summary{padding:18px 52px 18px 0;cursor:pointer}
+  .ck summary::after{content:"";position:absolute;right:8px;top:50%;width:20px;height:20px;margin-top:-10px;
+    background:linear-gradient(var(--gold),var(--gold)) 50% 50%/20px 1px no-repeat,linear-gradient(var(--gold),var(--gold)) 50% 50%/1px 20px no-repeat;transition:transform .45s var(--ease)}
+  .ck[open] summary::after{background:linear-gradient(var(--gold),var(--gold)) 50% 50%/20px 1px no-repeat;transform:rotate(180deg)}
+  .ck[open]{padding-bottom:30px}
+  .ck ol{margin-top:4px}
+  .sch{display:block}
+  .sch h2{margin-bottom:28px}
+  .ev{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:16px 0;min-height:0}
+  .ev-date{grid-column:1/-1}
+  .ev-d{min-width:0;font-size:44px}
+  .sch-more{text-align:left}
+  .sch-more .btn{width:100%}
+  .how-list{grid-template-columns:1fr;margin-top:40px}
+  .hw,.hw:first-child{padding:28px 0 32px}
+  .hw+.hw{border-left:0;border-top:1px solid var(--hl)}
+  .hw .btn{width:100%}
+  .hw p{margin-bottom:20px}
+  .hw p br{display:none}
+  .ct-grid{grid-template-columns:1fr;margin-top:40px}
+  .ct-info dt{padding-right:20px}
+  .rev-act{grid-template-columns:1fr}
+  .rev-ok{order:-1}
+  .stamp{width:80px;height:80px;font-size:21px;top:22px}
+  .done-t,.done-m{padding-right:92px}
+  .ft{padding-top:64px;padding-bottom:150px}
+  .cart-in{grid-template-columns:minmax(0,1fr) auto;gap:0 12px;padding:10px 16px 10px}
+  .cart-ic{display:none}
+  .cart-sum{display:contents}
+  .cart-info,.cart-ship{grid-column:1;line-height:1.5;height:24px;white-space:nowrap}
+  .cart-info{font-size:16px;letter-spacing:0}
+  .cart-info b{font-size:19px}
+  .cart-shipnote{grid-column:1/-1;line-height:1.5}
+  .cart .btn{grid-column:2;grid-row:1/3;padding:0 14px;letter-spacing:.04em;font-size:16px;min-height:52px}
+  .cart .btn svg{display:none}
+}
+@media (max-width:359px){
+  .brand{letter-spacing:.16em}
+  .mnav summary{padding-left:6px;gap:6px}
+}
+
+/* =====================================================================
+   4周目の重ね（r4.css）。3周目までの見た目の上に、直しだけを重ねている。
+   ===================================================================== */
+
+/* ---------- 金の決まり（4周目）----------
+   金を使うのは4つだけ：
+     1. 灯り …… 題字「愛華楼」（最初と最後）・章の大見出し・提灯
+     2. 数字 …… いまの値段・催事の日付・温め時間（1つの品に金の数字は1か所）
+     3. いまここ …… 選んで伝票に入った行・現在地のメニュー・入力中の枠
+     4. 細い線 …… 罫線・線画のしるし・従のボタンの枠
+   それ以外（品名・小見出し・ラベル・説明）は白（オフホワイト）。選んだだけの入数は「紙の札」（生成り）。
+   紙（短冊・伝票・清書）の上は、これまでどおり墨と朱だけ */
+.mark{color:var(--old)}
+.card-name,.card-top .card-name{color:var(--tx)}
+.alg-tx strong{color:var(--tx);font-weight:700}
+.step,.pt-use-h b,.pay h4,.ptcheck h3,.ct h3,.hw h3,.ck h3{color:var(--tx)}
+.ship strong{color:var(--tx)}
+.pt-line b{color:var(--tx);font-weight:700}
+.pt-line strong{color:var(--tx)}
+.ct-info dt{color:var(--old)}
+.mnav summary{color:var(--tx)}
+.cart-info b:first-child{color:var(--tx)}
+.cart-ship{color:var(--tx)}
+.ft-links a{color:var(--tx)}
+.ck ol li::before{border-color:var(--edge);color:var(--tx)}
+.sz.on{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+/* 注文の行：まだ数量が0の行は、選んである入数を白い枠だけで静かに。伝票に入った行だけ金に灯る */
+.sz:hover,.os:hover{border-color:var(--tx)}
+
+/* ---------- 大きな画面（1750px〜）：中身の幅を1568pxで止めて中央に（文字が小さいまま左右に間延びしないように）。写真と線は端まで ---------- */
+:root{--m:max(clamp(20px,5.5vw,88px),calc((100vw - 1568px) / 2))}
+@media (min-width:1600px){
+  .hero{height:clamp(640px,calc(100vh - 64px),920px)}
+  .hero-title .name{font-size:clamp(170px,10vw,196px)}
+}
+
+/* ---------- 最初の画面：背の低いノートPC（高さ720前後）でも、ボタンが下の帯に隠れない ---------- */
+@media (min-width:821px){
+  .hero-in{padding-bottom:96px}
+  .scrolldown{bottom:128px}
+}
+/* 温め方の札：2行になっても形が崩れない（最後の1〜2字だけ落ちない） */
+.ck-for{border-radius:18px;text-wrap:balance;word-break:auto-phrase;line-break:strict}
+
+/* ---------- ノートPCの幅（1101〜1439px）：注文の行で値段の「（税込）」が泣き別れになっていた ----------
+   伝票の幅を360pxで止めて行に幅を回す。さらに狭い1101〜1279pxは、入数のボタンを2段目に下ろす */
+@media (min-width:1101px) and (max-width:1439px){
+  .ord-grid{grid-template-columns:minmax(0,1fr) 360px}
+}
+@media (min-width:1101px) and (max-width:1279px){
+}
+/* 会場名は長さがまちまち（本番では毎回変わる）：最後の1字だけ次の行に落ちないように */
+.ev-venue{text-wrap:balance}
+/* 伝票の合計：題は折らない。桁が増えて入り切らない時は、金額だけ次の行の右へ */
+.slip-total{flex-wrap:wrap}
+.slip-total span{white-space:nowrap}
+.slip-total b{margin-left:auto}
+@media (max-width:359px){.slip-total span{letter-spacing:.06em}.slip-total b{font-size:38px}}
+/* ---------- 小さいスマホ（〜389px）：品名の最後の1字が落ちる・上の帯が窮屈、を直す ---------- */
+@media (max-width:389px){
+  .row-no{margin-right:.4em;letter-spacing:0}
+}
+@media (max-width:359px){
+  .fl-ig{display:none}   /* Instagram は「ご注文方法」の章にもある。幅320では上の帯に LINE とメニューだけ */
+  .row-no{display:none}
+  .hero-title .name{font-size:80px}
+  .hero-in{gap:16px}
+  .hero-cta .btn{padding:0 4px;letter-spacing:0}
+}
+
+/* ---------- 品の札の中の間を、8pxの倍数にそろえる ---------- */
+.card-head{margin-top:24px}
+.card-top .card-head{margin-top:0}
+.card-desc{margin-top:8px}
+.alg{margin-top:16px;padding-top:16px}
+.price{margin-top:16px}
+.sizes{margin-top:16px}
+.adds{margin-top:8px}
+@media (max-width:820px){.card-top .card-head{margin-top:24px}}
+
+/* ---------- 画面のずれの元：「店長イチオシ」の札 ----------
+   縦書きの札の幅が、開いた直後の一瞬だけ画面の外まで広がり、スマホでは画面全体が一瞬ちぢんで張り付く帯が飛んでいた。
+   札の幅を決め打ちにし、念のため章の左右も切る */
+.feat-flag{width:40px;padding-left:0;padding-right:0;display:flex;align-items:center;white-space:nowrap;line-height:1}
+.feat{overflow-x:clip}
+
+/* ---------- 読み上げ用・キーボード用 ---------- */
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.skip{position:fixed;z-index:120;left:8px;top:8px;display:flex;align-items:center;min-height:48px;padding:0 20px;background:var(--paper);color:var(--ink);font-size:16px;font-weight:700;transform:translateY(-200%)}
+.skip:focus{transform:none;outline:3px solid var(--gold);outline-offset:2px}
+#orderform h2:focus{outline:0}
+
+/* ---------- 行き来の道 ----------
+   品の番号は「紙の番号札」。押すと短冊のお品書きへ戻る。伝票に入った品は、短冊と同じ朱の丸が付く */
+a.card-no{position:relative;flex:none;display:grid;place-items:center;width:44px;height:44px;margin:-8px 0 -8px -6px;align-self:center;color:var(--ink);letter-spacing:.04em;line-height:1;isolation:isolate}
+a.card-no::before{content:"";position:absolute;z-index:-1;left:6px;right:6px;top:5px;bottom:5px;background:var(--paper);transition:transform .4s var(--ease)}
+a.card-no:hover::before{transform:rotate(-4deg)}
+a.card-no::after{content:"";position:absolute;right:0;top:0;width:12px;height:12px;border-radius:50%;background:var(--red);transform:scale(0);transition:transform .5s var(--ease)}
+.card.sel a.card-no::after{transform:scale(1)}
+.card-head{gap:8px 12px}
+/* 品 → その品の温め方（湯気のしるし＋温め方の題そのまま） */
+.heat{display:flex;flex-wrap:wrap;gap:0 24px;margin-top:8px}
+.heat a{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:16px;line-height:1.5;color:var(--tx);text-decoration:underline;text-decoration-color:var(--edge);text-decoration-thickness:1px;text-underline-offset:6px;transition:text-decoration-color .3s}
+.heat a:hover{text-decoration-color:var(--gold)}
+.heat svg{flex:none;width:14px;height:22px;fill:none;stroke:var(--gold);stroke-width:1.2;stroke-linecap:round}
+/* 注文の行 → その品の説明へ戻る（品の番号＋品名がリンク。番号は短冊・番号札と同じ） */
+.row-no{margin-right:.7em;font-size:16px;letter-spacing:.08em;color:var(--mut)}
+/* 飛んだ先が分かるように、着いた品名・題が一度だけ金に灯る（いまここ＝金） */
+@keyframes here{0%,55%{color:var(--gold)}100%{color:var(--tx)}}
+.card:target .card-name,.ck:target h3{animation:here 2.2s var(--ease) both}
+/* スマホ・タブレット：ヘッダーに小さな提灯（いまの章）。メニューの一覧にも章の番号と現在地 */
+.mnav summary i{display:none}
+.mn-ch{flex:none;display:grid;place-items:center;width:28px;height:38px;border:1px solid var(--gold);border-radius:50%/36%;font-family:var(--serif);font-size:16px;line-height:1;color:var(--gold);
+  background:radial-gradient(ellipse at 50% 58%,rgba(255,210,122,.3),rgba(255,210,122,.05) 72%)}
+.mnav summary{gap:10px;padding:0 0 0 8px}
+.mn-k{flex:none;width:2.2em;font-family:var(--serif);font-size:17px;color:var(--mut)}
+.mnav li a[aria-current]{color:var(--gold)}
+.mnav li a[aria-current] .mn-k{color:var(--gold)}
+
+/* ---------- スマホ：道しるべを足した分、章の間と品の間を少し詰める／帯の高さを先に決めておく（読み込み中に帯が伸びて動かないように） ---------- */
+@media (max-width:820px){
+  .menu,.ord,.cook,.sch,.how,.ct{padding-top:64px;padding-bottom:64px}
+  .about,.feat{padding-top:64px;padding-bottom:64px}
+  .heat{margin-top:0}
+  .cart-in{min-height:96px}
+}
+@media (max-width:599px){
+  .grid{row-gap:48px}
+}
+
+/* ---------- 提灯：字の入れ替えを短く・なめらかに ---------- */
+.lamp-b span{transition:opacity .22s}
+
+/* ---------- 古いブラウザ（dialog を知らない物）での確認画面 ---------- */
+dialog:not([open]){display:none}
+.nd dialog[open]{display:block;position:fixed;z-index:200;top:16px;left:0;right:0;margin:0 auto;max-height:calc(100vh - 32px);box-shadow:0 0 0 200vmax rgba(13,13,15,.9)}
+.nd dialog.rev[open]{box-shadow:0 0 0 200vmax rgba(13,13,15,.86),0 0 120px rgba(255,210,122,.2)}
+.nd.dlg-open,.nd.dlg-open body{overflow:hidden}
+
+/* ---------- 印刷（お客さんが注文内容を紙に出す時）----------
+   紙の上では金を使わない：金の所は深紅に、黒い地は白に。張り付く物・飾りは出さない。
+   確認画面・完了の紙が開いている時は、その紙だけを刷る */
+@media print{
+  :root{--night:#fff;--panel:#fff;--tx:#1A1A1A;--mut:#55504A;--old:#55504A;--gold:#7E1B1B;--hl:#CFC6B5;--edge:#8A847A;--paper:#fff}
+  @page{margin:14mm 12mm}
+  html{scroll-behavior:auto}
+  body{background:#fff;color:#1A1A1A;font-size:11pt;line-height:1.7}
+  *,*::before,*::after{box-shadow:none!important;text-shadow:none!important;animation:none!important;transition:none!important}
+  .rv.wait{opacity:1!important;transform:none!important}
+  .hd{position:static;background:none;border:0}
+  .hd-nav,.hd-prog,.lamp,.cart,.steam,.scrolldown,.skip,.hero-cta,.meter,.sch-more,.hw .btn,.feat .btn{display:none!important}
+  .hero{height:auto;overflow:visible}
+  .hero-ph{position:relative;left:auto;height:70mm}
+  .hero-ph::after,.feat-ph::after{display:none}
+  .hero-in{height:auto;padding:8mm 0 0;align-items:flex-end}
+  .hero-title .name{font-size:54pt}
+  section,.ft{padding-top:10mm!important;padding-bottom:6mm!important;padding-left:0!important;padding-right:0!important;border-top-color:#CFC6B5}
+  .h-big,.feat h2{font-size:26pt;margin-top:2mm}
+  .h-v{writing-mode:horizontal-tb;font-size:22pt}
+  .cook{background:none}
+  .card-ph{background:none}
+  .card-ph.plate img{-webkit-mask-image:none;mask-image:none}
+  .card,.row,.pair,.ck,.ev,.hw,.slip,.fs,.pay,.ptcard{break-inside:avoid}
+  .grid .card:nth-child(3n+2){margin-top:0}
+  .tz{border:1px solid #1A1A1A}
+  .btn-red,.add,.submit,.tag-hot,.sz-badge,.feat-flag,.rev-ok{background:none!important;color:#1A1A1A!important;border:1px solid #1A1A1A}
+  .sz.on,.os.on,.row.has .os.on{background:none;color:#1A1A1A;border:2px solid #1A1A1A}
+  .in{background:none;border-color:#8A847A;color:#1A1A1A;color-scheme:light}
+  .slip{position:static}
+  .slip-paper,.ptcard,.done{border:1px solid #1A1A1A;transform:none}
+  .slip-paper::before,.done::before{display:none}
+  .ft{padding-bottom:0!important}
+  .ft-brand .name{font-size:54pt;color:var(--gold)!important;-webkit-text-stroke:0}
+  /* 紙が開いている時は、その紙だけ */
+  .dlg-open body>*:not(main),.dlg-open main>*:not(.ord),.dlg-open .ord>*:not(dialog){display:none!important}
+  .dlg-open .ord{padding:0!important;border:0}
+  .dlg-open dialog[open]{position:absolute;top:0;left:0;right:0;width:auto;max-width:none;max-height:none;margin:0;overflow:visible;border:0;background:#fff;color:#1A1A1A}
+  .dlg-open dialog::backdrop{background:none}
+  .rev-in{padding:0}
+  .rev h3,.done h3{margin-top:5mm}
+  .rev ul li,.done ul li{padding:1.6mm 0}
+  .rev dt,.rev dd,.done dt,.done dd{padding:1.4mm 0}
+  .done{margin:0;padding:6mm}
+  .rev-act,.done-close,.done-line button,.snd{display:none!important}
+}
+
+/* =====================================================================
+   5周目の重ね（r5.css）。4周目までの見た目の上に、直しだけを重ねている。
+   ===================================================================== */
+
+/* ---------- iPhone の Safari 向け ----------
+   1) 画面の下のホームバー・横向きの時の切り欠きをよける（viewport-fit=cover とセット）
+   2) 確認画面の高さは「いま見えている高さ」（dvh）で決める（Safari は下の道具の帯のぶん 100vh が長い）
+   3) 日付の欄は、空の時に高さが潰れたり中央寄せになったりしないように */
+@supports (padding:env(safe-area-inset-bottom)){
+  body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+  .cart{padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .rev-act{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+}
+.rev{max-height:calc(100dvh - 32px)}
+.nd dialog[open]{max-height:calc(100dvh - 32px)}
+input[type=date].in{-webkit-appearance:none;appearance:none;display:block;width:100%;min-height:56px;text-align:left}
+input[type=date].in::-webkit-date-and-time-value{text-align:left;min-height:1.6em}
+input[type=date].in::-webkit-calendar-picker-indicator{filter:invert(.85)}
+/* 押した時の灰色のちらつきを消す・続けて押しても拡大しない */
+a,button,summary{-webkit-tap-highlight-color:transparent}
+.sz,.os,.add,.tz{touch-action:manipulation}
+
+/* ---------- 文の折れ方：Safari には「文節で折る」機能が無いので、短い文は行の長さをそろえる・塊で折る ---------- */
+.hero-tag,.ptcheck h3,.step,.fs legend,.done-t,.rev h2,.h-big{text-wrap:balance}
+.nw{white-space:nowrap}
+.slip-items li span.nw{font-family:inherit;font-weight:inherit;font-size:inherit}   /* 塊の中の字は品名と同じ書体のまま（値段の太い明朝を拾わない） */
+.slip-items li span:first-child,.rev ul li,.done ul li{word-break:keep-all;overflow-wrap:anywhere}
+
+/* ---------- 下の帯（スマホ）：送料の案内が長い時に、ボタンの下にもぐって切れていた → 2行に折る ---------- */
+@media (max-width:820px){
+  .cart-ship{height:auto;min-height:24px;white-space:normal;text-wrap:balance}
+  .cart-in{align-items:center}
+}
+/* 小さいスマホ（〜359px）：点数と小計を1段目いっぱいに、2段目に送料の案内とボタン。
+   「※北海道・沖縄・離島は別途送料」は伝票とお届け先の欄にも書いてあるので、この幅の帯では出さない */
+@media (max-width:359px){
+  .cart-in{grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding-top:8px;padding-bottom:8px;min-height:0}
+  .cart-info{grid-column:1/-1;height:auto}
+  .cart-ship{grid-column:1;grid-row:2;align-self:center;line-height:1.4}
+  .cart .btn{grid-column:2;grid-row:2;min-height:48px;padding:0 12px}
+  .cart-shipnote{display:none}
+  .submit{letter-spacing:.06em;font-size:19px;gap:8px}
+  .hero-tag{font-size:18px;letter-spacing:.04em}
+}
+/* 完了の紙：細い画面では、お礼の文を判の下から紙の幅いっぱいに */
+@media (max-width:430px){
+  .done-m{padding-right:0}
+  .done-t{min-height:72px}
+}
+
+/* ---------- 伝票（PC・横に付いてくる時）：背の低い画面でも、合計金額がいつも見える ----------
+   紙の高さを「画面の高さ − 上の帯 − 下の帯」までにして、品の行だけを紙の中で送る。合計・送料の案内は紙の下に固定 */
+@media (min-width:1101px){
+  .slip{top:76px}
+  .slip-paper{display:flex;flex-direction:column;max-height:calc(100vh - 76px - var(--cb,76px) - 10px);max-height:calc(100dvh - 76px - var(--cb,76px) - 10px)}
+  .slip-paper>*{flex:none}
+  .slip-scroll{flex:1 1 auto;min-height:72px;overflow-y:auto;overscroll-behavior:contain;margin-right:-12px;padding-right:12px;scrollbar-width:thin;scrollbar-color:#A79F92 transparent;
+    /* 上下にまだ行がある時だけ、うすい影が出る（紙の色のふたが、端まで送ると影を隠す） */
+    background:
+      linear-gradient(var(--paper) 40%,rgba(251,246,238,0)) 0 0/100% 28px no-repeat local,
+      linear-gradient(rgba(251,246,238,0),var(--paper) 60%) 0 100%/100% 28px no-repeat local,
+      linear-gradient(rgba(26,26,26,.16),rgba(26,26,26,0)) 0 0/100% 10px no-repeat scroll,
+      linear-gradient(rgba(26,26,26,0),rgba(26,26,26,.16)) 0 100%/100% 10px no-repeat scroll}
+  .slip-scroll:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .slip-scroll .slip-sum{padding-bottom:10px}
+}
+/* 背の低い画面（高さ760px以下のノートPC）：紙の余白と題を少し詰めて、品の行に高さを回す */
+@media (min-width:1101px) and (max-height:760px){
+  .slip-paper{padding:24px 24px 16px}
+  .slip-head{padding-bottom:10px}
+  .slip-head h3{font-size:21px}
+  .slip-head .seal{transform:scale(.8);transform-origin:top right;margin-bottom:-12px}
+  .slip-items li{padding:8px 0}
+  .slip-total{padding-top:10px}
+  .slip-total b{font-size:38px}
+  .slip-note{margin-top:6px;line-height:1.5}
+}
+@media print{
+  .slip-paper{display:block;max-height:none}
+  .slip-scroll{overflow:visible;background:none;margin:0;padding:0}
+}
+
+/* ---------- 確認画面：題が「ご注文内／容の確認」と言葉の途中で折れない（区切りは HTML の <wbr>）／横向きのスマホ（背がとても低い）ではボタンを横に並べて、中身の見える高さを残す ---------- */
+.rev h2{word-break:keep-all}
+@media (max-height:500px){
+  .rev-act{grid-template-columns:1fr auto;padding-top:8px;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+  .rev-back,.rev-ok{min-height:48px}
+  .rev-in{padding-top:20px;padding-bottom:16px}
+}
+
+/* ---------- 動きの磨き（受賞作との見比べから。文章・写真は変えず、動かし方だけ）----------
+   1) 最初の写真：読み進むにつれて、ゆっくり寄っていく（店先に一歩近づく感じ）
+   2) 品の写真：のれんを上げるように、上から下へ開いて現れる
+   「動きを減らす」設定・JSなし・印刷では、どちらも動かず最初から全部見える */
+@media (prefers-reduced-motion:no-preference){
+  .hero-ph{overflow:hidden}
+  .js .hero-ph img{transform:scale(calc(1 + var(--hs,0) * .09));transform-origin:58% 60%;will-change:transform}
+  .js .card-ph{clip-path:inset(0);transition:clip-path 1.2s cubic-bezier(.2,.7,.2,1) .12s}
+  .js .card.rv.wait .card-ph{clip-path:inset(0 0 100% 0)}
+}
+@media print{.card-ph{clip-path:none!important}}
+
+/* ---------- 小さいスマホ（〜359px）：注文の行で、小計の欄（見えない箱）が「12個」のボタンの右半分にかぶさり、押せない所があった ---------- */
+@media (max-width:359px){
+}
+
+/* ---------- 小さいスマホ（320px）：ポイントの欄が中の長い一文に押されて画面より19px広くなり、右端が切れていた ----------
+   （4周目までの点検は「広がった画面」を基準にしていて見逃していた。点検の道具も直した） */
+@media (max-width:620px){
+  .fr,.fr.zip,.pt{grid-template-columns:minmax(0,1fr)}
+  .pt>*{min-width:0}
+  .pt-use-h span,.f label{overflow-wrap:anywhere}
+}
+@media (max-width:359px){
+  .h-v{font-size:30px;letter-spacing:.06em}   /* 「催事スケジュール」が1行に収まる */
+}
+
+/* ---------- ページ全体の印刷（5周目に25枚を通しで確認）：題が写真にかぶらない／見出しだけが頁の最後に取り残されない ---------- */
+@media print{
+  .hero-in{margin-top:0}
+  h2,h3,h4,.step,.fs legend,.mark{break-after:avoid}
+  .slip{margin-top:6mm}
+  #oshinagaki ul,#oshinagaki li,.tz{break-inside:avoid}   /* 短冊が頁の切れ目で上下に割れない */
+}
+
+/* =====================================================================
+   6周目の重ね（r6.css）：注文の流れ（2026-11-19 社長・涼介さんの決定）
+   品を選ぶのはメニューのカードだけ／注文フォームは「選んだ品だけ」の確認の場所。
+   押す所は 48px（44px以上）、字は 16px 以上、色は今までの金・朱・紙の色だけ。
+   ===================================================================== */
+
+/* ---------- 「− 数 ＋」（メニューのカードと、選んだ品の行で同じ部品） ---------- */
+.stp{display:flex;align-items:center;justify-content:space-between}
+.stp[hidden],.add[hidden],.incart[hidden],.pk-empty[hidden]{display:none}
+.sb{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;font-size:24px;line-height:1;color:var(--gold);touch-action:manipulation;
+  transition:background .25s,color .25s,border-color .25s,transform .15s}
+@media (hover:hover){.sb:hover{background:rgba(255,210,122,.16)}}   /* 指で押す端末では、離した後に色が残らないように（マウスの時だけ） */
+.sb:active{transform:scale(.92);background:var(--gold);color:var(--night)}
+.sn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:40px;line-height:1.15;text-align:center}
+.sn small{font-size:16px;color:var(--old);white-space:nowrap}
+.sn b{font-family:var(--serif);font-weight:800;font-size:24px;color:var(--gold)}
+
+/* ---------- メニューのカード：「カートに追加」と同じ場所・同じ高さで「− 数 ＋」に変わる ---------- */
+.ad{flex:1 1 0;min-width:0;display:flex}
+.ad>.add,.ad>.stp{flex:1 1 auto;min-width:0}
+.ad>.stp{min-height:54px;padding:0 3px;border:1px solid var(--gold);border-radius:3px}
+/* カードの中の「−」「＋」は、数字の左右いっぱいを押せる所にする（指が少しずれても押せる） */
+.ad>.stp .sb{flex:1 1 48px;width:auto;border-radius:2px}
+.js .ad>.stp:not([hidden]){animation:fadein .35s var(--ease) both}
+/* 入数の目安（焼売・にら饅頭）：選んである入数の分だけ */
+.sz-hint{margin-top:10px;font-size:16px;line-height:1.6;color:var(--mut)}
+/* その品でカートに入っている組み合わせ（朱の丸は、短冊・番号札の丸と同じ印） */
+.incart{position:relative;margin-top:12px;padding-left:20px;font-size:16px;line-height:1.7;color:var(--gold)}
+.incart::before{content:"";position:absolute;left:2px;top:.62em;width:10px;height:10px;border-radius:50%;background:var(--red)}
+/* 生冷凍・調理済みの2つ：カードの幅が足りない時（小さいスマホ・カードが2〜3列の幅）は自動で縦に並ぶ（横に2つだと「− 数 ＋」が字に重なる）。
+   168px＝押す所48×2＋「調理済み」の字64＋枠 */
+.adds.two{flex-wrap:wrap}
+.adds.two .ad{flex:1 1 168px}
+
+/* ---------- 注文フォーム：選んだ品だけの行 ---------- */
+.pk{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto 100px auto;gap:6px 22px;align-items:center;padding:20px 0 20px 16px;border-bottom:1px solid var(--hl)}
+.pk::before{content:"";position:absolute;left:0;top:22px;bottom:22px;width:2px;background:var(--gold)}
+.js .pk.new{animation:fadein .5s var(--ease) both}
+.pk-name{font-family:var(--serif);font-size:19px;line-height:1.5;letter-spacing:.02em;word-break:keep-all;overflow-wrap:anywhere}
+.pk-name a{display:inline-block;padding:10px 0;margin:-10px 0;text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:6px;transition:text-decoration-color .3s}
+.pk-name a:hover{text-decoration-color:var(--gold)}
+.pk-size{display:inline-block;margin-right:.7em;padding:0 10px;border:1px solid var(--gold);border-radius:3px;font-family:var(--sans,inherit);font-size:16px;line-height:1.6;letter-spacing:0;color:var(--gold);white-space:nowrap}
+.pk-price,.pk-hint{font-size:16px;line-height:1.6;color:var(--old)}
+.pk-price{margin-top:6px}
+.pk-price b{font-size:17px;font-weight:700;color:var(--tx)}
+.pk .stp{gap:8px}
+.pk .sb{border:1px solid var(--edge)}
+@media (hover:hover){.pk .sb:hover{border-color:var(--gold)}}
+.pk-sub{text-align:right;font-family:var(--serif);font-size:20px;color:var(--gold);white-space:nowrap}
+.pk-x{min-height:44px;min-width:44px;padding:0 4px;font-size:16px;color:var(--old);text-decoration:underline;text-decoration-color:var(--edge);text-decoration-thickness:1px;text-underline-offset:6px;white-space:nowrap;touch-action:manipulation;transition:color .25s,text-decoration-color .25s}
+.pk-x:hover{color:var(--tx);text-decoration-color:var(--tx)}
+/* 幅が足りない所（スマホ・タブレット縦／伝票が横に並ぶ狭めのPC）：1段目＝品名と「取り消す」、2段目＝「− 数 ＋」と小計 */
+@media (max-width:820px),(min-width:1101px) and (max-width:1279px){
+  .pk{grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;padding:16px 0 18px 14px;align-items:start}
+  .pk-info{display:contents}
+  .pk-name{grid-column:1;grid-row:1}
+  .pk-x{grid-column:2;grid-row:1;margin-top:-6px}
+  .pk-price{grid-column:1/-1;grid-row:2;margin-top:-4px}
+  .pk-hint{grid-column:1/-1;grid-row:3;margin-top:-8px}
+  .pk .stp{grid-column:1;grid-row:4;justify-self:start;margin-top:4px}
+  .pk-sub{grid-column:2;grid-row:4;align-self:center;font-size:22px}
+}
+@media (max-width:389px){
+  .pk-name{font-size:17px;letter-spacing:0}
+  .pk-size{margin-right:.5em;padding:0 8px}
+}
+@media (max-width:359px){
+  .pk{padding-left:8px}
+}
+
+/* ---------- 何も選んでいない時の案内 ---------- */
+.pk-empty{padding:40px 12px 44px;border-bottom:1px solid var(--hl);text-align:center}
+.pk-empty p{font-family:var(--serif);font-size:20px;line-height:1.7;letter-spacing:.08em;margin-bottom:22px;text-wrap:balance}
+
+@media print{
+  .pk{break-inside:avoid}
+  .sb,.pk-x,.pk-empty .btn{border:1px solid #1A1A1A}
+}
+/* 11/19 入口の行き先：スマホ幅で、海老焼売の写真の枠を読み込む前から画面の幅いっぱいに取っておく。
+   Safari系は読み込み前の枠の幅が0（＝高さ0）で、メニューへ移る途中に写真が入ると260pxずれて着いていた（前からあった癖）。見た目は同じ */
+@media (max-width:820px){.feat-ph{justify-self:stretch}}
+/* 11/19 下の帯のボタン：注文フォームの中では文字が「注文内容を確認する」に変わる（mk_r6js.py の barSync）。
+   スマホ幅では「注文内容を／確認する」の2行に組む＝「注文へ進む」と同じ5字の幅なので、帯の左の字（点数・小計・送料）が動かない */
+.cart .cb-t{display:inline-flex;flex-wrap:wrap;justify-content:center}
+@media (max-width:820px){
+  .cart.cf .btn{line-height:1.3;letter-spacing:.04em}
+  .cart.cf .cb-t{flex-direction:column;align-items:center}
+}
+.steam .ys0{stop-color:var(--gold);stop-opacity:0}.steam .ys1{stop-color:var(--gold);stop-opacity:1}
+.steam path.yw{fill:none;stroke-width:2.6;stroke-linecap:round;vector-effect:non-scaling-stroke;filter:blur(.5px);stroke-dasharray:none;opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:yuge 6.5s ease-in-out infinite}
+.steam path.yw:nth-of-type(2){animation-delay:-2.2s;animation-duration:7.2s}
+.steam path.yw:nth-of-type(3){animation-delay:-4.4s;animation-duration:6.8s}
+@keyframes yuge{0%{opacity:0;transform:translateY(46px) scaleX(.85)}22%{opacity:.9}62%{opacity:.6}100%{opacity:0;transform:translateY(-64px) scaleX(1.3)}}
+.cook-hd .steam path.yw{opacity:0}
+@media (prefers-reduced-motion:reduce){.steam path.yw,.cook-hd .steam path.yw{animation:none;opacity:.55;transform:none}}
+
+/* =====================================================================
+   7周目の重ね（r7.css）：A案の仕上げ（2026-11-19 社長がA案に決定）
+   字は 16px 以上、押す所は 48px（44px以上）、色は今までの金・朱・紙・墨だけ。
+   ===================================================================== */
+
+/* ---------- スマホ・タブレット縦：上の帯を透かさない（後ろの見出しの字が店名に重なって見えていた） ---------- */
+@media (max-width:820px){.hd{background:var(--night,#0D0D0F)}}
+
+/* ---------- 入数ボタン：選んでも幅が変わらないようにする ----------
+   選ぶと字が太くなって数px広がり、ぎりぎり1段に収まっていた幅（PC 1280 の焼売・にら饅頭など）で「12個」を選ぶと2段に折れていた。
+   どのボタンも「太字の時の幅」を先に取っておく（見えない写しを高さ0で持つ）ので、選んでも並びが動かない。
+   その分は左右の余白の下限を詰めて吸収する（余った幅はボタンが均等に広がって埋めるので、見た目の余白はほぼ今までどおり。
+   2px＝スマホで今まで1段に収まっていた幅（360 など）が、写しを足しても1段のままになる値） */
+.sz{padding:0 2px}
+.sz::after{content:attr(data-t);display:block;height:0;overflow:hidden;visibility:hidden;font-weight:700;pointer-events:none}
+.sz[data-b]::after{content:attr(data-t) attr(data-b);padding-right:24px}
+
+/* ---------- ご注文方法の3つのボタン：字を途中で折らない（幅821で「ご注文フォームへ」の最後の1字だけ次の行へ落ちていた） ---------- */
+@media (min-width:821px){
+  .hw .btn{white-space:nowrap}
+}
+@media (min-width:821px) and (max-width:1100px){
+  .hw .btn{padding:0 18px;letter-spacing:.08em}
+}
+
+/* ---------- 注文フォーム：ポイントを使う枠（照会できた時だけ出る）と、割引の知らせ ---------- */
+.pt-use[hidden],.pt-use-i[hidden],.rev dl.tot dd.rev-pt[hidden]{display:none}
+.pt-use-i{margin-top:10px;padding:10px 14px;border-left:2px solid var(--gold);font-size:16px;line-height:1.7;color:var(--gold)}
+.pt-use-i.low{border-left-color:var(--edge);color:var(--mut)}
+
+/* ---------- 確認画面：「ポイントを使う」の案内（今のHPと同じ文・同じ出し方。紙の上なので、墨の字に朱の細い囲み） ---------- */
+.rev dl.tot dd.rev-pt{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:10px 0;padding:12px 14px;
+  border:1px solid var(--red);border-radius:3px;text-align:left;font-weight:400;font-family:inherit;font-size:16px;line-height:1.7;color:var(--ink)}
+.rev-pt span{flex:1 1 200px}
+/* 朱の塗りは下の「確定」のボタンだけに残す（主役を2つにしない）。こちらは朱の線と字 */
+.rev-pt-b{flex:0 0 auto;min-height:48px;padding:0 20px;border:1px solid var(--red);border-radius:2px;color:var(--red);
+  font-size:16px;font-weight:700;letter-spacing:.06em;white-space:nowrap;touch-action:manipulation;transition:background .3s,color .3s}
+.rev-pt-b:hover{background:var(--red);color:#fff}
+@media (max-width:389px){.rev-pt-b{flex:1 1 100%}}
+@media print{
+  .rev dl.tot dd.rev-pt{display:none}
+}
+
+/* ---------- 送料無料の紙吹雪（今のHPにある演出。朱と金の小さな紙片が、下の帯の上あたりから1回だけ舞う） ----------
+   帯（z60）より上・確認画面（z200）より下。押す物の邪魔をしない。印刷には出さない */
+.kami{position:fixed;left:0;top:0;width:100%;height:100%;z-index:70;pointer-events:none}
+@media print{.kami{display:none}}
+
+/* ---------- 小さいスマホ：一番上で題字に掛かる間だけ、下の帯を引っ込める（r7_shiage.py 6-3b。押せない・読み上げない状態にして隠す） ---------- */
+.cart.lo{transform:translateY(110%);visibility:hidden;transition:transform .5s var(--ease),visibility 0s .5s}
+
+/* ---------- 確認画面：幅の狭いスマホで「お支払い金額」の数字が1字ずつ折れていた（¥3,67／0）→ 見出しの下の段に、折らずに出す ---------- */
+@media (max-width:420px){
+  .rev dl.tot dt:last-of-type{grid-column:1/-1;padding-right:0;padding-bottom:0}
+  .rev dl.tot dd:last-of-type{grid-column:1/-1;padding-top:0;white-space:nowrap;overflow-wrap:normal}
+}
+
+/* =====================================================================
+   本番用に足したもの（2026-11-19〜）
+   見本には置き場所が無く、今のHPの動き（top.js）が文字を出す先。見た目の調子は見本に合わせる：
+   字は16px以上・押す所は44px以上・色は今までの金／朱（#B02A26）／紙の色だけ。
+   ===================================================================== */
+
+/* 選んだ品の行：38行（1品×1入数）が最初から並んでいて、数が0の行は隠す */
+.order-product-row[hidden]{display:none}
+
+/* お支払い情報の入力：決済会社（Stripe）の入力欄が入る場所。見本の点線の枠は外す */
+.pay-el{display:block;min-height:0;border:0;padding:0;margin-bottom:12px;text-align:left;color:inherit}
+.pay-el:empty{display:none}
+/* カード欄の案内・エラー（「郵便番号を入れると…」「北海道・沖縄は…」など） */
+.pay-msg{margin:0 0 12px;padding:12px 14px;border-left:2px solid var(--gold);font-size:16px;line-height:1.7;color:var(--tx)}
+.pay-amt small{display:block;margin-top:2px;font-family:var(--sans);font-size:16px;line-height:1.6;color:var(--mut)}
+
+/* 伝票：代引き手数料の行（代金引換を選んだ時だけ出る） */
+.slip-cod{padding:0 0 12px;text-align:right;font-size:16px;line-height:1.6;font-weight:700;color:var(--ink)}
+
+/* ポイント割引の表示（「−¥○○ ポイント割引適用／お支払い金額」）は見本の .pt-use-i をそのまま使う */
+
+/* ポイント残高確認の結果 */
+.pt-res{display:none;margin-top:16px;padding:16px 18px;border:1px solid var(--hl)}
+.pt-res.show{display:block}
+.pt-res-n{font-family:var(--serif);line-height:1.2}
+.pt-res-n b{font-weight:800;font-size:40px;color:var(--gold)}
+.pt-res-n span{margin-left:.2em;font-size:19px}
+.pt-res-l{margin-top:4px;font-size:16px;line-height:1.7;overflow-wrap:anywhere}
+/* LINE連携のボタン（LINE未連携の会員の時だけ出る） */
+.pt-link{margin-top:14px;padding:14px 16px;border:1px dashed var(--edge);font-size:16px;line-height:1.7}
+.pt-link b{display:block;font-weight:700}
+.pt-link p{color:var(--mut)}
+.pt-link .mini{display:block;width:100%;margin-top:12px}
+
+/* 確認画面：確認中に内容が変わった時の案内（紙の上なので、墨の字に朱の囲み） */
+.rev-chg{margin-top:14px;padding:12px 14px;border:1px solid var(--red);border-radius:3px;font-size:16px;line-height:1.7;font-weight:700;color:var(--ink)}
+.rev-chg:empty{display:none}
+/* 確認画面：送料を別途ご案内する時の一文 */
+#orderReviewSummary>p{margin-top:12px;font-size:16px;line-height:1.7;color:var(--ink2)}
+/* dialog を知らない古い端末：確認画面はフォームの下にそのまま出す */
+.rev.order-review-inline{display:block;position:static;margin:32px auto 0}
+/* dialog を知らない古い端末：送信中・完了は暗幕の上に重ねる */
+.flow.flow-inline[open]{display:block;position:fixed;z-index:200;top:16px;left:0;right:0;margin:0 auto;box-shadow:0 0 0 200vmax rgba(13,13,15,.93)}
+.snd[hidden],.done[hidden]{display:none}
+
+/* 完了画面：ポイント利用・お支払い金額の行 */
+.done dd.pt-used{font-weight:700;color:var(--red)}
+
+/* 催事スケジュール：読み込み中・予定が無い時・読み込めない時 */
+.sch-load{color:var(--mut)}
+.sch-empty{border-top:1px solid var(--gold);border-bottom:1px solid var(--hl);padding:32px 0}
+.sch-empty h3{font-family:var(--serif);font-weight:500;font-size:22px;line-height:1.6;letter-spacing:.08em}
+.sch-empty p{margin-top:8px;color:var(--mut)}
+
+/* 帯の文字が「注文内容を確認する」の時（フォームの中にいる間）。見本の .cart.cf と同じ */
