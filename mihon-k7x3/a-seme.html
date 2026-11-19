@@ -1009,6 +1009,9 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
   .pk{break-inside:avoid}
   .sb,.pk-x,.pk-empty .btn{border:1px solid #1A1A1A}
 }
+/* 11/19 入口の行き先：スマホ幅で、海老焼売の写真の枠を読み込む前から画面の幅いっぱいに取っておく。
+   Safari系は読み込み前の枠の幅が0（＝高さ0）で、メニューへ移る途中に写真が入ると260pxずれて着いていた（前からあった癖）。見た目は同じ */
+@media (max-width:820px){.feat-ph{justify-self:stretch}}
 .steam .ys0{stop-color:var(--gold);stop-opacity:0}.steam .ys1{stop-color:var(--gold);stop-opacity:1}
 .steam path.yw{fill:none;stroke-width:2.6;stroke-linecap:round;vector-effect:non-scaling-stroke;filter:blur(.5px);stroke-dasharray:none;opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:yuge 6.5s ease-in-out infinite}
 .steam path.yw:nth-of-type(2){animation-delay:-2.2s;animation-duration:7.2s}
@@ -1085,8 +1088,7 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
       <div class="hero-rule" aria-hidden="true"></div>
       <p class="hero-tag">本格的な中華を<br>ご家庭でも</p>
       <div class="hero-cta">
-        <a href="#menu" class="btn btn-red">メニューを見る</a>
-        <a href="#orderform" class="btn btn-line">ご注文はこちら</a>
+        <a href="#orderform" class="btn btn-red">ご注文はこちら</a>
       </div>
     </div>
   </div>
@@ -1997,6 +1999,13 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
 
   document.addEventListener('click',function(ev){
     var t=ev.target, b, c, ad, it, i, q;
+    /* 入口の行き先（11/19 涼介さんの指摘）：何も選んでいない時、注文フォーム行きの入口（最初の画面の「ご注文はこちら」・上の帯やスマホの案内の「注文する」など）は
+       メニューへ着く。品が入っていれば今までどおり注文フォームへ。押した時だけ行き先を付け替え、すぐ元に戻す（JSが動かない端末では今までのリンクのまま） */
+    if((b=t.closest('a[href="#orderform"]'))){ var emp=!Object.keys(cart).length; if(emp){ var en=b; en.setAttribute('href','#menu'); setTimeout(function(){ en.setAttribute('href','#orderform');},0) }
+      var tg=$(emp?'#menu':'#orderform'), mv=false, um=function(){ mv=true; }; ['touchstart','wheel','keydown'].forEach(function(n){ addEventListener(n,um,{passive:true,once:true}); });
+      /* なめらかな移動が途中で止まることがある（Safariに近い環境）ので、少し待って、着いていなければ直接移す。その間にお客さんが自分で画面を動かしていたら何もしない */
+      setTimeout(function(){ if(mv||!tg) return; var r=tg.getBoundingClientRect(); if(Math.abs(r.top-80)>40) tg.scrollIntoView({behavior:'instant',block:'start'}); },1300);
+      return;}
     if((b=t.closest('.sz'))){ pick(b,'.sz'); cardSync(b.closest('.card')); return; }
     if((b=t.closest('.add'))){
       /* カードで選んである入数のまま1つ足す → その場で「− 数 ＋」に変わる */
