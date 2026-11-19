@@ -1012,6 +1012,13 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
 /* 11/19 入口の行き先：スマホ幅で、海老焼売の写真の枠を読み込む前から画面の幅いっぱいに取っておく。
    Safari系は読み込み前の枠の幅が0（＝高さ0）で、メニューへ移る途中に写真が入ると260pxずれて着いていた（前からあった癖）。見た目は同じ */
 @media (max-width:820px){.feat-ph{justify-self:stretch}}
+/* 11/19 下の帯のボタン：注文フォームの中では文字が「注文内容を確認する」に変わる（mk_r6js.py の barSync）。
+   スマホ幅では「注文内容を／確認する」の2行に組む＝「注文へ進む」と同じ5字の幅なので、帯の左の字（点数・小計・送料）が動かない */
+.cart .cb-t{display:inline-flex;flex-wrap:wrap;justify-content:center}
+@media (max-width:820px){
+  .cart.cf .btn{line-height:1.3;letter-spacing:.04em}
+  .cart.cf .cb-t{flex-direction:column;align-items:center}
+}
 .steam .ys0{stop-color:var(--gold);stop-opacity:0}.steam .ys1{stop-color:var(--gold);stop-opacity:1}
 .steam path.yw{fill:none;stroke-width:2.6;stroke-linecap:round;vector-effect:non-scaling-stroke;filter:blur(.5px);stroke-dasharray:none;opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:yuge 6.5s ease-in-out infinite}
 .steam path.yw:nth-of-type(2){animation-delay:-2.2s;animation-duration:7.2s}
@@ -1982,6 +1989,40 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
     $('#orderSubmitBtn').disabled=sub<MIN;
     d.style.setProperty('--cb',(count?cart_.offsetHeight:0)+'px');
     if(!first && !calm){cart_.classList.remove('bump'); void cart_.offsetWidth; cart_.classList.add('bump');}
+    barSync();
+  }
+  /* --- 下の帯のボタン：注文フォームの中（選んだ品の確認の場所を見ている・過ぎた）にいる間は、文字を「注文内容を確認する」に変える。
+         押すと何が起きるかを先に見せるため。フォームより上へ戻れば「注文へ進む」に戻る。合計が足りない間は変えない（押しても確認へは進めないので） --- */
+  var barBtn=$('.cart a'), barTx=document.createElement('span'), barOn=false, barTick=false;
+  barTx.className='cb-t'; barTx.textContent=barBtn.firstChild.nodeValue; barBtn.replaceChild(barTx,barBtn.firstChild);
+  /* 選んだ品の場所の頭が、下の帯より120px以上上に見えている（または過ぎた）＝お客さんはもう選んだ品を見ている */
+  function barDeep(){ var g=$('#orderItems'); return !!g && g.getBoundingClientRect().top<=$('#floatingCart').getBoundingClientRect().top-120; }
+  function barSync(){
+    barTick=false;
+    var on=barDeep() && state.sub>=MIN, c=$('#floatingCart'); if(on===barOn) return; barOn=on;
+    /* 幅の狭い画面では「注文内容を／確認する」の2行に組む（r6.css）。言葉の途中では折れない */
+    if(on) barTx.innerHTML='<span class="nw">注文内容を</span><span class="nw">確認する</span>'; else barTx.textContent='注文へ進む';
+    c.classList.toggle('cf',on);
+    if(!c.classList.contains('off')) d.style.setProperty('--cb',c.offsetHeight+'px');
+  }
+  addEventListener('scroll',function(){ if(!barTick){ barTick=true; requestAnimationFrame(barSync); } },{passive:true});
+  addEventListener('resize',barSync);
+  /* まだ埋まっていない（または書き方が合っていない）最初の欄。隠れている欄は見ない。住所は郵便番号から入る欄なので、空なら郵便番号へ */
+  function barGap(){
+    var fs=$$('input,select,textarea',$('#orderForm'));
+    for(var i=0;i<fs.length;i++){ var f=fs[i];
+      if(f.offsetParent===null) continue;
+      if(f.id==='orderAddress' && !f.value.trim()){ if($('#orderZip').value.replace(/[^0-9]/g,'').length<7) return $('#orderZip'); continue; }
+      if(f.willValidate && !f.validity.valid) return f; }
+    return null;
+  }
+  function barBring(t){
+    var w=t.closest('.wait'), mv=false, um=function(){ mv=true; }; if(w) w.classList.remove('wait');
+    if(t.id!=='orderTotalBox') t.focus({preventScroll:true});
+    t.scrollIntoView({behavior:calm?'auto':'smooth',block:'center'});
+    ['touchstart','wheel','keydown'].forEach(function(n){ addEventListener(n,um,{passive:true,once:true}); });
+    /* なめらかな移動が途中で止まった時の保険（お客さんが自分で動かした・打ち始めた時は何もしない） */
+    setTimeout(function(){ if(mv) return; var r=t.getBoundingClientRect(); if(r.top<70 || r.bottom>innerHeight-$('#floatingCart').offsetHeight) t.scrollIntoView({behavior:'instant',block:'center'}); },1100);
   }
   /* 数を変える（0〜99）。0 になったらカートから外す */
   function setQ(it,i,q){
@@ -2025,11 +2066,21 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
       return;
     }
     if((b=t.closest('.pk-x'))){ rowSet(b.closest('.pk'),0,'.pk-x'); return; }
-    /* 下の帯の「注文へ進む」→ 選んだ品の確認の場所へ（移動そのものはリンクのまま）。
-       なめらかな移動が途中で止まることがある（Safariに近い環境で、たまに）ので、少し待って、まだ着いていなければその場所へ直接移す */
+    /* 下の帯のボタン（11/19 涼介さんの指摘：注文フォームまで来た後に押しても先へ進まなかった）。押せば必ず1歩先へ進む：
+       ① 選んだ品の確認の場所がまだ画面より下にある時 → 今までどおりそこへ（移動そのものはリンクのまま）。
+          なめらかな移動が途中で止まることがある（Safariに近い環境で、たまに）ので、少し待って、まだ着いていなければその場所へ直接移す
+       ② そこを見ている・過ぎている時 → 合計が足りなければ合計の伝票へ／必須の欄に空きがあれば最初の空き欄へ（カーソルも入る）／
+          全部埋まっていれば「注文内容を確認する」を押したのと同じ（確認画面が開く） */
     if((b=t.closest('.cart a'))){
       var go=$('#orderItems');
-      if(go) setTimeout(function(){ var r=go.getBoundingClientRect(); if(r.top<40 || r.top>innerHeight*0.5) go.scrollIntoView({behavior:'instant',block:'start'}); },1300);
+      if(!barDeep()){
+        if(go) setTimeout(function(){ var r=go.getBoundingClientRect(); if(r.top<40 || r.top>innerHeight*0.5) go.scrollIntoView({behavior:'instant',block:'start'}); },1300);
+        return;
+      }
+      ev.preventDefault();
+      if(state.sub<MIN){ barBring($('#orderTotalBox')); return; }
+      var gap=barGap();
+      if(gap) barBring(gap); else $('#orderSubmitBtn').click();
       return;
     }
     /* 商品 → その品の温め方：スマホではたたんである札を先に開けてから飛ぶ */
