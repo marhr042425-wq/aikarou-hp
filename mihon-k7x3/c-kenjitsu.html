@@ -216,12 +216,6 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:
 .o-hint>span{display:block}
 .js .o-hint>span{display:none}
 .js .o-hint>span.on{display:block}
-.o-size{grid-area:size;display:flex;gap:6px}
-.orow[data-kind="tea"]{grid-template-areas:"info info" "size size" "qty qty"}
-.orow[data-kind="tea"] .osz{max-width:none}
-.osz{flex:1 1 0;max-width:72px;min-width:48px;min-height:48px;padding:0 2px;box-shadow:inset 0 0 0 1px var(--hl);border-radius:2px;font-size:16px;white-space:nowrap;background:var(--white)}
-.osz em{font-style:normal;color:var(--red);font-weight:600;margin-left:4px}
-.osz.on{box-shadow:inset 0 0 0 2px var(--ink);font-weight:600}
 .o-qty{grid-area:qty;display:flex;align-items:center;justify-self:end}
 .o-qty button{width:44px;height:48px;box-shadow:inset 0 0 0 1px var(--field);border-radius:2px;font-size:22px;line-height:1;background:var(--white)}
 .o-qty button:hover{background:var(--paper)}
@@ -250,11 +244,6 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:
   .orow>*{padding:20px 0;display:flex;align-items:center;justify-content:center}
   .orow>* + *{border-left:1px solid var(--hl)}
   .o-info{display:block;padding:20px 24px 20px 32px}
-  .o-size{padding:20px 16px}
-  .orow[data-kind="tea"]{grid-template-areas:"info size qty sub"}
-  .osz{flex:0 0 auto;max-width:none}
-  .osz{min-width:64px;padding:0 6px}
-  .o-size{gap:4px}
   .o-qty{justify-self:stretch}
   .o-sub{justify-content:flex-end;padding-right:32px}
   .orow.has::before{width:6px}
@@ -626,7 +615,6 @@ html.has-cart{scroll-padding-bottom:136px}
   .hd-links{margin-right:0}
   .mnav summary{padding-left:6px;gap:6px}
   .orow{grid-template-areas:"info info" "size size" "qty qty"}
-  .osz{max-width:none}
 }
 .items{border-bottom-color:var(--ink)}
 .ck li{border-top-style:solid;padding:12px 0 12px 40px}
@@ -637,7 +625,6 @@ html.has-cart{scroll-padding-bottom:136px}
 dialog:not([open]){display:none}
 .item-name{gap:16px}
 .feat-head{gap:24px}
-.o-size{gap:8px}
 .hl{gap:8px}
 .ck ol{margin-top:24px}
 .way .btn{margin-top:24px}
@@ -655,8 +642,6 @@ p,li,dd,.help,.o-ship,.alg,.o-note,.note-sub,.o-hint{text-wrap-style:pretty}
 }
 @media (max-width:339px){.rail,.about .rail{font-size:24px;letter-spacing:.02em}}
 @media (min-width:360px) and (max-width:389px){
-  .osz{min-width:44px}
-  .o-size{gap:4px}
   .o-num{width:28px}
 }
 @media (min-width:1100px) and (max-width:1279px){.o-info{padding-right:12px}}
@@ -769,9 +754,6 @@ p,li,dd,.help,.o-ship,.alg,.o-note,.note-sub,.o-hint{text-wrap-style:pretty}
 .ck li{word-break:normal}
 @media (max-width:359px){
   .ev-venue{word-break:normal;text-wrap-style:balance}
-  .orow[data-kind="tea"]{grid-template-areas:"info info" "size size" "sub qty"}
-  .o-size{gap:4px}
-  .osz em{margin-left:2px}
 }
 .ck li{word-break:auto-phrase;text-wrap-style:balance}
 .rvw dd,.rvw li span{word-break:auto-phrase}
@@ -860,6 +842,49 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   .item-tx{margin-top:0}
   .item-buy{margin-top:12px}
   .hero-ph{clip-path:none!important}
+}
+.adds{flex-direction:column}
+.addw{min-width:0}
+.addw .add{display:block;width:100%}
+.stp{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;min-height:56px;background:var(--white);border:2px solid var(--ink);border-radius:2px}
+.stp button{font-size:26px;line-height:1}
+.stp button[data-d="-1"]{border-right:1px solid var(--hl)}
+.stp button[data-d="-1"]:hover{background:var(--paper)}
+.stp button[data-d="1"]{background:var(--red);color:#fff}
+.stp button[data-d="1"]:hover{background:var(--red-d)}
+.stp-n{display:flex;align-items:center;justify-content:center;gap:12px;min-width:0;white-space:nowrap}
+.stp-n small{font-size:16px;font-weight:600;line-height:1}
+.stp-n b{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.sz{position:relative}
+.sz.has::after{content:"";position:absolute;right:6px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.incart{margin-top:8px;font-size:16px;line-height:1.6}
+.orow,.orow.has{background:none}
+.orow{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"info info" "del qty";gap:16px 12px}
+.o-qty button{width:56px;height:56px;font-size:26px}
+.o-num{width:56px;font-size:26px}
+.o-del{grid-area:del;justify-self:start;min-height:48px;min-width:48px;padding:0 4px;font-size:16px;color:var(--mut)}
+.o-del span{text-decoration:underline;text-decoration-color:var(--field);text-underline-offset:5px;text-decoration-thickness:1px}
+.o-del:hover{color:var(--red)}
+.js .orow .o-hint>span{display:inline}
+.o-list{scroll-margin-top:88px}
+.o-list:focus{outline:0}
+.o-more{padding:4px 16px;text-align:right;border-bottom:1px solid var(--hl)}
+.o-more a{display:inline-flex;align-items:center;gap:8px;min-height:48px;font-size:16px;line-height:1.4;text-decoration:underline;text-decoration-color:var(--field);text-underline-offset:5px;text-decoration-thickness:1px}
+.o-more a:hover{color:var(--red);text-decoration-color:var(--red)}
+.o-empty{padding:56px 16px;text-align:center}
+.o-empty p{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.8;letter-spacing:.08em}
+.o-empty .btn{margin-top:24px}
+@media (max-width:359px){
+  .orow{grid-template-areas:"info info" "sub sub" "del qty";gap:8px}
+  .o-qty button{width:48px}
+  .o-num{width:44px}
+}
+@media (min-width:768px){.o-more{padding:4px 32px}}
+@media (min-width:768px) and (max-width:1099px){.o-sub{right:32px}}
+@media (min-width:1100px){
+  .o-cap{grid-template-columns:minmax(0,1fr) 232px 136px 120px}
+  .orow{grid-template-columns:minmax(0,1fr) 232px 136px 120px;grid-template-areas:"info qty sub del";gap:0}
+  .o-del{justify-self:stretch}
 }
 
 /* ---- ここから共有用のコピーにだけ足した表示（見本です／入口へ戻る） ---- */
@@ -971,7 +996,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥900</s> <b>¥855</b> <small>/ 4個（税込）</small></div>
         <div class="sizes" role="group" aria-label="焼き小籠包のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥855</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,710</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,565</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="焼き小籠包" aria-label="焼き小籠包をカートに追加">＋ カートに追加</button></div>
+        <div class="adds"><div class="addw" data-add="焼き小籠包"><button type="button" class="add" aria-label="焼き小籠包をカートに追加">＋ カートに追加</button><div class="stp" role="group" aria-label="焼き小籠包の数量" hidden><button type="button" data-d="-1" aria-label="焼き小籠包を取り消す">−</button><span class="stp-n"><b>1</b></span><button type="button" data-d="1" aria-label="焼き小籠包を1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv" id="p2" data-p="肉焼売">
@@ -985,7 +1011,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
         <div class="sizes" role="group" aria-label="肉焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,520</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,280</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="肉焼売【生冷凍】" aria-label="肉焼売【生冷凍】をカートに追加">＋ 生冷凍</button><button type="button" class="add" data-add="肉焼売【調理済み冷凍】" aria-label="肉焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div>
+        <div class="adds"><div class="addw" data-add="肉焼売【生冷凍】"><button type="button" class="add" aria-label="肉焼売【生冷凍】をカートに追加">＋ 生冷凍</button><div class="stp" role="group" aria-label="肉焼売【生冷凍】の数量" hidden><button type="button" data-d="-1" aria-label="肉焼売【生冷凍】を取り消す">−</button><span class="stp-n"><small>生冷凍</small><b>1</b></span><button type="button" data-d="1" aria-label="肉焼売【生冷凍】を1つ増やす">＋</button></div></div><div class="addw" data-add="肉焼売【調理済み冷凍】"><button type="button" class="add" aria-label="肉焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button><div class="stp" role="group" aria-label="肉焼売【調理済み冷凍】の数量" hidden><button type="button" data-d="-1" aria-label="肉焼売【調理済み冷凍】を取り消す">−</button><span class="stp-n"><small>調理済み</small><b>1</b></span><button type="button" data-d="1" aria-label="肉焼売【調理済み冷凍】を1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv" id="p3" data-p="海老焼売">
@@ -999,7 +1026,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
         <div class="sizes" role="group" aria-label="海老焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,520</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,280</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="海老焼売【生冷凍】" aria-label="海老焼売【生冷凍】をカートに追加">＋ 生冷凍</button><button type="button" class="add" data-add="海老焼売【調理済み冷凍】" aria-label="海老焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div>
+        <div class="adds"><div class="addw" data-add="海老焼売【生冷凍】"><button type="button" class="add" aria-label="海老焼売【生冷凍】をカートに追加">＋ 生冷凍</button><div class="stp" role="group" aria-label="海老焼売【生冷凍】の数量" hidden><button type="button" data-d="-1" aria-label="海老焼売【生冷凍】を取り消す">−</button><span class="stp-n"><small>生冷凍</small><b>1</b></span><button type="button" data-d="1" aria-label="海老焼売【生冷凍】を1つ増やす">＋</button></div></div><div class="addw" data-add="海老焼売【調理済み冷凍】"><button type="button" class="add" aria-label="海老焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button><div class="stp" role="group" aria-label="海老焼売【調理済み冷凍】の数量" hidden><button type="button" data-d="-1" aria-label="海老焼売【調理済み冷凍】を取り消す">−</button><span class="stp-n"><small>調理済み</small><b>1</b></span><button type="button" data-d="1" aria-label="海老焼売【調理済み冷凍】を1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv" id="p4" data-p="肉にら饅頭">
@@ -1013,7 +1041,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
         <div class="sizes" role="group" aria-label="肉にら饅頭のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,520</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,280</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="肉にら饅頭【生冷凍】" aria-label="肉にら饅頭【生冷凍】をカートに追加">＋ 生冷凍</button><button type="button" class="add" data-add="肉にら饅頭【調理済み冷凍】" aria-label="肉にら饅頭【調理済み冷凍】をカートに追加">＋ 調理済み</button></div>
+        <div class="adds"><div class="addw" data-add="肉にら饅頭【生冷凍】"><button type="button" class="add" aria-label="肉にら饅頭【生冷凍】をカートに追加">＋ 生冷凍</button><div class="stp" role="group" aria-label="肉にら饅頭【生冷凍】の数量" hidden><button type="button" data-d="-1" aria-label="肉にら饅頭【生冷凍】を取り消す">−</button><span class="stp-n"><small>生冷凍</small><b>1</b></span><button type="button" data-d="1" aria-label="肉にら饅頭【生冷凍】を1つ増やす">＋</button></div></div><div class="addw" data-add="肉にら饅頭【調理済み冷凍】"><button type="button" class="add" aria-label="肉にら饅頭【調理済み冷凍】をカートに追加">＋ 調理済み</button><div class="stp" role="group" aria-label="肉にら饅頭【調理済み冷凍】の数量" hidden><button type="button" data-d="-1" aria-label="肉にら饅頭【調理済み冷凍】を取り消す">−</button><span class="stp-n"><small>調理済み</small><b>1</b></span><button type="button" data-d="1" aria-label="肉にら饅頭【調理済み冷凍】を1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv" id="p5" data-p="ちまき">
@@ -1027,7 +1056,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
         <div class="sizes" role="group" aria-label="ちまきのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>2個</span><span>¥744</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>4個</span><span>¥1,488</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>6個</span><span>¥2,232</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="ちまき" aria-label="ちまきをカートに追加">＋ カートに追加</button></div>
+        <div class="adds"><div class="addw" data-add="ちまき"><button type="button" class="add" aria-label="ちまきをカートに追加">＋ カートに追加</button><div class="stp" role="group" aria-label="ちまきの数量" hidden><button type="button" data-d="-1" aria-label="ちまきを取り消す">−</button><span class="stp-n"><b>1</b></span><button type="button" data-d="1" aria-label="ちまきを1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv" id="p6" data-p="肉まん">
@@ -1041,7 +1071,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
         <div class="sizes" role="group" aria-label="肉まんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>1個</span><span>¥513</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>2個</span><span>¥1,026</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>3個</span><span>¥1,539</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="肉まん" aria-label="肉まんをカートに追加">＋ カートに追加</button></div>
+        <div class="adds"><div class="addw" data-add="肉まん"><button type="button" class="add" aria-label="肉まんをカートに追加">＋ カートに追加</button><div class="stp" role="group" aria-label="肉まんの数量" hidden><button type="button" data-d="-1" aria-label="肉まんを取り消す">−</button><span class="stp-n"><b>1</b></span><button type="button" data-d="1" aria-label="肉まんを1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv" id="p7" data-p="角煮バーガー">
@@ -1055,7 +1086,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
         <div class="sizes" role="group" aria-label="角煮バーガーのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>1個</span><span>¥513</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>2個</span><span>¥1,026</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>3個</span><span>¥1,539</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="角煮バーガー" aria-label="角煮バーガーをカートに追加">＋ カートに追加</button></div>
+        <div class="adds"><div class="addw" data-add="角煮バーガー"><button type="button" class="add" aria-label="角煮バーガーをカートに追加">＋ カートに追加</button><div class="stp" role="group" aria-label="角煮バーガーの数量" hidden><button type="button" data-d="-1" aria-label="角煮バーガーを取り消す">−</button><span class="stp-n"><b>1</b></span><button type="button" data-d="1" aria-label="角煮バーガーを1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv" id="p8" data-p="チャーシューまん">
@@ -1069,7 +1101,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
         <div class="sizes" role="group" aria-label="チャーシューまんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>2個</span><span>¥744</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>4個</span><span>¥1,488</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>6個</span><span>¥2,232</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="チャーシューまん" aria-label="チャーシューまんをカートに追加">＋ カートに追加</button></div>
+        <div class="adds"><div class="addw" data-add="チャーシューまん"><button type="button" class="add" aria-label="チャーシューまんをカートに追加">＋ カートに追加</button><div class="stp" role="group" aria-label="チャーシューまんの数量" hidden><button type="button" data-d="-1" aria-label="チャーシューまんを取り消す">−</button><span class="stp-n"><b>1</b></span><button type="button" data-d="1" aria-label="チャーシューまんを1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv item-sm" id="p9" data-p="ザーサイ">
@@ -1083,7 +1116,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 140g（税込）</small></div>
         <div class="sizes" role="group" aria-label="ザーサイのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>140g</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>280g</span><span>¥1,520</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="ザーサイ" aria-label="ザーサイをカートに追加">＋ カートに追加</button></div>
+        <div class="adds"><div class="addw" data-add="ザーサイ"><button type="button" class="add" aria-label="ザーサイをカートに追加">＋ カートに追加</button><div class="stp" role="group" aria-label="ザーサイの数量" hidden><button type="button" data-d="-1" aria-label="ザーサイを取り消す">−</button><span class="stp-n"><b>1</b></span><button type="button" data-d="1" aria-label="ザーサイを1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     <article class="item rv item-sm" id="p10" data-p="モンゴル茶">
@@ -1097,7 +1131,8 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <div class="item-buy">
         <div class="price"><b>¥4,000</b> <small>/ 1袋30個入（税込）</small></div>
         <div class="sizes" role="group" aria-label="モンゴル茶のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>1袋</span><span>¥4,000</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>2袋<em>お得</em></span><span>¥7,500</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>3袋<em>最安</em></span><span>¥10,800</span></button></div>
-        <div class="adds"><button type="button" class="add" data-add="モンゴル茶" aria-label="モンゴル茶をカートに追加">＋ カートに追加</button></div>
+        <div class="adds"><div class="addw" data-add="モンゴル茶"><button type="button" class="add" aria-label="モンゴル茶をカートに追加">＋ カートに追加</button><div class="stp" role="group" aria-label="モンゴル茶の数量" hidden><button type="button" data-d="-1" aria-label="モンゴル茶を取り消す">−</button><span class="stp-n"><b>1</b></span><button type="button" data-d="1" aria-label="モンゴル茶を1つ増やす">＋</button></div></div></div>
+        <p class="incart" hidden></p>
       </div>
     </article>
     </div>
@@ -1108,7 +1143,7 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
 <section class="sec alt fold" id="orderform">
   <h2 class="rail rv" data-no="三" data-t="ご注文フォーム"><span class="no stamp" aria-hidden="true">三</span>ご注文フォーム</h2>
   <div class="body">
-    <p class="o-lead rv">催事会場で気に入った商品をご自宅でもう一度。<br>商品と数量を選んで、お客様情報をご入力ください。</p>
+    <p class="o-lead rv">催事会場で気に入った商品をご自宅でもう一度。<br>メニューで選んだ品をご確認のうえ、お客様情報をご入力ください。</p>
 
     <div class="sheet rv">
       <div class="o-head">
@@ -1116,86 +1151,13 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
         <div><p class="o-off">HPからのご注文は全点心商品 <strong>5%OFF</strong></p></div>
         <div class="o-headnote">※北海道・沖縄・離島は送料を別途ご案内します。</div>
       </div>
-      <div class="o-cap" aria-hidden="true"><span>商品</span><span>入数</span><span>数量</span><span>小計</span></div>
-      <div class="o-list">
-        <div class="orow" role="group" aria-label="焼き小籠包" data-name="焼き小籠包" data-kind="size" data-price="855" data-orig="900" data-base="4">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">一</span>焼き小籠包</div><div class="o-price"><s>¥900</s> → ¥855 / <span class="nb">4個入（税込）</span></div></div>
-          <div class="o-size" role="group" aria-label="焼き小籠包の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="焼き小籠包を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="焼き小籠包を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="肉焼売【生冷凍】" data-name="肉焼売【生冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">二</span>肉焼売<wbr><span class="nb">【生冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
-          <div class="o-size" role="group" aria-label="肉焼売【生冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉焼売【生冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉焼売【生冷凍】を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="肉焼売【調理済み冷凍】" data-name="肉焼売【調理済み冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">二</span>肉焼売<wbr><span class="nb">【調理済み冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
-          <div class="o-size" role="group" aria-label="肉焼売【調理済み冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉焼売【調理済み冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉焼売【調理済み冷凍】を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="海老焼売【生冷凍】" data-name="海老焼売【生冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">三</span>海老焼売<wbr><span class="nb">【生冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
-          <div class="o-size" role="group" aria-label="海老焼売【生冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="海老焼売【生冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="海老焼売【生冷凍】を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="海老焼売【調理済み冷凍】" data-name="海老焼売【調理済み冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">三</span>海老焼売<wbr><span class="nb">【調理済み冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
-          <div class="o-size" role="group" aria-label="海老焼売【調理済み冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="海老焼売【調理済み冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="海老焼売【調理済み冷凍】を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="肉にら饅頭【生冷凍】" data-name="肉にら饅頭【生冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">四</span>肉にら饅頭<wbr><span class="nb">【生冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
-          <div class="o-size" role="group" aria-label="肉にら饅頭【生冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉にら饅頭【生冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉にら饅頭【生冷凍】を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="肉にら饅頭【調理済み冷凍】" data-name="肉にら饅頭【調理済み冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">四</span>肉にら饅頭<wbr><span class="nb">【調理済み冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
-          <div class="o-size" role="group" aria-label="肉にら饅頭【調理済み冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉にら饅頭【調理済み冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉にら饅頭【調理済み冷凍】を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="ちまき" data-name="ちまき" data-kind="size" data-price="744" data-orig="784" data-base="2">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">五</span>ちまき</div><div class="o-price"><s>¥784</s> → ¥744 / <span class="nb">2個入（税込）</span></div></div>
-          <div class="o-size" role="group" aria-label="ちまきの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">2個</button><button type="button" class="osz" aria-pressed="false" data-m="2">4個</button><button type="button" class="osz" aria-pressed="false" data-m="3">6個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="ちまきを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="ちまきを1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="肉まん" data-name="肉まん" data-kind="size" data-price="513" data-orig="540" data-base="1">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">六</span>肉まん</div><div class="o-price"><s>¥540</s> → ¥513 / <span class="nb">1個入（税込）</span></div></div>
-          <div class="o-size" role="group" aria-label="肉まんの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">1個</button><button type="button" class="osz" aria-pressed="false" data-m="2">2個</button><button type="button" class="osz" aria-pressed="false" data-m="3">3個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉まんを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉まんを1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="角煮バーガー" data-name="角煮バーガー" data-kind="size" data-price="513" data-orig="540" data-base="1">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">七</span>角煮バーガー</div><div class="o-price"><s>¥540</s> → ¥513 / <span class="nb">1個入（税込）</span></div></div>
-          <div class="o-size" role="group" aria-label="角煮バーガーの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">1個</button><button type="button" class="osz" aria-pressed="false" data-m="2">2個</button><button type="button" class="osz" aria-pressed="false" data-m="3">3個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="角煮バーガーを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="角煮バーガーを1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="チャーシューまん" data-name="チャーシューまん" data-kind="size" data-price="744" data-orig="784" data-base="2">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">八</span>チャーシューまん</div><div class="o-price"><s>¥784</s> → ¥744 / <span class="nb">2個入（税込）</span></div></div>
-          <div class="o-size" role="group" aria-label="チャーシューまんの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">2個</button><button type="button" class="osz" aria-pressed="false" data-m="2">4個</button><button type="button" class="osz" aria-pressed="false" data-m="3">6個</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="チャーシューまんを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="チャーシューまんを1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="ザーサイ" data-name="ザーサイ" data-kind="unit" data-price="760" data-orig="800" data-unit="140g">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">九</span>ザーサイ</div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">140g（税込）</span></div></div>
-          <div class="o-size" role="group" aria-label="ザーサイの入数"><button type="button" class="osz on" aria-pressed="true" data-uprice="760" data-uorig="800" data-ulabel="140g">140g</button><button type="button" class="osz" aria-pressed="false" data-uprice="1520" data-uorig="1600" data-ulabel="280g">280g</button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="ザーサイを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="ザーサイを1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
-        <div class="orow" role="group" aria-label="モンゴル茶" data-name="モンゴル茶" data-kind="tea" data-price="4000" data-bags="1">
-          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">十</span>モンゴル茶</div><div class="o-price">¥4,000 / <span class="nb">1袋30個入（税込）</span></div><div class="o-hint" data-teahint></div></div>
-          <div class="o-size" role="group" aria-label="モンゴル茶の入数"><button type="button" class="osz on" aria-pressed="true" data-tprice="4000" data-bags="1">1袋</button><button type="button" class="osz" aria-pressed="false" data-tprice="7500" data-bags="2">2袋<em>お得</em></button><button type="button" class="osz" aria-pressed="false" data-tprice="10800" data-bags="3">3袋<em>最安</em></button></div>
-          <div class="o-qty"><button type="button" data-d="-1" aria-label="モンゴル茶を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="モンゴル茶を1つ増やす">＋</button></div>
-          <div class="o-sub">-</div>
-        </div>
+      <!-- 6周目：全品の表はやめた。ここに並ぶのはメニューで選んだ品だけ（行は script.js が作る）。できるのは数の増減と取り消しだけ -->
+      <div class="o-cap" id="orderCap" aria-hidden="true" hidden><span>商品</span><span>数量</span><span>小計</span><span></span></div>
+      <div class="o-list" id="orderList" role="group" aria-label="選んだ品" tabindex="-1"></div>
+      <p class="o-more" id="orderMore" hidden><a href="#menu">メニューで品を足す<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      <div class="o-empty" id="orderEmpty">
+        <p>メニューから品をお選びください</p>
+        <a href="#menu" class="btn btn-line" id="orderEmptyBtn">メニューへ戻る</a>
       </div>
       <div class="o-total" id="orderTotalBox" tabindex="-1">
         <div>
@@ -1558,39 +1520,71 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   });
   var FREE=8000, MIN=2000, SHIP=1200, TEA=30, SEP=['北海道','沖縄県'];
   var NOTE='※ 送料 全国一律¥1,200（税込・冷凍便／常温便とも）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から';
-  var rows=$$('.orow');
-  function qty(r){return parseInt($('.o-num',r).textContent,10)||0}
-  function mult(r){return r.dataset.kind==='size' ? (parseInt(r.dataset.m||'1',10)) : 1}
-  function price(r){return parseInt(r.dataset.price,10)*mult(r)}
-  function subtotal(){return rows.reduce(function(s,r){return s+price(r)*qty(r)},0)}
-  function count(){return rows.reduce(function(s,r){return s+qty(r)},0)}
+  var CAT=[{"n":"焼き小籠包","p":"焼き小籠包","no":"一","k":"size","v":"","h":0,"s":[{"l":"4個","u":"4個入","pr":855,"og":900,"pc":4},{"l":"8個","u":"8個入","pr":1710,"og":1800,"pc":8},{"l":"12個","u":"12個入","pr":2565,"og":2700,"pc":12}]},{"n":"肉焼売【生冷凍】","p":"肉焼売","no":"二","k":"size","v":"生冷凍","h":1,"s":[{"l":"4個","u":"4個入","pr":760,"og":800,"pc":4},{"l":"8個","u":"8個入","pr":1520,"og":1600,"pc":8},{"l":"12個","u":"12個入","pr":2280,"og":2400,"pc":12}]},{"n":"肉焼売【調理済み冷凍】","p":"肉焼売","no":"二","k":"size","v":"調理済み","h":1,"s":[{"l":"4個","u":"4個入","pr":760,"og":800,"pc":4},{"l":"8個","u":"8個入","pr":1520,"og":1600,"pc":8},{"l":"12個","u":"12個入","pr":2280,"og":2400,"pc":12}]},{"n":"海老焼売【生冷凍】","p":"海老焼売","no":"三","k":"size","v":"生冷凍","h":1,"s":[{"l":"4個","u":"4個入","pr":760,"og":800,"pc":4},{"l":"8個","u":"8個入","pr":1520,"og":1600,"pc":8},{"l":"12個","u":"12個入","pr":2280,"og":2400,"pc":12}]},{"n":"海老焼売【調理済み冷凍】","p":"海老焼売","no":"三","k":"size","v":"調理済み","h":1,"s":[{"l":"4個","u":"4個入","pr":760,"og":800,"pc":4},{"l":"8個","u":"8個入","pr":1520,"og":1600,"pc":8},{"l":"12個","u":"12個入","pr":2280,"og":2400,"pc":12}]},{"n":"肉にら饅頭【生冷凍】","p":"肉にら饅頭","no":"四","k":"size","v":"生冷凍","h":1,"s":[{"l":"4個","u":"4個入","pr":760,"og":800,"pc":4},{"l":"8個","u":"8個入","pr":1520,"og":1600,"pc":8},{"l":"12個","u":"12個入","pr":2280,"og":2400,"pc":12}]},{"n":"肉にら饅頭【調理済み冷凍】","p":"肉にら饅頭","no":"四","k":"size","v":"調理済み","h":1,"s":[{"l":"4個","u":"4個入","pr":760,"og":800,"pc":4},{"l":"8個","u":"8個入","pr":1520,"og":1600,"pc":8},{"l":"12個","u":"12個入","pr":2280,"og":2400,"pc":12}]},{"n":"ちまき","p":"ちまき","no":"五","k":"size","v":"","h":0,"s":[{"l":"2個","u":"2個入","pr":744,"og":784,"pc":2},{"l":"4個","u":"4個入","pr":1488,"og":1568,"pc":4},{"l":"6個","u":"6個入","pr":2232,"og":2352,"pc":6}]},{"n":"肉まん","p":"肉まん","no":"六","k":"size","v":"","h":0,"s":[{"l":"1個","u":"1個入","pr":513,"og":540,"pc":1},{"l":"2個","u":"2個入","pr":1026,"og":1080,"pc":2},{"l":"3個","u":"3個入","pr":1539,"og":1620,"pc":3}]},{"n":"角煮バーガー","p":"角煮バーガー","no":"七","k":"size","v":"","h":0,"s":[{"l":"1個","u":"1個入","pr":513,"og":540,"pc":1},{"l":"2個","u":"2個入","pr":1026,"og":1080,"pc":2},{"l":"3個","u":"3個入","pr":1539,"og":1620,"pc":3}]},{"n":"チャーシューまん","p":"チャーシューまん","no":"八","k":"size","v":"","h":0,"s":[{"l":"2個","u":"2個入","pr":744,"og":784,"pc":2},{"l":"4個","u":"4個入","pr":1488,"og":1568,"pc":4},{"l":"6個","u":"6個入","pr":2232,"og":2352,"pc":6}]},{"n":"ザーサイ","p":"ザーサイ","no":"九","k":"unit","v":"","h":0,"s":[{"l":"140g","u":"140g","pr":760,"og":800},{"l":"280g","u":"280g","pr":1520,"og":1600}]},{"n":"モンゴル茶","p":"モンゴル茶","no":"十","k":"tea","v":"","h":0,"s":[{"l":"1袋","u":"1袋30個入","pr":4000,"bags":1},{"l":"2袋","u":"2袋（計60個）","pr":7500,"bags":2},{"l":"3袋","u":"3袋（計90個）","pr":10800,"bags":3}]}];
+  var HINT=[['4個入：','お弁当に・1人前の目安'],['8個入：','ふたりの食卓に・','2人前の目安'],['12個入：','家族で・3人前の目安']];
+  var cart=[];                                                  
+  var listEl=$('#orderList');
+  function cat(n){ for(var k=0;k<CAT.length;k++) if(CAT[k].n===n) return CAT[k]; return null; }
+  function line(c,i){ for(var k=0;k<cart.length;k++) if(cart[k].c===c && cart[k].i===i) return cart[k]; return null; }
+  function setQ(c,i,q){
+    q=Math.max(0,Math.min(99,q)); var l=line(c,i);
+    if(!q){ if(l) cart.splice(cart.indexOf(l),1); return; }
+    if(l) l.q=q; else { cart.push({c:c,i:i,q:q}); cart.sort(function(a,b){ return CAT.indexOf(a.c)-CAT.indexOf(b.c) || a.i-b.i; }); }   
+  }
+  function lp(l){ return l.c.s[l.i].pr; }
+  function subtotal(){return cart.reduce(function(s,l){return s+lp(l)*l.q},0)}
+  function count(){return cart.reduce(function(s,l){return s+l.q},0)}
   function pref(){var a=$('#orderAddress').value; var m=a.match(/^(北海道|東京都|(?:京都|大阪)府|.{2,3}県)/); return m?m[1]:null}
   function ship(sub){var p=pref(); if(!p) return {pref:null,fee:null,separate:false}; if(SEP.indexOf(p)>=0) return {pref:p,fee:null,separate:true}; return {pref:p,fee:sub>=FREE?0:SHIP,separate:false}}
-  function renderRow(r){
-    var k=r.dataset.kind, el=$('.o-price',r), q=qty(r);
-    if(k==='size'){
-      var m=mult(r), base=parseInt(r.dataset.base,10);
-      el.innerHTML='<s>'+yen(parseInt(r.dataset.orig,10)*m)+'</s> → '+yen(price(r))+' / <span class="nb">'+(base*m)+'個入（税込）</span>';
-      $$('.o-hint span',r).forEach(function(s,i){s.classList.toggle('on',i===m-1)});
-    }else if(k==='unit'){
-      el.innerHTML='<s>'+yen(parseInt(r.dataset.orig,10))+'</s> → '+yen(price(r))+' / <span class="nb">'+r.dataset.unit+'（税込）</span>';
-    }else{
-      var b=parseInt(r.dataset.bags,10)||1, p=price(r);
-      el.innerHTML=yen(p)+' / <span class="nb">'+(b>1 ? b+'袋（計'+(b*TEA)+'個）' : '1袋30個入')+'（税込）</span>';
-      var h=$('[data-teahint]',r);
-      if(h) h.innerHTML = b>1 ? '<span class="on">1袋あたり'+yen(p/b)+'（'+Math.round((1-p/b/4000)*100)+'%お得）</span>' : '';
-    }
-    var sub=$('.o-sub',r);
-    sub.textContent = q>0 ? yen(price(r)*q) : '-';
-    r.classList.toggle('has',q>0);
+  function mk(tag,cls,text,parent){ var el=d.createElement(tag); if(cls) el.className=cls; if(text!=null) el.textContent=text; if(parent) parent.appendChild(el); return el; }
+  function key(l){ return l.c.n+'|'+l.i; }
+  function full(l){ return l.c.n+' '+(l.c.k==='tea' ? l.c.s[l.i].bags+'袋セット' : l.c.s[l.i].u); }
+  function makeRow(l){
+    var c=l.c, s=c.s[l.i], r=mk('div','orow has'); r.setAttribute('role','group'); r.setAttribute('aria-label',full(l)); r.dataset.key=key(l);
+    var info=mk('div','o-info',null,r), nm=mk('div','o-name',null,info), m=c.n.match(/^([^【]+)(【.+】)$/);
+    mk('span','o-no',c.no,nm).setAttribute('aria-hidden','true');
+    if(m){ nm.appendChild(d.createTextNode(m[1])); nm.appendChild(d.createElement('wbr')); mk('span','nb',m[2],nm); } else nm.appendChild(d.createTextNode(c.n));
+    var pr=mk('div','o-price',null,info);
+    if(s.og){ mk('s',null,yen(s.og),pr); pr.appendChild(d.createTextNode(' → ')); }
+    pr.appendChild(d.createTextNode(yen(s.pr)+' / ')); mk('span','nb',s.u+'（税込）',pr);
+    if(c.h){ var h=mk('div','o-hint',null,info), t=HINT[l.i]; h.appendChild(d.createTextNode(t[0])); t.slice(1).forEach(function(x){ mk('span','nb',x,h); }); }
+    if(c.k==='tea' && s.bags>1) mk('div','o-hint','1袋あたり'+yen(s.pr/s.bags)+'（'+Math.round((1-s.pr/s.bags/4000)*100)+'%お得）',info);
+    var q=mk('div','o-qty',null,r);
+    mk('button',null,'−',q).dataset.d='-1'; mk('span','o-num',null,q); var pl=mk('button',null,'＋',q); pl.dataset.d='1'; pl.setAttribute('aria-label',full(l)+'を1つ増やす');
+    mk('div','o-sub',null,r);
+    var del=mk('button','o-del',null,r); mk('span',null,'取り消す',del); del.setAttribute('aria-label',full(l)+'を取り消す');
+    $$('button',r).forEach(function(b){ b.type='button'; });
+    return r;
   }
-  function pick(r,btn){
-    $$('.osz',r).forEach(function(b){b.classList.remove('on');b.setAttribute('aria-pressed','false')});
-    btn.classList.add('on'); btn.setAttribute('aria-pressed','true');
-    if(btn.dataset.m) r.dataset.m=btn.dataset.m;
-    if(btn.dataset.uprice){ r.dataset.price=btn.dataset.uprice; r.dataset.orig=btn.dataset.uorig; r.dataset.unit=btn.dataset.ulabel; }
-    if(btn.dataset.tprice){ r.dataset.price=btn.dataset.tprice; r.dataset.bags=btn.dataset.bags; }
-    renderRow(r);
+  function renderList(){
+    var have={}; $$('.orow',listEl).forEach(function(r){ have[r.dataset.key]=r; });
+    var ref=listEl.firstChild;
+    cart.forEach(function(l){
+      var r=have[key(l)]; if(!r) r=makeRow(l); else delete have[key(l)];
+      if(r!==ref) listEl.insertBefore(r,ref); else ref=ref.nextSibling;
+      $('.o-num',r).textContent=l.q; $('.o-sub',r).textContent=yen(lp(l)*l.q);
+      $('.o-qty button',r).setAttribute('aria-label',full(l)+(l.q>1?'を1つ減らす':'を取り消す'));
+    });
+    for(var k in have) listEl.removeChild(have[k]);
+    var none=!cart.length;
+    $('#orderEmpty').hidden=!none; $('#orderCap').hidden=none; $('#orderMore').hidden=none;
+  }
+  function szi(it){ var on=$('.sz.on',it); return on?parseInt(on.dataset.i,10):0; }
+  function renderMenu(){
+    $$('.item').forEach(function(it){
+      var i=szi(it), mine=cart.filter(function(l){return l.c.p===it.dataset.p});
+      $$('.addw',it).forEach(function(w){
+        var l=line(cat(w.dataset.add),i), add=$('.add',w), st=$('.stp',w);
+        add.hidden=!!l; st.hidden=!l;
+        if(l){ $('b',st).textContent=l.q; $('button',st).setAttribute('aria-label',full(l)+(l.q>1?'を1つ減らす':'を取り消す')); }
+      });
+      $$('.sz',it).forEach(function(b){ var k=parseInt(b.dataset.i,10); b.classList.toggle('has',mine.some(function(l){return l.i===k})); });
+      var box=$('.incart',it), txt=mine.map(function(l){ return (l.c.v?l.c.v+' ':'')+(l.c.k==='tea'?l.c.s[l.i].bags+'袋セット':l.c.s[l.i].u)+'×'+l.q; });
+      if(box.dataset.k!==txt.join('|')){
+        box.dataset.k=txt.join('|'); box.textContent=''; box.hidden=!txt.length;
+        if(txt.length) nws(box,['カートに'].concat(txt.map(function(t,k){ return t+(k<txt.length-1?'・':''); })));
+      }
+    });
   }
   function update(){
     var sub=subtotal(), s=ship(sub), total=sub>0?sub+(s.fee||0):0, el=$('#orderShipping'), lab='商品小計 '+yen(sub);
@@ -1616,20 +1610,21 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
     d.documentElement.classList.toggle('has-cart',c>0);
     $$('.shina li,.item').forEach(function(li){
       var n=li.dataset.p;
-      li.classList.toggle('in', rows.some(function(r){return qty(r)>0 && r.dataset.name.replace(/【[^】]+】/g,'')===n}));
+      li.classList.toggle('in', cart.some(function(l){return l.c.p===n}));
     });
-    var nos=[]; rows.forEach(function(r){ var k=$('.o-no',r).textContent; if(qty(r)>0 && nos.indexOf(k)<0) nos.push(k); });
+    renderList(); renderMenu();
+    var nos=[]; cart.forEach(function(l){ if(nos.indexOf(l.c.no)<0) nos.push(l.c.no); });
     var box=$('#cartNos'), key=nos.join('');
     if(box.dataset.k!==key){ box.dataset.k=key; box.textContent=''; nos.forEach(function(k){ box.appendChild(d.createElement('i')).textContent=k; }); }
     payBox();
     phrase($('#orderTotalBox')); phrase(cartEl); ask();
   }
   var sayT=0;
-  function say(r){
+  function say(c,i){
     clearTimeout(sayT);
     sayT=setTimeout(function(){
-      var q=qty(r), on=$('.osz.on',r), c=count(), t=r.dataset.name+' '+(on?on.firstChild.textContent+' ':'')+(q>0? q+'点、小計'+yen(price(r)*q) : '0点')+'。';
-      t+= c>0 ? '合計 '+c+'点、商品小計 '+yen(subtotal())+'。'+$('#floatingCartShipping').textContent : 'カートは空です';
+      var l=line(c,i), n=count(), t=(l? full(l)+' '+l.q+'点、小計'+yen(lp(l)*l.q) : c.n+' '+(c.k==='tea'?c.s[i].bags+'袋セット':c.s[i].u)+' を取り消しました')+'。';
+      t+= n>0 ? '合計 '+n+'点、商品小計 '+yen(subtotal())+'。'+$('#floatingCartShipping').textContent : 'カートは空です';
       $('#srLive').textContent=t;
     },250);
   }
@@ -1643,21 +1638,28 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
     var t=ev.target, b;
     if((b=t.closest('.sz'))){
       $$('.sz',b.parentNode).forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false')});
-      b.classList.add('on'); b.setAttribute('aria-pressed','true'); return;
+      b.classList.add('on'); b.setAttribute('aria-pressed','true'); renderMenu(); return;
     }
     if((b=t.closest('.add'))){
-      var r=rows.filter(function(x){return x.dataset.name===b.dataset.add})[0]; if(!r) return;
-      var on=$('.sz.on',b.closest('.item')), i=on?parseInt(on.dataset.i,10):0, sb=$$('.osz',r)[i];
-      if(sb) pick(r,sb);
-      $('.o-num',r).textContent=qty(r)+1; renderRow(r); update(); say(r);
-      var br=b.getBoundingClientRect(), over=br.bottom+12-(innerHeight-cartEl.offsetHeight);
+      var w=b.closest('.addw'), c=cat(w.dataset.add), i=szi(b.closest('.item')); if(!c) return;
+      setQ(c,i,1); update(); say(c,i);
+      var pl=$('.stp button[data-d="1"]',w); pl.focus({preventScroll:true});
+      var br=w.getBoundingClientRect(), over=br.bottom+12-(innerHeight-cartEl.offsetHeight);
       if(over>0 && over<cartEl.offsetHeight+40) scrollBy({top:over,behavior:reduce?'auto':'smooth'});
       return;
     }
-    if((b=t.closest('.osz'))){ pick(b.closest('.orow'),b); update(); say(b.closest('.orow')); return; }
-    if((b=t.closest('.o-qty button'))){
-      var row=b.closest('.orow'), n=Math.max(0,Math.min(99,qty(row)+parseInt(b.dataset.d,10)));
-      $('.o-num',row).textContent=n; renderRow(row); update(); say(row); return;
+    if((b=t.closest('.stp button'))){
+      var w2=b.closest('.addw'), c2=cat(w2.dataset.add), i2=szi(b.closest('.item')), l2=line(c2,i2); if(!l2) return;
+      setQ(c2,i2,l2.q+parseInt(b.dataset.d,10)); update(); say(c2,i2);
+      if(!line(c2,i2)) $('.add',w2).focus({preventScroll:true});
+      return;
+    }
+    if((b=t.closest('.o-qty button,.o-del'))){
+      var row=b.closest('.orow'), l3=cart.filter(function(x){return key(x)===row.dataset.key})[0]; if(!l3) return;
+      var c3=l3.c, i3=l3.i, nx=row.nextElementSibling||row.previousElementSibling;
+      setQ(c3,i3, b.classList.contains('o-del') ? 0 : l3.q+parseInt(b.dataset.d,10)); update(); say(c3,i3);
+      if(!line(c3,i3)){ var to=nx&&nx.parentNode ? $('.o-qty button[data-d="1"]',nx) : $('#orderEmptyBtn'); to.focus({preventScroll:true}); }
+      return;
     }
   });
   $('#orderPayment').addEventListener('change',update);
@@ -1672,6 +1674,7 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   });
   function goal(){
     if(subtotal()<MIN) return $('#orderTotalBox');
+    if(listEl.getBoundingClientRect().top>innerHeight*0.5) return listEl;
     var fs=$$('input,select,textarea',$('#orderForm'));
     for(var i=0;i<fs.length;i++){ var f=fs[i];
       if(f.id==='orderAddress' && !f.value.trim()) return $('#orderZip');
@@ -1681,12 +1684,17 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   function bring(t){
     var w=t.closest('.wait'); if(w) w.classList.remove('wait');
     if(t.focus && t.id!=='orderTotalBox') t.focus({preventScroll:true});
+    if(t===listEl){ var cap=$('#orderCap'), a=(cap.offsetParent?cap:t).getBoundingClientRect().top+scrollY, z=$('#orderTotalBox').getBoundingClientRect().bottom+scrollY, room=innerHeight-72-cartEl.offsetHeight;
+      scrollTo({top: z-a<room ? a-72-(room-(z-a))/2 : a-88, behavior:reduce?'auto':'smooth'}); return; }
     t.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
     setTimeout(function(){ var r=t.getBoundingClientRect(); if(r.top<64||r.bottom>innerHeight-(cartEl.classList.contains('show')?cartEl.offsetHeight:0)) t.scrollIntoView({behavior:'auto',block:'center'}); },1000);
   }
   $('#cartGo').addEventListener('click',function(e){ e.preventDefault(); bring(goal()); });
+  var byPtr=false;
+  d.addEventListener('pointerdown',function(){ byPtr=true; },true);
+  d.addEventListener('keydown',function(){ byPtr=false; },true);
   d.addEventListener('focusin',function(e){
-    var t=e.target; if(!t.getBoundingClientRect || t.closest('dialog,.cart,.hd,.floats,.skip')) return;
+    var t=e.target; if(byPtr || !t.getBoundingClientRect || t.closest('dialog,.cart,.hd,.floats,.skip')) return;
     var r=t.getBoundingClientRect(), bot=innerHeight-(cartEl.classList.contains('show')&&!cartEl.classList.contains('low')?cartEl.offsetHeight+8:0);
     if(r.bottom>bot && r.height<bot-80) scrollBy({top:r.bottom-bot+16,behavior:'auto'});
     else if(r.top<68 && r.top>-r.height) scrollBy({top:r.top-80,behavior:'auto'});
@@ -1735,18 +1743,18 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
     var s=ship(sub), p=points(), total=sub+(s.fee||0), amount=Math.max(total-p,0), online=$('#orderPayment').value==='credit';
     add('h3','ご注文の明細');
     var ul=add('ul'), items=[];
-    var line=function(name,amt,no){var li=add('li',null,ul), sp=add('span',null,li); if(no) add('i',no,sp,'o-no').setAttribute('aria-hidden','true'); nws(sp,[].concat(name)); add('b',amt,li); items.push([name,amt,no])};
+    var row1=function(name,amt,no){var li=add('li',null,ul), sp=add('span',null,li); if(no) add('i',no,sp,'o-no').setAttribute('aria-hidden','true'); nws(sp,[].concat(name)); add('b',amt,li); items.push([name,amt,no])};
     var nm2=function(n){var m=n.match(/^([^【]+)(【.+】)$/); return m?[m[1],m[2]]:[n]};
-    rows.forEach(function(r){
-      var q=qty(r); if(!q) return; var k=r.dataset.kind, nm=r.dataset.name, a=yen(price(r)*q), no=$('.o-no',r).textContent;
-      if(k==='tea'){var b=parseInt(r.dataset.bags,10)||1; line([nm,b+'袋セット','（計'+(b*TEA)+'個）'+(q>1?' × '+q:'')],a,no);}
-      else if(k==='unit') line([nm,r.dataset.unit+' × '+q],a,no);
-      else {var pc=parseInt(r.dataset.base,10)*mult(r); line(nm2(nm).concat([pc+'個入 × '+q+'袋','（計'+(pc*q)+'個）']),a,no);}
+    cart.forEach(function(l){
+      var q=l.q, c=l.c, sz=c.s[l.i], k=c.k, nm=c.n, a=yen(lp(l)*q), no=c.no;
+      if(k==='tea'){var b=sz.bags; row1([nm,b+'袋セット','（計'+(b*TEA)+'個）'+(q>1?' × '+q:'')],a,no);}
+      else if(k==='unit') row1([nm,sz.u+' × '+q],a,no);
+      else {var pc=sz.pc; row1(nm2(nm).concat([pc+'個入 × '+q+'袋','（計'+(pc*q)+'個）']),a,no);}
     });
     var goods=items.slice();
-    if(s.separate) line(['送料 別途ご案内','（'+s.pref+'宛・','実費送料を','後日ご連絡）'],'');
-    else if(s.fee>0) line(['送料','（'+s.pref+'宛）'],yen(s.fee));
-    else line(['送料 無料','（税込¥8,000以上）'],'');
+    if(s.separate) row1(['送料 別途ご案内','（'+s.pref+'宛・','実費送料を','後日ご連絡）'],'');
+    else if(s.fee>0) row1(['送料','（'+s.pref+'宛）'],yen(s.fee));
+    else row1(['送料 無料','（税込¥8,000以上）'],'');
     var tot=add('dl',null,S,'tot'), row=function(dl,k,v){add('dt',k,dl); var dd=add('dd',null,dl); if(typeof v==='string') dd.textContent=v; else nws(dd,v); return dd};
     row(tot,'商品小計（税込）',yen(sub));
     row(tot,'送料',s.separate?'別途ご案内':yen(s.fee));
@@ -1798,7 +1806,7 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   function finish(){
     closeDlg(flow); flow.classList.remove('is-done');
     $('#orderProcessingOverlay').hidden=false; $('#orderCompleteOverlay').hidden=true;
-    rows.forEach(function(r){ $('.o-num',r).textContent='0'; renderRow(r); });
+    cart.length=0;
     $('#orderForm').reset(); $('#pointUseAmount').dispatchEvent(new Event('input')); update();
     var back=$('#orderform'); back.setAttribute('tabindex','-1'); back.focus({preventScroll:true}); back.scrollIntoView();
   }
@@ -1816,7 +1824,7 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   });
   addEventListener('afterprint',function(){ $$('details.ck[data-pr]').forEach(function(x){ x.removeAttribute('open'); x.removeAttribute('data-pr'); }); });
   $('#copyrightYear').textContent=new Date().getFullYear();
-  rows.forEach(renderRow); update(); phrase();
+  update(); phrase();
   var evm=location.hash.match(/ev=(empty|error|loading)/);
   if(evm){
     var box=$('#scheduleContainer');
@@ -1827,7 +1835,7 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   }
   if(/demo|review/.test(location.hash)){
     [['焼き小籠包',1,2],['海老焼売【生冷凍】',0,1],['肉にら饅頭【調理済み冷凍】',0,1],['モンゴル茶',0,1]].forEach(function(x){
-      var r=rows.filter(function(y){return y.dataset.name===x[0]})[0]; pick(r,$$('.osz',r)[x[1]]); $('.o-num',r).textContent=x[2]; renderRow(r);
+      setQ(cat(x[0]),x[1],x[2]);
     });
     update();
   }
