@@ -337,3 +337,63 @@ test('書体：見出し・ボタンの字は、書体ファイルを作った�
   for (const t of texts) for (const c of t) if (!/\s/.test(c) && !have.has(c)) missing.add(c);
   assert.deepEqual([...missing], [], '書体ファイルに無い字（scripts/fonts_collect.mjs から作り直す）');
 });
+
+// ── お金の関数は、今の app.js と一字一句同じ（掛け替えまでの間、片方だけ直して食い違うのを防ぐ）──
+// 今の app.js を直した時（値段・送料・文言など）は、同じ直しを top.js にも入れる。ここが落ちたらその合図。
+// 少しだけ違う関数（つなぎ先・色・絵文字・見るだけの守り）は下の「違ってよい所」に理由つきで並べてある。
+function fnBody(src, name) {
+  const m = src.match(new RegExp('\\n  (?:async )?function ' + name + '\\('));
+  if (!m) return null;
+  return src.slice(m.index + 1, src.indexOf('\n  }\n', m.index + 1) + 5);
+}
+test('お金と送信の関数は、今の app.js と一字一句同じ', { skip: !exists('app.js') && '片付け後（app.js が無い）' }, () => {
+  const app = read('app.js');
+  const SAME = ['getRowMultiplier', 'getRowPrice', 'getRowProductName', 'getRowPieces',
+    'calcShipping', 'calcCodFee', 'getDestPrefecture', 'getOrderSubtotal', 'getOrderTotalNum', 'resolveUsablePoints', 'useAllPoints',
+    'hidePointUseBox', 'buildOrderPayload', 'getOrderReviewDetails', 'handleOrderSubmit', 'confirmReviewedOrder',
+    'handleCardPaymentSubmit', 'cardPrepErrorMsg', 'updateCardPaymentUI', 'scheduleCardRemount', 'unmountCardPaymentElement',
+    'showCardError', 'clearCardError', 'hideCardChargeAmount', 'closeOrderReview', 'isOrderReviewOpen',
+    'shouldShowReviewPointGuide', 'goToPointUseFromReview', 'getOrderProgressTarget', 'linkLineWithPhone', 'linkLineFromOrder', 'handleSubmit'];
+  for (const name of SAME) {
+    const a = fnBody(app, name), b = fnBody(js, name);
+    assert(a && b, name + ' が見つからない');
+    assert.equal(b, a, name + ' が app.js と違う');
+  }
+  // 送料・最低金額・代引きの数字も同じ
+  for (const line of ['const FREE_SHIPPING_LINE = 8000;', 'const MIN_ORDER_SUBTOTAL = 2000;', 'const UNIFORM_SHIPPING_FEE = 1200;',
+    "const SEPARATE_QUOTE_PREFS = ['北海道', '沖縄県'];", 'const MIN_POINT_USE = 50;', 'const TEA_PIECES_PER_BAG = 30;']) {
+    assert(app.includes(line) && js.includes(line), line);
+  }
+});
+test('少しだけ違う関数は、違いが「決めた所」だけ', { skip: !exists('app.js') && '片付け後（app.js が無い）' }, () => {
+  const app = read('app.js');
+  // [関数名, app.js の文字 → top.js の文字 の置き換え]。置き換えた結果が top.js と一字一句同じになること。
+  const API = "'https://akira042425-1.onrender.com/orders/api/";
+  const DIFF = {
+    lookupPoints: [["fetch(" + API + "point-check", "fetch(HP_CONFIG.apiBase + '/orders/api/point-check"]],
+    checkPointBalance: [["fetch(" + API + "point-check", "fetch(HP_CONFIG.apiBase + '/orders/api/point-check"]],
+    updateTotal: [["' ＋ \u{1F389} 送料無料（¥8,000以上）'", "' ＋ 送料無料（¥8,000以上）'"]],                 // 絵文字を使わない
+    _copyAndOpenLine: [["'✓ コピーしました'", "'コピーしました'"]],                                        // 同上
+    applyPointDiscount: [["textEl.style.color = '#aaa';", "infoEl.classList.add('low');"],                       // 色は top.css で付ける
+      ["textEl.style.color = '#E84040';", "infoEl.classList.remove('low');"]],
+    updatePaymentOptions: [["codOption.style.display = '';\n", "codOption.style.display = '';\n      codOption.disabled = false;\n"],   // Safari でも代金引換を選べなくする
+      ["codOption.style.display = 'none';\n", "codOption.style.display = 'none';\n      codOption.disabled = true;\n"]],
+    getStripe: [['window.Stripe) {', 'window.Stripe && HP_CONFIG.stripeKey) {'], ['window.Stripe(STRIPE_PUBLISHABLE_KEY)', 'window.Stripe(HP_CONFIG.stripeKey)']],
+    renderOrderReview: [["const totals = add('dl', '');\n", "const totals = add('dl', '');\n    totals.className = 'tot';\n"],   // top.css の名前を付けるだけ
+      ["'order-review-point-guide'", "'rev-pt'"], ["'order-review-point-guide-btn'", "'rev-pt-b'"]],
+  };
+  for (const [name, swaps] of Object.entries(DIFF)) {
+    let a = fnBody(app, name);
+    const b = fnBody(js, name);
+    assert(a && b, name);
+    for (const [from, to] of swaps) { assert(a.includes(from), name + ': ' + from); a = a.split(from).join(to); }
+    assert.equal(b, a, name);
+  }
+  // submitReviewedOrder：つなぎ先と「見るだけ」の守りだけが違う
+  const sent = fnBody(js, 'submitReviewedOrder');
+  const guardStart = sent.indexOf('    // 確認用ページ（隠しページ）では、ここから先');
+  const guardEnd = sent.indexOf('    orderSubmissionInProgress = true;');
+  assert(guardStart > 0 && guardEnd > guardStart);
+  assert.equal((sent.slice(0, guardStart) + sent.slice(guardEnd)).replace("fetch(HP_CONFIG.apiBase + '/orders/api/hp-order'", "fetch(" + API + "hp-order'"),
+    fnBody(app, 'submitReviewedOrder'));
+});
