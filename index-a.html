@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ▼▼ 掛け替えの日に外す印（2か所）▼▼
+     1) 検索除外（noindex）：隠しページの間だけ。index.html に掛け替える時は下の1行を消す。
+     2) 見るだけの守り（aikaro-preview）：aikaro.jp の上でも「お支払い欄を出さない・注文を送らない」。掛け替える時は下の1行を消す。
+     （tests/test_top_page.cjs の「掛け替えの印」が、消し忘れ・消しすぎを見張る） -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="aikaro-preview" content="1">
+<!-- ▲▲ 掛け替えの日に外す印 ここまで ▲▲ -->
+<title>本格中華 愛華楼 | 本格点心をご家庭でも</title>
+<meta name="description" content="本格中華 愛華楼。焼き小籠包、焼売、肉まん、角煮バーガーなど本格点心をお届けします。LINE・オンラインからもご注文いただけます。">
+<link rel="canonical" href="https://aikaro.jp/">
+<meta property="og:title" content="本格中華 愛華楼 | 本格点心をご家庭でも">
+<meta property="og:description" content="焼き小籠包、焼売、肉まん、角煮バーガーなど本格点心をお届けします。催事リピーターの方はHP注文で5%OFF！">
+<meta property="og:url" content="https://aikaro.jp/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="https://aikaro.jp/images/yakishoronpo.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://aikaro.jp/images/yakishoronpo.jpg">
+<meta name="twitter:title" content="本格中華 愛華楼">
+<meta name="twitter:description" content="焼き小籠包、焼売、肉まんなど本格点心をお届け。HP注文で5%OFF！">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "本格中華 愛華楼",
+  "url": "https://aikaro.jp/",
+  "image": "https://aikaro.jp/images/yakishoronpo.jpg",
+  "description": "焼き小籠包・焼売・肉まん・角煮バーガーなど本格点心を提供する中華料理店。催事出店と通販・配送にも対応。",
+  "servesCuisine": "中華料理",
+  "priceRange": "¥¥",
+  "telephone": "+81-90-2096-1896",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "花見ヶ丘3-22-20",
+    "addressLocality": "福津市",
+    "addressRegion": "福岡県",
+    "postalCode": "811-3209",
+    "addressCountry": "JP"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "opens": "12:00",
+    "closes": "17:00"
+  }],
+  "sameAs": [
+    "https://www.instagram.com/aika_rou/"
+  ]
+}
+</script>
+<meta name="theme-color" content="#0D0D0F">
+<link rel="preload" href="fonts/smb1-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/smb1-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="top.css?v=20261119b">
+</head>
+<body>
+<a class="skip" href="#menu">メニュー</a>
+<a class="skip" href="#orderform">注文する</a>
+
+<header class="hd">
+  <div class="hd-in">
+    <a href="#top" class="brand">愛華楼</a>
+    <nav class="hd-nav" aria-label="メインメニュー">
+      <ul class="nav-pc">
+        <li><a href="#about">愛華楼について</a></li>
+        <li><a href="#menu">メニュー</a></li>
+        <li><a href="#orderform">注文する</a></li>
+        <li><a href="#cooking">温め方</a></li>
+        <li><a href="#schedule">催事スケジュール</a></li>
+        <li><a href="#order">ご注文方法</a></li>
+        <li><a href="#contact">お問い合わせ</a></li>
+      </ul>
+      <!-- Instagram・LINE のボタン（線画のしるし）。スマホ・タブレットはヘッダーの中、パソコンは右の余白に付いてくる -->
+      <a href="https://www.instagram.com/aika_rou/" class="fl fl-ig" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 26 26" aria-hidden="true"><rect x="3.5" y="3.5" width="19" height="19" rx="5.5"/><circle cx="13" cy="13" r="4.5"/><path d="M18.6 7.4h.1" stroke-width="2"/></svg>
+        <span aria-hidden="true">Instagram</span>
+      </a>
+      <a href="https://lin.ee/wbAZif6" class="fl fl-line" id="lineFloat" target="_blank" rel="noopener" aria-label="LINEで注文">
+        <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M13 4c5.5 0 10 3.6 10 8s-4.5 8-10 8c-1 0-2-.1-2.9-.4L5.5 22l1.2-4C4.4 16.5 3 14.4 3 12c0-4.4 4.5-8 10-8z"/></svg>
+        <span aria-hidden="true">注文する</span>
+      </a>
+      <details class="mnav">
+        <summary><span class="mn-ch" aria-hidden="true">華</span>メニュー</summary>
+        <ul>
+        <li><a href="#about"><span class="mn-k" aria-hidden="true">壱</span>愛華楼について</a></li>
+        <li><a href="#menu"><span class="mn-k" aria-hidden="true">参</span>メニュー</a></li>
+        <li><a href="#orderform"><span class="mn-k" aria-hidden="true">肆</span>注文する</a></li>
+        <li><a href="#cooking"><span class="mn-k" aria-hidden="true">伍</span>温め方</a></li>
+        <li><a href="#schedule"><span class="mn-k" aria-hidden="true">陸</span>催事スケジュール</a></li>
+        <li><a href="#order"><span class="mn-k" aria-hidden="true">漆</span>ご注文方法</a></li>
+        <li><a href="#contact"><span class="mn-k" aria-hidden="true">捌</span>お問い合わせ</a></li>
+        </ul>
+      </details>
+    </nav>
+  </div>
+  <div class="hd-prog" aria-hidden="true"></div>
+</header>
+
+<!-- 提灯の道しるべ（飾り。読み上げには出さない） -->
+<div class="lamp" aria-hidden="true"><span class="lamp-str"></span><span class="lamp-b"><span>華</span></span></div>
+
+<main>
+<section class="hero" id="top" data-ch="華">
+  <div class="hero-ph"><picture><source type="image/webp" srcset="images/yakishoronpo-480.webp 480w, images/yakishoronpo-800.webp 800w, images/yakishoronpo-960.webp 960w, images/yakishoronpo-1300.webp 1300w" sizes="(max-width:820px) 100vw, 64vw"><img fetchpriority="high" src="images/yakishoronpo.jpg" alt="愛華楼の焼き小籠包" width="1300" height="870"></picture></div>
+  <div class="hero-in">
+    <h1 class="hero-title"><span class="pre">本格中華</span><span class="name">愛華楼</span></h1>
+    <div class="hero-side">
+      <div class="hero-rule" aria-hidden="true"></div>
+      <p class="hero-tag">本格的な中華を<br>ご家庭でも</p>
+      <div class="hero-cta">
+        <a href="#orderform" class="btn btn-red">ご注文はこちら</a>
+      </div>
+    </div>
+  </div>
+  <div class="scrolldown" aria-hidden="true">SCROLL</div>
+</section>
+
+<section class="about" id="about" data-ch="壱">
+  <div class="mark rv" aria-hidden="true">壱　ABOUT US</div>
+  <h2 class="h-v rv">愛華楼について</h2>
+  <p class="lead rv">愛華楼は、横浜中華街で培われた伝統の技と厳選素材を用いた<br class="pc">本格中華点心の専門店です。</p>
+  <p class="body rv">おうちで、湯気の立つ熱々を楽しんでいただけるよう、<br class="pc">海老焼売をはじめとする自慢の点心をお届けしています。<br class="pc">使っている材料は、各商品ページの「原材料名」でご覧いただけます。</p>
+  <div class="badges rv">
+    <div class="badge"><i aria-hidden="true">福</i><span>福岡の点心屋</span></div>
+    <div class="badge"><i aria-hidden="true">凍</i><span>冷凍注文可</span></div>
+  </div>
+</section>
+
+<section class="feat" id="featured" data-ch="弐">
+  <div class="feat-ph rv">
+    <div class="feat-flag">店長イチオシ</div>
+    <picture><source type="image/webp" srcset="images/ebi-shumai-400.webp 400w, images/ebi-shumai-640.webp 640w, images/ebi-shumai-850.webp 850w" sizes="(max-width:820px) 100vw, 43vw"><img decoding="async" src="images/ebi-shumai.jpg" alt="海老焼売" loading="lazy" width="850" height="567"></picture>
+  </div>
+  <div class="feat-tx rv">
+    <div class="mark" aria-hidden="true">弐　RECOMMENDED</div>
+    <h2>海老焼売</h2>
+    <p>海老をふんだんに使った、プリプリ食感がやみつきになる新感覚の焼売。一口噛めば広がる海老の旨みと、ジューシーな肉汁のハーモニー。一度食べたら忘れられない、愛華楼自慢の逸品です。</p>
+    <div class="feat-price"><s>¥800</s><b>¥760</b><small>/ 4個（税込）</small></div>
+    <a href="#order" class="btn btn-red">注文する</a>
+  </div>
+</section>
+
+<section class="menu" id="menu" data-ch="参">
+  <div class="menu-top">
+    <div class="rv">
+      <div class="mark" aria-hidden="true">参　MENU</div>
+      <h2 class="h-big">メニュー</h2>
+    </div>
+    <div class="note rv">
+      <p class="note-main">催事でお買い上げのお客様へ — HPからのご注文で <strong>5%OFF</strong></p>
+      <p class="note-sub">催事会場でお気に召した商品を、ご自宅からお得にリピート注文いただけます</p>
+    </div>
+  </div>
+  <!-- 短冊のお品書き：商品名と値段だけ（新しい言葉は足していない）。押すとその商品へ飛ぶ -->
+  <nav aria-label="メニューの一覧" id="oshinagaki">
+    <ul class="tzs rv">
+      <li><a class="tz" href="#p01"><span class="tz-no" aria-hidden="true">01</span><span class="tz-name">焼き小籠包</span><span class="tz-price">¥855</span></a></li>
+      <li><a class="tz" href="#p02"><span class="tz-no" aria-hidden="true">02</span><span class="tz-name">肉焼売</span><span class="tz-price">¥760</span></a></li>
+      <li><a class="tz" href="#p03"><span class="tz-no" aria-hidden="true">03</span><span class="tz-name">海老焼売</span><span class="tz-price">¥760</span></a></li>
+      <li><a class="tz" href="#p04"><span class="tz-no" aria-hidden="true">04</span><span class="tz-name">肉にら饅頭</span><span class="tz-price">¥760</span></a></li>
+      <li><a class="tz" href="#p05"><span class="tz-no" aria-hidden="true">05</span><span class="tz-name">ちまき</span><span class="tz-price">¥744</span></a></li>
+      <li><a class="tz" href="#p06"><span class="tz-no" aria-hidden="true">06</span><span class="tz-name">肉まん</span><span class="tz-price">¥513</span></a></li>
+      <li><a class="tz" href="#p07"><span class="tz-no" aria-hidden="true">07</span><span class="tz-name">角煮バーガー</span><span class="tz-price">¥513</span></a></li>
+      <li><a class="tz" href="#p08"><span class="tz-no" aria-hidden="true">08</span><span class="tz-name">チャーシューまん</span><span class="tz-price">¥744</span></a></li>
+      <li><a class="tz" href="#p09"><span class="tz-no" aria-hidden="true">09</span><span class="tz-name">ザーサイ</span><span class="tz-price">¥760</span></a></li>
+      <li><a class="tz" href="#p10"><span class="tz-no" aria-hidden="true">10</span><span class="tz-name">モンゴル茶</span><span class="tz-price">¥4,000</span></a></li>
+    </ul>
+  </nav>
+      <article data-kind="size" class="card card-top rv" id="p01">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/yakishoronpo2-400.webp 400w, images/yakishoronpo2-640.webp 640w, images/yakishoronpo2-800.webp 800w, images/yakishoronpo2-1200.webp 1200w, images/yakishoronpo2-1800.webp 1800w" sizes="(max-width:820px) 92vw, 52vw"><img decoding="async" src="images/yakishoronpo2.jpg" alt="焼き小籠包" loading="lazy" width="1800" height="1205" style="object-position:50% 50%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="01 メニューの一覧へ">01</a>
+            <h3 class="card-name">焼き小籠包</h3>
+            <span class="tag tag-hot">人気No.1</span>
+          </div>
+          <p class="card-desc">外カリッ！中ジュワ〜！1度は食べてみたい一品！コラーゲンスープが美味しい焼き小籠包。</p>
+          <p class="heat"><a href="#ck4"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>焼き小籠包の温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・大豆・豚肉・鶏肉・ゼラチン・ごま</p></div>
+          <div class="price"><s>¥900</s> <b>¥855</b> <small>/ 4個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="焼き小籠包のサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="4" data-t="4個 ¥855">4個 ¥855</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="8" data-t="8個 ¥1,710">8個 ¥1,710</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="12" data-t="12個 ¥2,565">12個 ¥2,565</button></div>
+          <div class="adds"><div class="ad" data-add="焼き小籠包"><button type="button" class="add" data-add="焼き小籠包" onclick="addToOrder('焼き小籠包')" aria-label="焼き小籠包をカートに追加">＋ カートに追加</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <div class="grid">
+      <article data-kind="size" class="card rv" id="p02">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/nikushyumai-400.webp 400w, images/nikushyumai-640.webp 640w, images/nikushyumai-850.webp 850w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img decoding="async" src="images/nikushyumai.jpg" alt="肉焼売" loading="lazy" width="850" height="567" style="object-position:50% 55%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="02 メニューの一覧へ">02</a>
+            <h3 class="card-name">肉焼売</h3>
+            <span class="tag">定番</span>
+          </div>
+          <p class="card-desc">国産豚肉をふんだんに使った、タレの要らないにくにくジューシーで箸が止まらない一品。</p>
+          <p class="heat"><a href="#ck3"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉焼売・海老焼売の蒸し方</a><a href="#ck1"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>調理済商品の温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・ごま・大豆・豚肉</p></div>
+          <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="肉焼売のサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="4" data-h="4個入：お弁当に・1人前の目安" data-t="4個 ¥760">4個 ¥760</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安" data-t="8個 ¥1,520">8個 ¥1,520</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="12" data-h="12個入：家族で・3人前の目安" data-t="12個 ¥2,280">12個 ¥2,280</button></div>
+          <p class="sz-hint">4個入：お弁当に・1人前の目安</p>
+          <div class="adds two"><div class="ad" data-add="肉焼売【生冷凍】"><button type="button" class="add" data-add="肉焼売【生冷凍】" onclick="addToOrder('肉焼売【生冷凍】')" aria-label="肉焼売【生冷凍】をカートに追加">＋ 生冷凍</button></div><div class="ad" data-add="肉焼売【調理済み冷凍】"><button type="button" class="add" data-add="肉焼売【調理済み冷凍】" onclick="addToOrder('肉焼売【調理済み冷凍】')" aria-label="肉焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="size" class="card rv" id="p03">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/ebi-shumai-400.webp 400w, images/ebi-shumai-640.webp 640w, images/ebi-shumai-850.webp 850w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img decoding="async" src="images/ebi-shumai.jpg" alt="海老焼売" loading="lazy" width="850" height="567" style="object-position:50% 50%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="03 メニューの一覧へ">03</a>
+            <h3 class="card-name">海老焼売</h3>
+            <span class="tag">おすすめ</span>
+          </div>
+          <p class="card-desc">海老をふんだんに使ったプリプリ感がやみつき新食感！これぞ海老焼売！</p>
+          <p class="heat"><a href="#ck3"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉焼売・海老焼売の蒸し方</a><a href="#ck1"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>調理済商品の温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">えび</span><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>えび・小麦・卵・ごま・大豆・豚肉</p></div>
+          <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="海老焼売のサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="4" data-h="4個入：お弁当に・1人前の目安" data-t="4個 ¥760">4個 ¥760</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安" data-t="8個 ¥1,520">8個 ¥1,520</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="12" data-h="12個入：家族で・3人前の目安" data-t="12個 ¥2,280">12個 ¥2,280</button></div>
+          <p class="sz-hint">4個入：お弁当に・1人前の目安</p>
+          <div class="adds two"><div class="ad" data-add="海老焼売【生冷凍】"><button type="button" class="add" data-add="海老焼売【生冷凍】" onclick="addToOrder('海老焼売【生冷凍】')" aria-label="海老焼売【生冷凍】をカートに追加">＋ 生冷凍</button></div><div class="ad" data-add="海老焼売【調理済み冷凍】"><button type="button" class="add" data-add="海老焼売【調理済み冷凍】" onclick="addToOrder('海老焼売【調理済み冷凍】')" aria-label="海老焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="size" class="card rv" id="p04">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/niraniku-400.webp 400w, images/niraniku-640.webp 640w, images/niraniku-800.webp 800w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img decoding="async" src="images/niraniku.jpg" alt="肉にら饅頭" loading="lazy" width="1300" height="867" style="object-position:50% 55%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="04 メニューの一覧へ">04</a>
+            <h3 class="card-name">肉にら饅頭</h3>
+            <span class="tag">定番</span>
+          </div>
+          <p class="card-desc">餃子の一種、お酒の肴、ご飯のお供！肉とニラの相性が堪らない肉たっぷりなニラ饅頭。</p>
+          <p class="heat"><a href="#ck2"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉にら饅頭の焼き方</a><a href="#ck1"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>調理済商品の温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・ごま・大豆・豚肉</p></div>
+          <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="肉にら饅頭のサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="4" data-h="4個入：お弁当に・1人前の目安" data-t="4個 ¥760">4個 ¥760</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="8" data-h="8個入：ふたりの食卓に・2人前の目安" data-t="8個 ¥1,520">8個 ¥1,520</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="12" data-h="12個入：家族で・3人前の目安" data-t="12個 ¥2,280">12個 ¥2,280</button></div>
+          <p class="sz-hint">4個入：お弁当に・1人前の目安</p>
+          <div class="adds two"><div class="ad" data-add="肉にら饅頭【生冷凍】"><button type="button" class="add" data-add="肉にら饅頭【生冷凍】" onclick="addToOrder('肉にら饅頭【生冷凍】')" aria-label="肉にら饅頭【生冷凍】をカートに追加">＋ 生冷凍</button></div><div class="ad" data-add="肉にら饅頭【調理済み冷凍】"><button type="button" class="add" data-add="肉にら饅頭【調理済み冷凍】" onclick="addToOrder('肉にら饅頭【調理済み冷凍】')" aria-label="肉にら饅頭【調理済み冷凍】をカートに追加">＋ 調理済み</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="size" class="card rv" id="p05">
+        <div class="card-ph plate" style="--px:49%;--py:50%;--z:1.3"><picture><source type="image/webp" srcset="images/chimaki-560.webp 560w, images/chimaki-876.webp 876w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img src="images/chimaki.jpg" alt="ちまき" loading="lazy" decoding="async" width="876" height="583"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="05 メニューの一覧へ">05</a>
+            <h3 class="card-name">ちまき</h3>
+            <span class="tag">人気</span>
+          </div>
+          <p class="card-desc">豚肉角煮が入ったモッチモチなちまき！何個でも食べてしまう飽きの来ない一品。</p>
+          <p class="heat"><a href="#ck6"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>ちまきの温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">えび</span><span class="alg-ic">かに</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・えび・かに・豚肉・大豆・鶏肉・りんご・ゼラチン・ごま</p></div>
+          <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="ちまきのサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="2" data-t="2個 ¥744">2個 ¥744</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="4" data-t="4個 ¥1,488">4個 ¥1,488</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="6" data-t="6個 ¥2,232">6個 ¥2,232</button></div>
+          <div class="adds"><div class="ad" data-add="ちまき"><button type="button" class="add" data-add="ちまき" onclick="addToOrder('ちまき')" aria-label="ちまきをカートに追加">＋ カートに追加</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="size" class="card rv" id="p06">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/nikuman-400.webp 400w, images/nikuman-611.webp 611w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img decoding="async" src="images/nikuman.jpg" alt="肉まん" loading="lazy" width="611" height="427" style="object-position:50% 50%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="06 メニューの一覧へ">06</a>
+            <h3 class="card-name">肉まん</h3>
+            <span class="tag">定番</span>
+          </div>
+          <p class="card-desc">手作りの皮にこだわったふっくら生地に合う餡が絶妙な肉まん。具がぎっしり入ってボリューム感たっぷり！1度食べると味が忘れられない一品。</p>
+          <p class="heat"><a href="#ck5"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉まん・角煮まん・叉焼まんの温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">乳</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・大豆・乳・豚肉・ごま・ゼラチン</p></div>
+          <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="肉まんのサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="1" data-t="1個 ¥513">1個 ¥513</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="2" data-t="2個 ¥1,026">2個 ¥1,026</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="3" data-t="3個 ¥1,539">3個 ¥1,539</button></div>
+          <div class="adds"><div class="ad" data-add="肉まん"><button type="button" class="add" data-add="肉まん" onclick="addToOrder('肉まん')" aria-label="肉まんをカートに追加">＋ カートに追加</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="size" class="card rv" id="p07">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/kakuni-burger-400.webp 400w, images/kakuni-burger-640.webp 640w, images/kakuni-burger-800.webp 800w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img decoding="async" src="images/kakuni-burger.jpg" alt="角煮バーガー" loading="lazy" width="1300" height="866" style="object-position:50% 50%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="07 メニューの一覧へ">07</a>
+            <h3 class="card-name">角煮バーガー</h3>
+            <span class="tag">おすすめ</span>
+          </div>
+          <p class="card-desc">じっくりコトコトに煮込んだ甘だれの角煮を割りパンに挟んだ堪らない一品。</p>
+          <p class="heat"><a href="#ck5"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉まん・角煮まん・叉焼まんの温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span><span class="alg-ic">かに</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・かに・豚肉・大豆・ゼラチン</p></div>
+          <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="角煮バーガーのサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="1" data-t="1個 ¥513">1個 ¥513</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="2" data-t="2個 ¥1,026">2個 ¥1,026</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="3" data-t="3個 ¥1,539">3個 ¥1,539</button></div>
+          <div class="adds"><div class="ad" data-add="角煮バーガー"><button type="button" class="add" data-add="角煮バーガー" onclick="addToOrder('角煮バーガー')" aria-label="角煮バーガーをカートに追加">＋ カートに追加</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="size" class="card rv" id="p08">
+        <div class="card-ph plate" style="--px:48%;--py:47%;--z:1.12"><picture><source type="image/webp" srcset="images/charshuman-560.webp 560w, images/charshuman-876.webp 876w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img src="images/charshuman.jpg" alt="チャーシューまん" loading="lazy" decoding="async" width="876" height="583"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="08 メニューの一覧へ">08</a>
+            <h3 class="card-name">チャーシューまん</h3>
+            <span class="tag">お手頃</span>
+          </div>
+          <p class="card-desc">ミルクを練りこんだキメの細かい生地！チャーシュー餡を包んだ飲茶！おやつなど小腹の空いた時にぴったり！</p>
+          <p class="heat"><a href="#ck5"><svg viewBox="0 0 14 22" aria-hidden="true"><path d="M4 21c-3-4 3-6 0-10s3-6 0-10M10 21c-3-4 3-6 0-10s3-6 0-10"/></svg>肉まん・角煮まん・叉焼まんの温め方</a></p>
+          <div class="alg"><div class="alg-ics" aria-hidden="true"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></div><p class="alg-tx"><strong>アレルゲン</strong>小麦・卵・豚肉・大豆・ごま</p></div>
+          <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
+          <div class="sizes" role="group" aria-label="チャーシューまんのサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="2" data-t="2個 ¥744">2個 ¥744</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="4" data-t="4個 ¥1,488">4個 ¥1,488</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="6" data-t="6個 ¥2,232">6個 ¥2,232</button></div>
+          <div class="adds"><div class="ad" data-add="チャーシューまん"><button type="button" class="add" data-add="チャーシューまん" onclick="addToOrder('チャーシューまん')" aria-label="チャーシューまんをカートに追加">＋ カートに追加</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="unit" class="card rv" id="p09">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/zasai-400.webp 400w, images/zasai-704.webp 704w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img decoding="async" src="images/zasai.jpg" alt="ザーサイ" loading="lazy" width="704" height="1524" style="object-position:50% 74%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="09 メニューの一覧へ">09</a>
+            <h3 class="card-name">ザーサイ</h3>
+            <span class="tag tag-cold">要冷蔵</span>
+          </div>
+          <p class="card-desc">中華のお漬物、食物繊維が豊富でお酒の肴に！ご飯のお供！1度食べるとやみつきになる事間違いなし！ラーメンにも相性抜群！</p>
+          <div class="alg"><p class="alg-tx"><strong>アレルゲン</strong>大豆・ごま<span class="alg-note">※特定原材料8品目には該当なし</span></p></div>
+          <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 140g（税込）</small></div>
+          <div class="sizes" role="group" aria-label="ザーサイのサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-l="140g" data-t="140g ¥760">140g ¥760</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-l="280g" data-t="280g ¥1,520">280g ¥1,520</button></div>
+          <div class="adds"><div class="ad" data-add="ザーサイ"><button type="button" class="add" data-add="ザーサイ" onclick="addToOrder('ザーサイ')" aria-label="ザーサイをカートに追加">＋ カートに追加</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      <article data-kind="tea" class="card rv" id="p10">
+        <div class="card-ph"><picture><source type="image/webp" srcset="images/mongol-tea-400.webp 400w, images/mongol-tea-704.webp 704w" sizes="(max-width:599px) 92vw, (max-width:1100px) 45vw, 29vw"><img decoding="async" src="images/mongol-tea.jpg" alt="モンゴル茶" loading="lazy" width="704" height="1524" style="object-position:50% 56%"></picture></div>
+        <div class="card-body">
+          <div class="card-head">
+            <a class="card-no" href="#oshinagaki" aria-label="10 メニューの一覧へ">10</a>
+            <h3 class="card-name">モンゴル茶</h3>
+            <span class="tag">新商品</span>
+          </div>
+          <p class="card-desc">モンゴル伝統のお茶。1袋30個入り。まとめ買いがお得です。</p>
+          
+          <div class="price"><b>¥4,000</b> <small>/ 1袋30個入（税込）</small></div>
+          <div class="sizes" role="group" aria-label="モンゴル茶のサイズ"><button type="button" class="sz on" onclick="selectSize(this)" aria-pressed="true" data-n="1" data-t="1袋 ¥4,000">1袋 ¥4,000</button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="2" data-t="2袋 ¥7,500" data-b="お得">2袋 ¥7,500<span class="sz-badge">お得</span></button><button type="button" class="sz" onclick="selectSize(this)" aria-pressed="false" data-n="3" data-t="3袋 ¥10,800" data-b="最安">3袋 ¥10,800<span class="sz-badge">最安</span></button></div>
+          <div class="adds"><div class="ad" data-add="モンゴル茶"><button type="button" class="add" data-add="モンゴル茶" onclick="addToOrder('モンゴル茶')" aria-label="モンゴル茶をカートに追加">＋ カートに追加</button></div></div>
+          <p class="incart" hidden></p>
+        </div>
+      </article>
+      </div>
+</section>
+
+<!-- ============ ご注文フォーム ============ -->
+<section class="ord" id="orderform" data-ch="肆">
+  <div class="ord-top">
+    <div class="rv">
+      <div class="mark" aria-hidden="true">肆　ORDER FORM</div>
+      <h2 class="h-big">ご注文フォーム</h2>
+    </div>
+    <p class="ord-lead rv">催事会場で気に入った商品をご自宅でもう一度。<br>メニューで選んだ品をご確認のうえ、お客様情報をご入力ください。</p>
+  </div>
+
+  <div class="ship rv">
+    <p>商品小計（税込）<strong>8,000円以上</strong>で<span class="big">送料無料</span></p>
+    <p>HPからのご注文は全点心商品<span class="big">5%OFF</span></p>
+    <p class="ship-note">※北海道・沖縄・離島は送料を別途ご案内します。</p>
+  </div>
+
+  <div class="ord-grid">
+    <div class="ord-main">
+      <h3 class="step" id="orderItems">商品と数量</h3>
+      <!-- 選んだ品の行。1行＝「1品×1入数」（焼き小籠包〜チャーシューまん 11品×3入数、ザーサイ 2、モンゴル茶 3 の計38行）。
+           数が0の行は隠れている＝「選んだ品だけ」が見える。値段・送る中身の正はこの行（top.js の getRowPrice・buildOrderPayload が読む）。
+           data-product-name＝サーバーへ送る商品名（日本語の正式名）。ブラウザの「ページを翻訳」で画面の商品名が訳されても注文が通るように、
+           翻訳されないこの場所から送る。画面の商品名（.order-product-name）を変える／行を足すときは、ここも同じ文字にすること
+           （tests/test_top_line_items.cjs が食い違いを検出する）。値段を変えるときは催事アプリ側の台帳と tests の黄金データも一緒に。 -->
+      <div class="pks order-product-list" id="orderRows">
+        <div class="order-product-row pk has-size" data-product-name="焼き小籠包" data-price="855" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="900" data-card="p01" data-size-index="0" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p01"><span class="row-no" aria-hidden="true">01</span><span class="order-product-name">焼き小籠包</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥900</s> → <b>¥855</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="焼き小籠包 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="焼き小籠包 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="焼き小籠包 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="焼き小籠包 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="焼き小籠包" data-price="855" data-unit="4個" data-base-pieces="4" data-multiplier="2" data-orig-price="900" data-card="p01" data-size-index="1" data-size-label="8個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p01"><span class="row-no" aria-hidden="true">01</span><span class="order-product-name">焼き小籠包</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,800</s> → <b>¥1,710</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="焼き小籠包 8個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="焼き小籠包 8個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="焼き小籠包 8個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="焼き小籠包 8個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="焼き小籠包" data-price="855" data-unit="4個" data-base-pieces="4" data-multiplier="3" data-orig-price="900" data-card="p01" data-size-index="2" data-size-label="12個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p01"><span class="row-no" aria-hidden="true">01</span><span class="order-product-name">焼き小籠包</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">12個入</span><span class="nw"><s>¥2,700</s> → <b>¥2,565</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="焼き小籠包 12個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="焼き小籠包 12個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="焼き小籠包 12個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="焼き小籠包 12個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800" data-card="p02" data-size-index="0" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p02"><span class="row-no" aria-hidden="true">02</span><span class="order-product-name">肉焼売<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉焼売【生冷凍】 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉焼売【生冷凍】 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉焼売【生冷凍】 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉焼売【生冷凍】 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="2" data-orig-price="800" data-card="p02" data-size-index="1" data-size-label="8個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p02"><span class="row-no" aria-hidden="true">02</span><span class="order-product-name">肉焼売<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉焼売【生冷凍】 8個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉焼売【生冷凍】 8個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉焼売【生冷凍】 8個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉焼売【生冷凍】 8個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="3" data-orig-price="800" data-card="p02" data-size-index="2" data-size-label="12個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p02"><span class="row-no" aria-hidden="true">02</span><span class="order-product-name">肉焼売<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">12個入</span><span class="nw"><s>¥2,400</s> → <b>¥2,280</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉焼売【生冷凍】 12個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉焼売【生冷凍】 12個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉焼売【生冷凍】 12個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉焼売【生冷凍】 12個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800" data-card="p02" data-size-index="0" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p02"><span class="row-no" aria-hidden="true">02</span><span class="order-product-name">肉焼売<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉焼売【調理済み冷凍】 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉焼売【調理済み冷凍】 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉焼売【調理済み冷凍】 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉焼売【調理済み冷凍】 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="2" data-orig-price="800" data-card="p02" data-size-index="1" data-size-label="8個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p02"><span class="row-no" aria-hidden="true">02</span><span class="order-product-name">肉焼売<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉焼売【調理済み冷凍】 8個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉焼売【調理済み冷凍】 8個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉焼売【調理済み冷凍】 8個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉焼売【調理済み冷凍】 8個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="3" data-orig-price="800" data-card="p02" data-size-index="2" data-size-label="12個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p02"><span class="row-no" aria-hidden="true">02</span><span class="order-product-name">肉焼売<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">12個入</span><span class="nw"><s>¥2,400</s> → <b>¥2,280</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉焼売【調理済み冷凍】 12個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉焼売【調理済み冷凍】 12個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉焼売【調理済み冷凍】 12個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉焼売【調理済み冷凍】 12個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="海老焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800" data-card="p03" data-size-index="0" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p03"><span class="row-no" aria-hidden="true">03</span><span class="order-product-name">海老焼売<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="海老焼売【生冷凍】 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="海老焼売【生冷凍】 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="海老焼売【生冷凍】 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="海老焼売【生冷凍】 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="海老焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="2" data-orig-price="800" data-card="p03" data-size-index="1" data-size-label="8個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p03"><span class="row-no" aria-hidden="true">03</span><span class="order-product-name">海老焼売<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="海老焼売【生冷凍】 8個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="海老焼売【生冷凍】 8個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="海老焼売【生冷凍】 8個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="海老焼売【生冷凍】 8個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="海老焼売【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="3" data-orig-price="800" data-card="p03" data-size-index="2" data-size-label="12個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p03"><span class="row-no" aria-hidden="true">03</span><span class="order-product-name">海老焼売<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">12個入</span><span class="nw"><s>¥2,400</s> → <b>¥2,280</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="海老焼売【生冷凍】 12個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="海老焼売【生冷凍】 12個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="海老焼売【生冷凍】 12個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="海老焼売【生冷凍】 12個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="海老焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800" data-card="p03" data-size-index="0" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p03"><span class="row-no" aria-hidden="true">03</span><span class="order-product-name">海老焼売<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="海老焼売【調理済み冷凍】 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="海老焼売【調理済み冷凍】 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="海老焼売【調理済み冷凍】 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="海老焼売【調理済み冷凍】 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="海老焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="2" data-orig-price="800" data-card="p03" data-size-index="1" data-size-label="8個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p03"><span class="row-no" aria-hidden="true">03</span><span class="order-product-name">海老焼売<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="海老焼売【調理済み冷凍】 8個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="海老焼売【調理済み冷凍】 8個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="海老焼売【調理済み冷凍】 8個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="海老焼売【調理済み冷凍】 8個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="海老焼売【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="3" data-orig-price="800" data-card="p03" data-size-index="2" data-size-label="12個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p03"><span class="row-no" aria-hidden="true">03</span><span class="order-product-name">海老焼売<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">12個入</span><span class="nw"><s>¥2,400</s> → <b>¥2,280</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="海老焼売【調理済み冷凍】 12個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="海老焼売【調理済み冷凍】 12個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="海老焼売【調理済み冷凍】 12個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="海老焼売【調理済み冷凍】 12個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉にら饅頭【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800" data-card="p04" data-size-index="0" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p04"><span class="row-no" aria-hidden="true">04</span><span class="order-product-name">肉にら饅頭<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉にら饅頭【生冷凍】 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉にら饅頭【生冷凍】 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉にら饅頭【生冷凍】 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉にら饅頭【生冷凍】 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉にら饅頭【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="2" data-orig-price="800" data-card="p04" data-size-index="1" data-size-label="8個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p04"><span class="row-no" aria-hidden="true">04</span><span class="order-product-name">肉にら饅頭<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉にら饅頭【生冷凍】 8個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉にら饅頭【生冷凍】 8個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉にら饅頭【生冷凍】 8個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉にら饅頭【生冷凍】 8個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉にら饅頭【生冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="3" data-orig-price="800" data-card="p04" data-size-index="2" data-size-label="12個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p04"><span class="row-no" aria-hidden="true">04</span><span class="order-product-name">肉にら饅頭<wbr>【生冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">12個入</span><span class="nw"><s>¥2,400</s> → <b>¥2,280</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉にら饅頭【生冷凍】 12個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉にら饅頭【生冷凍】 12個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉にら饅頭【生冷凍】 12個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉にら饅頭【生冷凍】 12個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉にら饅頭【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="1" data-orig-price="800" data-card="p04" data-size-index="0" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p04"><span class="row-no" aria-hidden="true">04</span><span class="order-product-name">肉にら饅頭<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉にら饅頭【調理済み冷凍】 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉にら饅頭【調理済み冷凍】 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉にら饅頭【調理済み冷凍】 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉にら饅頭【調理済み冷凍】 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉にら饅頭【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="2" data-orig-price="800" data-card="p04" data-size-index="1" data-size-label="8個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p04"><span class="row-no" aria-hidden="true">04</span><span class="order-product-name">肉にら饅頭<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">8個入</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉にら饅頭【調理済み冷凍】 8個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉にら饅頭【調理済み冷凍】 8個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉にら饅頭【調理済み冷凍】 8個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉にら饅頭【調理済み冷凍】 8個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉にら饅頭【調理済み冷凍】" data-price="760" data-unit="4個" data-base-pieces="4" data-multiplier="3" data-orig-price="800" data-card="p04" data-size-index="2" data-size-label="12個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p04"><span class="row-no" aria-hidden="true">04</span><span class="order-product-name">肉にら饅頭<wbr>【調理済み冷凍】</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">12個入</span><span class="nw"><s>¥2,400</s> → <b>¥2,280</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉にら饅頭【調理済み冷凍】 12個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉にら饅頭【調理済み冷凍】 12個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉にら饅頭【調理済み冷凍】 12個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉にら饅頭【調理済み冷凍】 12個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="ちまき" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784" data-card="p05" data-size-index="0" data-size-label="2個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p05"><span class="row-no" aria-hidden="true">05</span><span class="order-product-name">ちまき</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">2個入</span><span class="nw"><s>¥784</s> → <b>¥744</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="ちまき 2個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="ちまき 2個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="ちまき 2個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="ちまき 2個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="ちまき" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="2" data-orig-price="784" data-card="p05" data-size-index="1" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p05"><span class="row-no" aria-hidden="true">05</span><span class="order-product-name">ちまき</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥1,568</s> → <b>¥1,488</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="ちまき 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="ちまき 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="ちまき 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="ちまき 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="ちまき" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="3" data-orig-price="784" data-card="p05" data-size-index="2" data-size-label="6個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p05"><span class="row-no" aria-hidden="true">05</span><span class="order-product-name">ちまき</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">6個入</span><span class="nw"><s>¥2,352</s> → <b>¥2,232</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="ちまき 6個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="ちまき 6個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="ちまき 6個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="ちまき 6個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉まん" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540" data-card="p06" data-size-index="0" data-size-label="1個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p06"><span class="row-no" aria-hidden="true">06</span><span class="order-product-name">肉まん</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">1個入</span><span class="nw"><s>¥540</s> → <b>¥513</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉まん 1個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉まん 1個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉まん 1個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉まん 1個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉まん" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="2" data-orig-price="540" data-card="p06" data-size-index="1" data-size-label="2個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p06"><span class="row-no" aria-hidden="true">06</span><span class="order-product-name">肉まん</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">2個入</span><span class="nw"><s>¥1,080</s> → <b>¥1,026</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉まん 2個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉まん 2個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉まん 2個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉まん 2個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="肉まん" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="3" data-orig-price="540" data-card="p06" data-size-index="2" data-size-label="3個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p06"><span class="row-no" aria-hidden="true">06</span><span class="order-product-name">肉まん</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">3個入</span><span class="nw"><s>¥1,620</s> → <b>¥1,539</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="肉まん 3個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="肉まん 3個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="肉まん 3個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="肉まん 3個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="角煮バーガー" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="1" data-orig-price="540" data-card="p07" data-size-index="0" data-size-label="1個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p07"><span class="row-no" aria-hidden="true">07</span><span class="order-product-name">角煮バーガー</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">1個入</span><span class="nw"><s>¥540</s> → <b>¥513</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="角煮バーガー 1個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="角煮バーガー 1個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="角煮バーガー 1個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="角煮バーガー 1個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="角煮バーガー" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="2" data-orig-price="540" data-card="p07" data-size-index="1" data-size-label="2個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p07"><span class="row-no" aria-hidden="true">07</span><span class="order-product-name">角煮バーガー</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">2個入</span><span class="nw"><s>¥1,080</s> → <b>¥1,026</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="角煮バーガー 2個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="角煮バーガー 2個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="角煮バーガー 2個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="角煮バーガー 2個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="角煮バーガー" data-price="513" data-unit="1個" data-base-pieces="1" data-multiplier="3" data-orig-price="540" data-card="p07" data-size-index="2" data-size-label="3個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p07"><span class="row-no" aria-hidden="true">07</span><span class="order-product-name">角煮バーガー</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">3個入</span><span class="nw"><s>¥1,620</s> → <b>¥1,539</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="角煮バーガー 3個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="角煮バーガー 3個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="角煮バーガー 3個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="角煮バーガー 3個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="チャーシューまん" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="1" data-orig-price="784" data-card="p08" data-size-index="0" data-size-label="2個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p08"><span class="row-no" aria-hidden="true">08</span><span class="order-product-name">チャーシューまん</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">2個入</span><span class="nw"><s>¥784</s> → <b>¥744</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="チャーシューまん 2個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="チャーシューまん 2個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="チャーシューまん 2個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="チャーシューまん 2個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="チャーシューまん" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="2" data-orig-price="784" data-card="p08" data-size-index="1" data-size-label="4個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p08"><span class="row-no" aria-hidden="true">08</span><span class="order-product-name">チャーシューまん</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">4個入</span><span class="nw"><s>¥1,568</s> → <b>¥1,488</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="チャーシューまん 4個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="チャーシューまん 4個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="チャーシューまん 4個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="チャーシューまん 4個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-size" data-product-name="チャーシューまん" data-price="744" data-unit="2個" data-base-pieces="2" data-multiplier="3" data-orig-price="784" data-card="p08" data-size-index="2" data-size-label="6個入" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p08"><span class="row-no" aria-hidden="true">08</span><span class="order-product-name">チャーシューまん</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">6個入</span><span class="nw"><s>¥2,352</s> → <b>¥2,232</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="チャーシューまん 6個入の数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="チャーシューまん 6個入を取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="チャーシューまん 6個入を1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="チャーシューまん 6個入を取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-unit-size" data-product-name="ザーサイ" data-price="760" data-unit="140g" data-orig-price="800" data-card="p09" data-size-index="0" data-size-label="140g" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p09"><span class="row-no" aria-hidden="true">09</span><span class="order-product-name">ザーサイ</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">140g</span><span class="nw"><s>¥800</s> → <b>¥760</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="ザーサイ 140gの数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="ザーサイ 140gを取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="ザーサイ 140gを1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="ザーサイ 140gを取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-unit-size" data-product-name="ザーサイ" data-price="1520" data-unit="280g" data-orig-price="1600" data-card="p09" data-size-index="1" data-size-label="280g" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p09"><span class="row-no" aria-hidden="true">09</span><span class="order-product-name">ザーサイ</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">280g</span><span class="nw"><s>¥1,600</s> → <b>¥1,520</b>（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="ザーサイ 280gの数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="ザーサイ 280gを取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="ザーサイ 280gを1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="ザーサイ 280gを取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-tea-size" data-product-name="モンゴル茶" data-price="4000" data-tea-bags="1" data-unit="1袋30個入" data-card="p10" data-size-index="0" data-size-label="1袋セット" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p10"><span class="row-no" aria-hidden="true">10</span><span class="order-product-name">モンゴル茶</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">1袋30個入</span><span class="nw">¥4,000（税込）</span></div></div>
+          <div class="stp order-qty" role="group" aria-label="モンゴル茶 1袋セットの数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="モンゴル茶 1袋セットを取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="モンゴル茶 1袋セットを1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="モンゴル茶 1袋セットを取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-tea-size" data-product-name="モンゴル茶" data-price="7500" data-tea-bags="2" data-unit="1袋30個入" data-card="p10" data-size-index="1" data-size-label="2袋セット" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p10"><span class="row-no" aria-hidden="true">10</span><span class="order-product-name">モンゴル茶</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">2袋（計60個）</span><span class="nw">¥7,500（税込）</span></div>
+            <div class="pk-hint">1袋あたり¥3,750（6%お得）</div></div>
+          <div class="stp order-qty" role="group" aria-label="モンゴル茶 2袋セットの数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="モンゴル茶 2袋セットを取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="モンゴル茶 2袋セットを1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="モンゴル茶 2袋セットを取り消す">取り消す</button>
+        </div>
+        <div class="order-product-row pk has-tea-size" data-product-name="モンゴル茶" data-price="10800" data-tea-bags="3" data-unit="1袋30個入" data-card="p10" data-size-index="2" data-size-label="3袋セット" hidden>
+          <div class="pk-info"><div class="pk-name"><a href="#p10"><span class="row-no" aria-hidden="true">10</span><span class="order-product-name">モンゴル茶</span></a></div>
+            <div class="order-product-price pk-price"><span class="pk-size">3袋（計90個）</span><span class="nw">¥10,800（税込）</span></div>
+            <div class="pk-hint">1袋あたり¥3,600（10%お得）</div></div>
+          <div class="stp order-qty" role="group" aria-label="モンゴル茶 3袋セットの数量"><button type="button" class="sb" data-d="-1" onclick="changeQty(this,-1)" aria-label="モンゴル茶 3袋セットを取り消す">−</button><span class="sn"><b class="order-qty-num">0</b></span><button type="button" class="sb" data-d="1" onclick="changeQty(this,1)" aria-label="モンゴル茶 3袋セットを1つ増やす">＋</button></div>
+          <div class="order-subtotal pk-sub">-</div><button type="button" class="pk-x" onclick="removeOrderRow(this)" aria-label="モンゴル茶 3袋セットを取り消す">取り消す</button>
+        </div>
+      </div>
+      <!-- 何も選んでいない時だけ出る案内（品が入っている間は隠れている） -->
+      <div class="pk-empty" id="orderEmpty">
+        <p>メニューから品をお選びください</p>
+        <a class="btn btn-line" href="#menu">メニューへ戻る</a>
+      </div>
+    </div>
+
+    <!-- 伝票＝合計金額。カートに合わせて top.js が書き直す -->
+    <aside class="slip" id="orderTotalBox" aria-label="合計金額" tabindex="-1">
+      <div class="slip-paper">
+        <div class="slip-head">
+          <h3>ご注文の明細</h3>
+          <span class="seal" aria-hidden="true">愛華楼</span>
+        </div>
+        <div class="slip-scroll" id="slipScroll">
+        <ul class="slip-items" id="slipItems"></ul>
+        <dl class="slip-sum">
+          <dt>商品小計（税込）</dt><dd id="slipSub">¥0</dd>
+          <dt>送料</dt><dd id="slipShip">-</dd>
+        </dl>
+        <p class="slip-cod" id="orderCodFee" style="display:none"></p>
+        </div>
+        <div class="slip-total"><span>合計金額</span><b id="orderTotal">¥0</b></div>
+        <div class="meter" aria-hidden="true"><i></i></div>
+        <p class="slip-note" id="orderShipping">※ 送料 全国一律¥1,200（税込・冷凍便／常温便とも）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から</p>
+      </div>
+    </aside>
+
+    <form class="ord-form" id="orderForm" onsubmit="handleOrderSubmit(event)">
+      <h3 class="step">お客様情報</h3>
+      <fieldset class="fs">
+        <legend>お届け先・お支払い</legend>
+        <div class="fr one">
+          <div class="f"><label for="orderName">お名前<b>*</b></label><input class="in" type="text" id="orderName" required placeholder="山田 太郎" autocomplete="name"></div>
+        </div>
+        <div class="fr">
+          <div class="f"><label for="orderPhone">電話番号<b>*</b></label><input class="in" type="tel" id="orderPhone" required placeholder="090-1234-5678" autocomplete="tel"></div>
+          <div class="f"><label for="orderEmail">メールアドレス</label><input class="in" type="email" id="orderEmail" placeholder="example@email.com" autocomplete="email">
+            <p class="fnote">※ お持ちでない方は空欄で大丈夫です。LINE登録済みのお客様にはLINEで発送のご連絡をいたします。</p></div>
+        </div>
+        <div class="fr zip">
+          <div class="f"><label for="orderZip">郵便番号<b>*</b></label><input class="in" type="text" id="orderZip" required placeholder="000-0000" maxlength="8" inputmode="numeric" autocomplete="postal-code"></div>
+          <div class="f"><label for="orderAddress">住所（自動入力）<b>*</b></label><input class="in" type="text" id="orderAddress" required placeholder="郵便番号を入力すると自動入力されます" readonly>
+            <p class="fnote">※ 送料は冷凍便・常温便とも全国一律¥1,200（税込）。住所の入力後、合計金額に自動で加算されます。北海道・沖縄・離島へのお届けは、実費送料を別途ご案内いたします。</p></div>
+        </div>
+        <div class="fr">
+          <div class="f"><label for="orderBanchi">番地<b>*</b></label><input class="in" type="text" id="orderBanchi" required placeholder="例: 1-2-3"></div>
+          <div class="f"><label for="orderBuilding">建物名・部屋番号</label><input class="in" type="text" id="orderBuilding" placeholder="例: ○○マンション 101号室"></div>
+        </div>
+        <div class="fr">
+          <div class="f"><label for="orderDelivery">配送方法</label>
+            <select class="in" id="orderDelivery" onchange="updatePaymentOptions()">
+              <option value="sagawa">佐川急便（冷凍便）</option>
+              <option value="yamato">クロネコヤマト（冷凍便）</option>
+              <option value="sagawa_ambient">佐川急便（常温便）</option>
+              <option value="yamato_ambient">クロネコヤマト（常温便）</option>
+            </select></div>
+          <div class="f"><label for="orderPayment">お支払い方法</label>
+            <!-- 最初の選択は「クレジットカード・PayPay」（2026-11-19 社長決定）。代金引換はクロネコヤマト便を選んだ時だけ出る（top.js updatePaymentOptions） -->
+            <select class="in" id="orderPayment" onchange="updateCardPaymentUI(); updateTotal()">
+              <option value="bank">銀行振込</option>
+              <option value="credit" selected>クレジットカード・PayPay</option>
+              <option value="cod" id="codOption" style="display:none" disabled>代金引換（クロネコヤマト）</option>
+            </select>
+            <p class="fnote">※ 代金引換はクロネコヤマトのみ対応しております。</p></div>
+        </div>
+        <div class="fr">
+          <div class="f"><label for="orderDate">希望日（目安）</label><input class="in" type="date" id="orderDate">
+            <p class="fnote">※ 九州からの発送のため、地域により日数が異なります。ご希望に添えない場合がございます。</p></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fs">
+        <legend>ポイント</legend>
+        <div class="pt">
+          <div>
+            <div class="f"><label for="orderMemberId">ポイント会員番号（お持ちの方）</label><input class="in short" type="text" id="orderMemberId" placeholder="例: 0001" maxlength="6" inputmode="numeric">
+              <p class="fnote">会員番号がなくてもお電話番号でポイントが自動付与されます</p></div>
+            <!-- ポイントを使う枠（電話番号で会員が見つかった時だけ出る。top.js lookupPoints） -->
+            <div class="pt-use" id="pointUseBox" style="display:none">
+              <div class="pt-use-h"><b>ポイントを使う</b><span id="pointAvailable">残高: 0pt</span></div>
+              <div class="pt-use-r">
+                <input class="in" type="number" id="pointUseAmount" min="0" step="1" value="0" placeholder="0" aria-label="利用するポイント数" oninput="applyPointDiscount()">
+                <span>pt 利用（1pt = ¥1）</span>
+                <button type="button" class="mini" onclick="useAllPoints()">全額使う</button>
+              </div>
+              <p class="fnote">※ 50pt以上からご利用いただけます</p>
+              <p class="pt-use-i" id="pointDiscountInfo" role="status" style="display:none"><span id="pointDiscountText"></span></p>
+            </div>
+          </div>
+          <div>
+            <div class="ptcard">
+              <div class="ptcard-h"><h4>愛華楼ポイントカード</h4><span class="seal" aria-hidden="true">愛華楼</span></div>
+              <p>催事会場でもHPでも、ポイントが貯まる・使える！</p>
+              <dl>
+                <dt>貯める</dt><dd>¥200ごとに1pt（催事・HP共通）</dd>
+                <dt>使う</dt><dd>1pt = ¥1割引（50pt〜）</dd>
+                <dt>共通</dt><dd>催事で貯めたポイントもHPで使えます</dd>
+              </dl>
+            </div>
+            <div class="pt-line">
+              <b>LINE友達のお客様へ</b>
+              <p>LINEで貯めたポイントもこちらで使えます。<br>LINEで「<strong>電話 090-1234-5678</strong>」のように<strong>ご自身のお電話番号</strong>を送信して登録すると、ポイントが統合されHPでもご利用いただけます。</p>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fs">
+        <legend>備考</legend>
+        <div class="f"><textarea class="in" id="orderNote" placeholder="ご要望がございましたらご記入ください" aria-label="備考"></textarea></div>
+      </fieldset>
+
+      <!-- お支払い情報の入力（「クレジットカード・PayPay」を選んだ時だけ出る枠）。
+           カード／PayPay／Apple Pay 等はこの枠の中でお客様が選ぶ（出せる決済手段は Stripe 管理画面の設定に従う）。
+           注文内容の入力がすべて済んだ後に入れていただくため、送信ボタンの直前に置く -->
+      <div class="pay" id="cardPaymentBox" style="display:none">
+        <h4>お支払い情報の入力</h4>
+        <div class="pay-amt" id="cardChargeAmount" style="display:none"></div>
+        <div class="pay-el" id="payment-element"></div>
+        <p class="pay-msg" id="cardPaymentError" role="status" style="display:none"></p>
+        <p class="fnote">※ カード情報はStripe（決済代行会社）に直接送信され、当店のサーバーには保存されません。<br>※ PayPayをお選びの場合は、PayPayのお支払い画面に移動し、お支払い後この画面に戻ります。</p>
+      </div>
+
+      <button type="submit" class="submit" id="orderSubmitBtn" disabled>注文内容を確認する</button>
+      <div class="err" id="orderErrorBox" role="alert" style="display:none">送信できませんでした。お手数ですが、時間をおいて再度お試しいただくか、LINEでご注文ください。</div>
+      <p class="ord-note">※ 次の画面で注文内容をご確認いただけます。最終確定まで注文は送信されません。</p>
+    </form>
+  </div>
+
+  <div class="ptcheck rv">
+    <div>
+      <h3>ポイント残高を確認する</h3>
+      <p class="fnote">催事・HPで貯めたポイントをまとめて確認できます。</p>
+    </div>
+    <div>
+      <div class="ptcheck-row">
+        <input class="in" type="tel" id="pointCheckPhone" placeholder="電話番号を入力" maxlength="13" aria-label="電話番号">
+        <button type="button" class="mini" onclick="checkPointBalance()">確認</button>
+      </div>
+      <!-- 残高確認の結果（top.js checkPointBalance が書く）。LINE未連携の時だけ連携のボタンが出る -->
+      <div class="pt-res" id="pointResult" role="status">
+        <p class="pt-res-n"><b id="pointBalanceNum">0</b><span>pt</span></p>
+        <p class="pt-res-l" id="pointBalanceLabel"></p>
+        <div class="pt-link" id="pointLineLinkBox" style="display:none">
+          <b>LINEでも残高確認できます</b>
+          <p>LINE友だち追加後、トークに貼り付けて送るだけでポイントが統合されます。</p>
+          <button type="button" class="mini" id="pointLineLinkBtn" onclick="linkLineWithPhone()">LINEで連携する</button>
+        </div>
+      </div>
+      <p class="fnote">※ LINE友達登録のみでポイントをお持ちの方は、LINEで「電話 090-1234-5678」のようにご自身のお電話番号を送信して登録すると、こちらからも確認・ご利用いただけます。</p>
+    </div>
+  </div>
+
+  <!-- 確認画面（「注文内容を確認する」で開く。伝票の清書）。中身は top.js renderOrderReview が書く。
+       対応端末はモーダル、dialog 未対応の端末はフォームの下で同じ内容を確認する -->
+  <dialog class="rev order-review-dialog" id="orderReviewDialog" aria-labelledby="orderReviewTitle" aria-describedby="orderReviewIntro">
+    <div class="rev-in">
+      <div class="slip-head">
+        <div>
+          <h2 id="orderReviewTitle" tabindex="-1">ご注文内容の<wbr>確認</h2>
+          <p class="rev-intro" id="orderReviewIntro">まだ注文・お支払いは確定していません。内容をご確認ください。</p>
+        </div>
+        <span class="seal" aria-hidden="true">愛華楼</span>
+      </div>
+      <p class="rev-chg" id="orderReviewChanged" role="alert"></p>
+      <div id="orderReviewSummary"></div>
+    </div>
+    <div class="rev-act">
+      <button type="button" class="rev-back" onclick="closeOrderReview()">戻って修正する</button>
+      <button type="button" class="rev-ok" id="orderConfirmBtn" onclick="confirmReviewedOrder()">この内容で注文を確定する</button>
+    </div>
+  </dialog>
+
+  <!-- 送信中 → 注文完了（確認画面で最終のボタンを押すと出る）。中身は top.js が書く。お名前・ご住所は端末の書体で出す -->
+  <dialog class="flow" id="orderFlowDialog" aria-label="ご注文の送信">
+    <div class="snd" id="orderProcessingOverlay" hidden>
+      <div class="snd-lamp" aria-hidden="true"><span class="lamp-str"></span><span class="lamp-b"><span>華</span></span></div>
+      <p class="snd-msg" role="status">ご注文を送信しています…<br>そのままお待ちください</p>
+    </div>
+    <div class="done" id="orderCompleteOverlay" hidden>
+      <span class="stamp" aria-hidden="true">愛華楼</span>
+      <h2 class="done-t" id="orderCompleteTitle" tabindex="-1">ご注文<wbr>ありがとう<wbr>ございます！</h2>
+      <p class="done-m">ご注文を受け付けました。<br>確認のご連絡をさせていただきます。</p>
+      <div id="orderCompleteSummary"></div>
+      <div class="done-pt" id="orderCompletePoint" style="display:none">
+        <span class="pt-title">ポイント付与</span>
+        <span class="pt-get"><b id="orderPointEarned">0</b>pt 獲得</span>
+        <span class="pt-bal" id="orderPointBalance"></span>
+      </div>
+      <div class="done-line" id="orderCompleteLineLink" style="display:none">
+        <b>LINEでもポイント残高を確認できます</b>
+        追加後、トークに貼り付けて送るだけで連携完了します。<br>後からでも連携できます。
+        <button type="button" onclick="linkLineFromOrder()">LINEで連携する</button>
+      </div>
+      <button type="button" class="done-close" id="orderCompleteClose" onclick="closeOrderComplete()">閉じる</button>
+    </div>
+  </dialog>
+</section>
+
+<!-- ============ 温め方 ============ -->
+<section class="cook" id="cooking" data-ch="伍">
+  <div class="cook-hd rv">
+    <div class="mark" aria-hidden="true">伍　HOW TO REHEAT</div>
+    <h2 class="h-big">温め方</h2>
+  </div>
+  <div class="cook-list">
+    <details class="ck rv" id="ck1" open>
+      <summary><h3>調理済商品の温め方</h3><span class="ck-for">焼き小籠包・焼売・にら饅頭など</span></summary>
+      <ol>
+        <li><strong>電子レンジの場合</strong>：500Wで<strong class="t">1分</strong>温める</li>
+        <li><strong>オーブントースターの場合</strong>：レンジ加熱後、180度で<strong class="t">2〜3分</strong>加熱</li>
+        <li><strong>フライパンの場合</strong>：中火で<strong class="t">5〜6分</strong>加熱</li>
+      </ol>
+      <p class="ck-note">※ トースター・フライパンは加熱しすぎると焼き色がつく場合があります</p>
+    </details>
+    <details class="ck rv" id="ck2" open>
+      <summary><h3>肉にら饅頭の焼き方</h3><span class="ck-for">冷凍商品</span></summary>
+      <ol>
+        <li>フライパンに油を引き、にら饅頭を<strong>凍ったまま</strong>並べる</li>
+        <li>差し水を少量入れ、<strong>フタをして蒸し焼き</strong>にする</li>
+        <li>皮が<strong>半透明</strong>になったらフタを取る</li>
+        <li>両面を<strong>カリッと焼き上げて</strong>出来上がり</li>
+      </ol>
+    </details>
+    <details class="ck rv" id="ck3" open>
+      <summary><h3>肉焼売・海老焼売の蒸し方</h3><span class="ck-for">冷凍商品</span></summary>
+      <ol>
+        <li>蒸し器もしくは鍋に水を入れ、<strong>沸騰</strong>させておく</li>
+        <li>沸騰したら焼売を<strong>凍ったまま</strong>並べる</li>
+        <li>フタをして<strong class="t">15分</strong>蒸して出来上がり</li>
+      </ol>
+    </details>
+    <details class="ck rv" id="ck4" open>
+      <summary><h3>焼き小籠包の温め方</h3><span class="ck-for">冷凍商品 ／ 電子レンジ（ラップ不要）</span></summary>
+      <ol>
+        <li>お皿に移し、<strong>ラップをかけずに</strong>温める</li>
+        <li>2個：<strong class="t">1分10秒</strong> ／ 4個：<strong class="t">2分</strong> が目安</li>
+        <li>温め中に<strong>ふくらんできたら</strong>出来上がりのサイン</li>
+      </ol>
+      <p class="ck-note">※ ふくらみすぎると皮が破れてスープが出る場合があります。様子を見ながら温めてください</p>
+    </details>
+    <details class="ck rv" id="ck5" open>
+      <summary><h3>肉まん・角煮まん・叉焼まんの温め方</h3><span class="ck-for">冷凍商品 ／ 電子レンジ</span></summary>
+      <ol>
+        <li>皮を軽く<strong>水で濡らす</strong></li>
+        <li><strong>ラップをせずに</strong>電子レンジで<strong class="t">1分</strong>温める（1個あたり）</li>
+      </ol>
+      <p class="ck-note">※ 蒸したようにふっくらと仕上がります</p>
+    </details>
+    <details class="ck rv" id="ck6" open>
+      <summary><h3>ちまきの温め方</h3><span class="ck-for">冷凍商品 ／ 電子レンジ</span></summary>
+      <ol>
+        <li>軽く<strong>水にくぐらせて</strong>お皿に移す</li>
+        <li>電子レンジで<strong class="t">1分30秒</strong>温めて出来上がり（1個あたり）</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 催事スケジュール ============ -->
+<!-- 中身は催事アプリから届く（top.js loadSchedule）。予定が無い時・読み込めない時の案内も top.js が出す -->
+<section class="sch" id="schedule" data-ch="陸">
+  <div class="mark rv" aria-hidden="true">陸　EVENT SCHEDULE</div>
+  <h2 class="h-v rv">催事スケジュール</h2>
+  <div class="sch-body" id="scheduleContainer">
+    <p class="sch-load">読み込み中...</p>
+  </div>
+</section>
+
+<!-- ============ ご注文方法 ============ -->
+<section class="how" id="order" data-ch="漆">
+  <div class="rv">
+    <div class="mark" aria-hidden="true">漆　HOW TO ORDER</div>
+    <h2 class="h-big">ご注文方法</h2>
+  </div>
+  <div class="how-list rv">
+    <div class="hw">
+      <svg class="ic" viewBox="0 0 52 52" aria-hidden="true"><path d="M12 6h22l8 8v32H12z"/><path d="M34 6v8h8"/><path d="M19 22h16M19 29h16M19 36h10"/></svg>
+      <h3>ご注文フォーム</h3>
+      <p>このページのご注文フォームから、<br>24時間いつでも<br>ご注文いただけます。</p>
+      <a href="#orderform" class="btn btn-line">ご注文フォームへ</a>
+    </div>
+    <div class="hw">
+      <svg class="ic" viewBox="0 0 52 52" aria-hidden="true"><path d="M26 8c11 0 20 7 20 16s-9 16-20 16c-2 0-4-.2-5.8-.700L11 44l2.4-8C8.8 33 6 28.8 6 24 6 15 15 8 26 8z"/><path d="M18 24h.1M26 24h.1M34 24h.1" stroke-width="2.4"/></svg>
+      <h3>LINEで注文</h3>
+      <p>LINEのトークから<br>お気軽にご注文ください。</p>
+      <a href="https://lin.ee/wbAZif6" class="btn btn-line" target="_blank" rel="noopener">LINEを開く</a>
+    </div>
+    <div class="hw">
+      <svg class="ic" viewBox="0 0 52 52" aria-hidden="true"><path d="M8 16h9l3-5h12l3 5h9v26H8z"/><circle cx="26" cy="28" r="8"/><path d="M39 21h.1" stroke-width="2.4"/></svg>
+      <h3>Instagram</h3>
+      <p>最新情報や催事の様子を<br>発信しています。<br>メッセージでのご注文も可能です。</p>
+      <a href="https://www.instagram.com/aika_rou/" class="btn btn-line" target="_blank" rel="noopener">フォローする</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ お問い合わせ ============ -->
+<section class="ct" id="contact" data-ch="捌">
+  <div class="rv">
+    <div class="mark" aria-hidden="true">捌　CONTACT</div>
+    <h2 class="h-big">お問い合わせ</h2>
+  </div>
+  <div class="ct-grid">
+    <div class="ct-info rv">
+      <h3>店舗情報</h3>
+      <dl>
+        <dt>店舗名</dt><dd>本格中華 愛華楼</dd>
+        <dt>店舗</dt><dd>〒811-3209<br>福岡県福津市花見ヶ丘3-22-20</dd>
+        <dt>営業時間</dt><dd>火曜〜土曜 12:00 〜 17:00<br>日曜・月曜 定休日</dd>
+        <dt>事務所</dt><dd>〒811-3114<br>福岡県古賀市舞の里2丁目16番10号<br>（株式会社今津屋）</dd>
+      </dl>
+    </div>
+    <div class="ct-form rv">
+      <h3>お問い合わせフォーム</h3>
+      <form id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="fr">
+          <div class="f"><label for="name">お名前</label><input class="in" type="text" id="name" name="name" required placeholder="山田 太郎"></div>
+          <div class="f"><label for="email">メールアドレス</label><input class="in" type="email" id="email" name="email" required placeholder="example@email.com"></div>
+        </div>
+        <div class="fr one">
+          <div class="f"><label for="subject">お問い合わせ種別</label>
+            <select class="in" id="subject" name="subject">
+              <option value="order">ご注文について</option>
+              <option value="event">催事出店について</option>
+              <option value="other">その他</option>
+            </select></div>
+        </div>
+        <div class="fr one">
+          <div class="f"><label for="message">お問い合わせ内容</label><textarea class="in" id="message" name="message" required placeholder="お気軽にお問い合わせください"></textarea></div>
+        </div>
+        <button type="submit" class="btn btn-red">送信する</button>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="ft" data-ch="華">
+  <div class="ft-brand" id="ftBrand"><span class="pre">本格中華</span><span class="name">愛華楼</span></div>
+  <p class="ft-tag">本格点心をご家庭でも</p>
+  <p class="ft-links"><a href="/tokushoho.html">特定商取引法に基づく表記</a></p>
+  <p class="ft-copy">&copy; <span id="copyrightYear">2026</span> 愛華楼 All Rights Reserved.</p>
+</footer>
+
+<!-- 画面に張り付くカートの帯（商品を1つ以上選ぶと出る） -->
+<div class="cart off" id="floatingCart" role="region" aria-label="カート">
+  <!-- 読み上げ用：数量や入数を変えるたび、変えた品・合計・送料の案内をここ1か所で伝える（画面には出ない） -->
+  <p class="sr" id="srLive" role="status" aria-live="polite" aria-atomic="true"></p>
+  <div class="cart-in">
+    <svg class="cart-ic" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 5h5l4 17h15l3-12H10"/><circle cx="14" cy="27.5" r="2"/><circle cx="25" cy="27.5" r="2"/></svg>
+    <div class="cart-sum">
+      <span class="cart-info"><b id="floatingCartCount">0</b>点 ・ 商品小計 <b id="floatingCartTotal">¥0</b></span>
+      <span class="cart-ship" id="floatingCartShipping"></span>
+      <span class="cart-shipnote">※北海道・沖縄・離島は別途送料</span>
+    </div>
+    <a class="btn btn-red" href="#orderItems" onclick="proceedToOrder(event)"><span class="cb-t">注文へ進む</span><svg class="ar" viewBox="0 0 22 10" aria-hidden="true"><path d="M0 8h20l-7-7"/></svg></a>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="top.js?v=20261119b" defer></script>
+
+<!-- Google Analytics (GA4) 測定ID: G-H5MT5P6XZH（今津屋－愛華楼 プロパティ）2026-07-26 有効化。
+     今の index.html と同じ設定。手元で開いた時（aikaro.jp 以外）と、確認用の隠しページの間（aikaro-preview の印がある時）は、
+     試しの閲覧が集計に混ざらないよう読み込まない -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  if (['aikaro.jp', 'www.aikaro.jp'].indexOf(location.hostname) !== -1 && !document.querySelector('meta[name="aikaro-preview"]')) {
+    var gaScript = document.createElement('script');
+    gaScript.async = true;
+    gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-H5MT5P6XZH';
+    document.head.appendChild(gaScript);
+    gtag('js', new Date());
+    gtag('config', 'G-H5MT5P6XZH');
+  }
+</script>
+
+</body>
+</html>
