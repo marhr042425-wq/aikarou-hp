@@ -22,7 +22,7 @@
         apiBase: PROD_API_BASE,
         stripeKey: preview ? '' : PROD_STRIPE_KEY,
         canSend: !preview,
-        blockedMessage: preview ? 'このページは確認用のため、お支払い・ご注文の送信はできません。' : '',
+        blockedMessage: preview ? 'このページは確認用のため、お支払い・ご注文の送信はできません。確認画面は、お支払い方法を「銀行振込」にするとご覧いただけます。' : '',
         ready: Promise.resolve(),
       };
     }
@@ -1583,13 +1583,27 @@
       return;
     }
     flow.setAttribute('aria-label', mode === 'done' ? 'ご注文の完了' : 'ご注文の送信');
-    if (!open) {
-      if (typeof flow.showModal === 'function') {
-        flow.showModal();
-      } else {
-        // dialog未対応の端末では、同じ中身を暗幕の上に重ねて出す。
+    // 送信中は showModal() を使わない（ページの上に重ねるだけ＝flow-inline）。
+    // showModal() で開いた dialog はブラウザの「いちばん上の層」に入り、その外は見えても押せなくなる。
+    // カードの本人確認（3Dセキュア）の画面は Stripe がページの本体に差し込むので、
+    // 送信中の幕を showModal() で出すと、本人確認の画面が幕の後ろに回って押せなくなる。
+    // 完了画面は Stripe の出番が終わった後なので、今までどおり showModal() で出す。
+    const inline = mode === 'sending' || typeof flow.showModal !== 'function';
+    let opened = open;
+    if (opened && flow.classList.contains('flow-inline') !== inline) {
+      // 重ね方を替える時（送信中 → 完了）は、一度閉じてから開き直す。
+      if (flow.classList.contains('flow-inline') || typeof flow.close !== 'function') flow.removeAttribute('open');
+      else flow.close();
+      flow.classList.remove('flow-inline');
+      opened = false;
+    }
+    if (!opened) {
+      if (inline) {
+        // 暗幕の上に重ねて出す（dialog未対応の端末も同じ出し方）。
         flow.classList.add('flow-inline');
         flow.setAttribute('open', '');
+      } else {
+        flow.showModal();
       }
     }
     flow.scrollTop = 0;
@@ -1941,6 +1955,26 @@
     if (orderLineBox) orderLineBox.style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // PayPay などお支払いの画面へ移った後、ブラウザの「戻る」で帰ってきた時
+  // （ページが控えからそのまま戻る＝event.persisted）は、「送信しています…」のまま固まらないよう幕を下ろす。
+  window.addEventListener('pageshow', function releaseOrderFlowOnReturn(event) {
+    if (event.persisted && isOrderFlowMode('sending')) hideOrderProcessingOverlay();
+  });
+
+  // 確認用ページ（隠しページ）だけの案内：カードの入力欄が出ないので、
+  // 確認画面は銀行振込に切り替えて見ていただく。掛け替え後（印が無い時）は何も出ない。
+  (function showPreviewNotice() {
+    if (HP_CONFIG.mode !== 'preview') return;
+    const cardBox = document.getElementById('cardPaymentBox');
+    if (!cardBox || !cardBox.parentNode) return;
+    const note = document.createElement('p');
+    note.id = 'previewNotice';
+    note.className = 'pv-note';
+    note.setAttribute('role', 'note');
+    note.textContent = '見本の確認中は、カードの入力欄が出ません。確認画面は、お支払い方法を「銀行振込」に切り替えてご覧ください。';
+    cardBox.parentNode.insertBefore(note, cardBox);
+  })();
 
   // LINE連携用の電話番号を保持（残高確認エリアと注文完了画面で使用）
   let lineLinkPhone = '';

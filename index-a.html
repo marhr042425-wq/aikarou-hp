@@ -58,7 +58,7 @@
 <meta name="theme-color" content="#0D0D0F">
 <link rel="preload" href="fonts/smb1-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/smb1-500.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="top.css?v=20261119a">
+<link rel="stylesheet" href="top.css?v=20261119b">
 </head>
 <body>
 <a class="skip" href="#menu">メニュー</a>
@@ -966,14 +966,15 @@
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
-<script src="top.js?v=20261119a" defer></script>
+<script src="top.js?v=20261119b" defer></script>
 
 <!-- Google Analytics (GA4) 測定ID: G-H5MT5P6XZH（今津屋－愛華楼 プロパティ）2026-07-26 有効化。
-     今の index.html と同じ設定。手元で開いた時（aikaro.jp 以外）は、試しの閲覧が集計に混ざらないよう読み込まない -->
+     今の index.html と同じ設定。手元で開いた時（aikaro.jp 以外）と、確認用の隠しページの間（aikaro-preview の印がある時）は、
+     試しの閲覧が集計に混ざらないよう読み込まない -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  if (['aikaro.jp', 'www.aikaro.jp'].indexOf(location.hostname) !== -1) {
+  if (['aikaro.jp', 'www.aikaro.jp'].indexOf(location.hostname) !== -1 && !document.querySelector('meta[name="aikaro-preview"]')) {
     var gaScript = document.createElement('script');
     gaScript.async = true;
     gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-H5MT5P6XZH';

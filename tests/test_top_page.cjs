@@ -397,3 +397,125 @@ test('少しだけ違う関数は、違いが「決めた所」だけ', { skip: 
   assert.equal((sent.slice(0, guardStart) + sent.slice(guardEnd)).replace("fetch(HP_CONFIG.apiBase + '/orders/api/hp-order'", "fetch(" + API + "hp-order'"),
     fnBody(app, 'submitReviewedOrder'));
 });
+
+// ── 2026-11-19 巨匠の点検で足した見張り ──
+// 送信中の幕は showModal() で出さない（カードの本人確認の画面が幕の後ろに隠れて押せなくなるため）。
+function flowHarness({ nativeDialog = true } = {}) {
+  const a = js.indexOf('  function setOrderFlow(mode) {');
+  const b = js.indexOf('  (function guardOrderFlowDialog() {', a);
+  assert(a >= 0 && b > a);
+  const calls = [];
+  const classes = new Set(), attrs = new Map();
+  const flow = {
+    classList: { add: x => classes.add(x), remove: x => classes.delete(x), contains: x => classes.has(x) },
+    setAttribute: (k, v) => attrs.set(k, v), removeAttribute: k => attrs.delete(k), hasAttribute: k => attrs.has(k),
+    scrollTop: 0,
+  };
+  if (nativeDialog) {
+    flow.showModal = () => { calls.push('showModal'); attrs.set('open', ''); };
+    flow.close = () => { calls.push('close'); attrs.delete('open'); };
+  }
+  const sending = { hidden: true }, done = { hidden: true };
+  const context = { document: { getElementById: id => ({ orderFlowDialog: flow, orderProcessingOverlay: sending, orderCompleteOverlay: done })[id] || null } };
+  vm.createContext(context);
+  vm.runInContext(js.slice(a, b), context);
+  return { context, calls, classes, attrs, sending, done };
+}
+test('送信中の幕は showModal() を使わず、ページの上に重ねるだけ（カードの本人確認の画面を隠さない）', () => {
+  const h = flowHarness();
+  h.context.setOrderFlow('sending');
+  assert.deepEqual(h.calls, [], '送信中に showModal() を呼んでいる');
+  assert(h.attrs.has('open') && h.classes.has('flow-inline'));
+  assert.equal(h.sending.hidden, false); assert.equal(h.done.hidden, true);
+  assert.equal(h.context.isOrderFlowMode('sending'), true);
+  // 失敗して入力へ戻る時は、きれいに閉じる
+  h.context.setOrderFlow(null);
+  assert.deepEqual(h.calls, []);
+  assert(!h.attrs.has('open') && !h.classes.has('flow-inline'));
+});
+test('完了画面は showModal() で出す（送信中から切り替わる時は、重ねた幕を外してから開き直す）', () => {
+  const h = flowHarness();
+  h.context.setOrderFlow('sending');
+  h.context.setOrderFlow('done');
+  assert.deepEqual(h.calls, ['showModal']);
+  assert(h.attrs.has('open') && !h.classes.has('flow-inline'));
+  assert.equal(h.sending.hidden, true); assert.equal(h.done.hidden, false);
+  h.context.setOrderFlow(null);
+  assert.deepEqual(h.calls, ['showModal', 'close']);
+  assert(!h.attrs.has('open'));
+  // 送信中を通らずに完了を出しても同じ
+  const direct = flowHarness();
+  direct.context.setOrderFlow('done');
+  assert.deepEqual(direct.calls, ['showModal']);
+});
+test('dialog を知らない古い端末では、送信中も完了も重ねて出す（今までどおり）', () => {
+  const h = flowHarness({ nativeDialog: false });
+  h.context.setOrderFlow('sending');
+  h.context.setOrderFlow('done');
+  assert(h.attrs.has('open') && h.classes.has('flow-inline'));
+  assert.equal(h.done.hidden, false);
+  h.context.setOrderFlow(null);
+  assert(!h.attrs.has('open') && !h.classes.has('flow-inline'));
+});
+test('重ねて出した幕の後ろは透けず・押せない（画面いっぱいの暗幕の板がある）', () => {
+  assert.match(css, /\.flow\.flow-inline\[open\]::before\{content:"";position:fixed;top:0;right:0;bottom:0;left:0;z-index:-1;background:rgba\(13,13,15,\.93\)\}/);
+});
+test('お支払いの画面からブラウザの「戻る」で帰った時は、送信中の幕を下ろす（pageshow）', () => {
+  const a = js.indexOf("  window.addEventListener('pageshow', function releaseOrderFlowOnReturn(event) {");
+  assert(a >= 0, 'pageshow の受け口が無い');
+  const src = js.slice(a, js.indexOf('\n  });\n', a) + 7);
+  const run = (persisted, sendingNow) => {
+    let handler = null, hidden = 0;
+    const context = { window: { addEventListener: (name, fn) => { assert.equal(name, 'pageshow'); handler = fn; } },
+      isOrderFlowMode: mode => mode === 'sending' && sendingNow, hideOrderProcessingOverlay: () => { hidden++; } };
+    vm.createContext(context); vm.runInContext(src, context);
+    handler({ persisted });
+    return hidden;
+  };
+  assert.equal(run(true, true), 1, '控えから戻ったのに幕を下ろしていない');
+  assert.equal(run(false, true), 0, '普通の読み込みでは何もしない');
+  assert.equal(run(true, false), 0, '送信中でなければ何もしない（完了画面を消さない）');
+});
+test('確認用ページ（見るだけ）の間だけ、「銀行振込に切り替えると確認画面を見られる」案内を出す', () => {
+  const a = js.indexOf('  (function showPreviewNotice() {');
+  assert(a >= 0);
+  const src = js.slice(a, js.indexOf('\n  })();\n', a) + 9);
+  const run = mode => {
+    const inserted = [];
+    const cardBox = { parentNode: { insertBefore: (el, before) => { assert.equal(before, cardBox); inserted.push(el); } } };
+    const context = { HP_CONFIG: { mode }, document: {
+      getElementById: id => id === 'cardPaymentBox' ? cardBox : null,
+      createElement: tag => ({ tag, attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } }) } };
+    vm.createContext(context); vm.runInContext(src, context);
+    return inserted;
+  };
+  const shown = run('preview');
+  assert.equal(shown.length, 1);
+  assert.equal(shown[0].tag, 'p'); assert.equal(shown[0].className, 'pv-note');
+  assert.match(shown[0].textContent, /カードの入力欄が出ません/);
+  assert.match(shown[0].textContent, /「銀行振込」に切り替えて/);
+  assert.doesNotMatch(shown[0].textContent, /\p{Extended_Pictographic}/u);
+  assert.deepEqual(run('production'), [], '掛け替え後に案内が出ている');
+  assert.deepEqual(run('local'), []);
+  assert.match(css, /\.pv-note\{[^}]*font-size:16px/);
+  // 最後のボタンを押した時の文にも、同じ道案内がある
+  assert.match(config({ host: 'aikaro.jp', preview: true }).cfg.blockedMessage, /「銀行振込」/);
+});
+test('アクセス解析（GA4）は、aikaro.jp の上でも「見るだけ」の印がある間は読まない', () => {
+  const a = html.indexOf('window.dataLayer = window.dataLayer || [];');
+  const src = html.slice(a, html.indexOf('</script>', a));
+  const run = (hostname, preview) => {
+    const added = [];
+    const context = { window: {}, location: { hostname },
+      document: { querySelector: sel => (sel === 'meta[name="aikaro-preview"]' && preview) ? {} : null,
+        createElement: () => ({}), head: { appendChild: el => added.push(el.src) } } };
+    context.window = context;
+    vm.createContext(context); vm.runInContext(src, context);
+    return { added, pushed: context.dataLayer.length };
+  };
+  assert.deepEqual(run('aikaro.jp', true), { added: [], pushed: 0 });
+  assert.deepEqual(run('localhost', false), { added: [], pushed: 0 });
+  const live = run('aikaro.jp', false);
+  assert.equal(live.added.length, 1); assert.match(live.added[0], /googletagmanager\.com\/gtag\/js\?id=G-H5MT5P6XZH/);
+  assert.equal(live.pushed, 2);
+});

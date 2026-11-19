@@ -1119,8 +1119,13 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
 #orderReviewSummary>p{margin-top:12px;font-size:16px;line-height:1.7;color:var(--ink2)}
 /* dialog を知らない古い端末：確認画面はフォームの下にそのまま出す */
 .rev.order-review-inline{display:block;position:static;margin:32px auto 0}
-/* dialog を知らない古い端末：送信中・完了は暗幕の上に重ねる */
-.flow.flow-inline[open]{display:block;position:fixed;z-index:200;top:16px;left:0;right:0;margin:0 auto;box-shadow:0 0 0 200vmax rgba(13,13,15,.93)}
+/* 送信中（どの端末でも）と、dialog を知らない古い端末の完了：暗幕の上に重ねる。
+   送信中に showModal() を使わないのは、カードの本人確認の画面（Stripe がページの本体に出す）を幕の後ろに隠さないため（top.js setOrderFlow） */
+.flow.flow-inline[open]{display:block;position:fixed;z-index:1000;top:16px;left:0;right:0;margin:0 auto}
+/* 暗幕は画面いっぱいの板で敷く（幕の後ろの字が透けない・後ろのボタンを押せない。色は showModal の時の ::backdrop と同じ） */
+.flow.flow-inline[open]::before{content:"";position:fixed;top:0;right:0;bottom:0;left:0;z-index:-1;background:rgba(13,13,15,.93)}
+/* 確認用ページ（隠しページ）だけの案内 */
+.pv-note{margin:24px 0 20px;padding:12px 14px;border-left:2px solid var(--gold);font-size:16px;line-height:1.7;color:var(--tx)}
 .snd[hidden],.done[hidden]{display:none}
 
 /* 完了画面：ポイント利用・お支払い金額の行 */
