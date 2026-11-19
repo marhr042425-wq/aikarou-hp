@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>見本C（堅実）余白と縦書きのお品書き | 本格中華 愛華楼</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:,">
+<!-- 見本C：端末に元から入っている書体だけ（ヒラギノ明朝／游明朝・ヒラギノ角ゴ）。外から何も取り寄せません。
+     このファイルは c-kenjitsu_assets/src/（style.css・script.js・build_c.py）から組み立てたもの。 -->
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0}
+img{display:block;max-width:100%}
+h1,h2,h3,h4,p,ul,ol,dl,dd,figure{margin:0;padding:0}
+ul,ol{list-style:none}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-appearance:none;appearance:none;background:none;border:0;padding:0}
+s{text-decoration-thickness:1px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+summary{cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+[hidden]{display:none!important}
+:root{
+  --paper:#FBF6EE; --paper2:#F5EEE1; --white:#FFFFFF; --ink:#1A1A1A; --mut:#5E5852; --red:#B02A26; --red-d:#7E1B1B;
+  --night:#0D0D0F; --gold:#FFD27A; --hl:#DDD3C0; --field:#8A8175;
+  --serif:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP","Noto Serif CJK JP",serif;
+  --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic","Noto Sans JP","Noto Sans CJK JP","Meiryo",sans-serif;
+  --m:clamp(24px,6.667vw,96px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+h1,h2,h3,p,li,dd{line-break:strict}
+p,li,dd{word-break:auto-phrase}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.88;overflow-x:clip}
+.skip{position:absolute;left:16px;top:-80px;z-index:99;background:var(--ink);color:#fff;padding:12px 24px;font-size:17px}
+.skip:focus{top:8px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.num{font-family:var(--serif);font-variant-numeric:tabular-nums lining-nums}
+.rv{transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.wait{opacity:0;transform:translateY(16px)}
+.stamp{transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.wait .stamp,.stamp.wait{opacity:0;transform:scale(1.25)}
+.shina li,.evs .ev,.about-v p{transition:opacity .8s var(--ease) calc(var(--i,0) * 70ms),transform .8s var(--ease) calc(var(--i,0) * 70ms),background .3s}
+.shina.rv.wait,.evs.rv.wait,.about-v.rv.wait{opacity:1;transform:none}
+.shina.wait li,.evs.wait .ev,.about-v.wait p{opacity:0;transform:translateY(-16px)}
+@keyframes settle{from{transform:scale(1.05)}to{transform:none}}
+@keyframes lay{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes dim{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes draw{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv.wait,.wait .stamp,.stamp.wait,.shina.wait li,.evs.wait .ev,.about-v.wait p{opacity:1;transform:none}
+}
+.hd{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--hl)}
+.hd-in{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 var(--m)}
+.brand{font-family:var(--serif);font-weight:600;font-size:24px;letter-spacing:.32em;display:flex;align-items:center;gap:12px;min-height:48px}
+.brand::before{content:"";width:8px;height:8px;background:var(--red)}
+.nav-pc{display:flex;gap:clamp(16px,2vw,32px);font-size:16px}
+.nav-pc a{display:flex;align-items:center;min-height:48px;white-space:nowrap;position:relative}
+.nav-pc a::after{content:"";position:absolute;left:0;right:0;bottom:10px;height:1px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav-pc a:hover::after,.nav-pc a[aria-current]::after{transform:scaleX(1)}
+.mnav{display:none}
+.mnav summary{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 0 0 16px;font-size:16px}
+.mnav summary i{display:block;width:24px;height:9px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.mnav-in{position:absolute;left:0;right:0;top:65px;background:var(--paper);border-bottom:1px solid var(--ink);padding:0 var(--m) 24px;max-height:calc(100dvh - 65px);overflow:auto}
+.mnav li a{display:flex;align-items:center;gap:16px;min-height:56px;border-bottom:1px solid var(--hl);font-family:var(--serif);font-size:19px;letter-spacing:.08em}
+.mnav li a b{flex:none;display:grid;place-items:center;width:32px;height:32px;font-weight:600;color:var(--red);font-size:16px;line-height:1;box-shadow:inset 0 0 0 1px var(--hl)}
+.mnav li a[aria-current] b{background:var(--red);color:#fff;box-shadow:none}
+@media (max-width:1099px){.nav-pc{display:none}.mnav{display:block}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:0 32px;font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:.12em;border-radius:2px;transition:background .25s,color .25s}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-d)}
+.btn-line{box-shadow:inset 0 0 0 1px var(--ink);background:transparent}
+.btn-line:hover{background:var(--ink);color:var(--paper)}
+.ar{width:24px;height:8px;fill:none;stroke:currentColor;stroke-width:1.2;flex:none}
+.hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 424px;column-gap:64px;padding-right:var(--m);height:clamp(640px,calc(100svh - 64px),864px);max-width:1760px}
+.hero-ph{position:relative;overflow:hidden;background:#EDE6D8}
+.hero-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:56% 50%;animation:settle 2.4s var(--ease) both}
+.hero-tx{display:flex;flex-direction:column;justify-content:space-between;align-items:stretch;padding:56px 0;min-height:0}
+.hero-v{writing-mode:vertical-rl;align-self:flex-end;flex:1;min-height:0}
+.hero-title{font-family:var(--serif);line-height:1;margin-left:56px}
+.hero-title .pre{display:block;font-size:20px;font-weight:600;letter-spacing:.6em;color:var(--red);padding-top:.5em;margin-left:16px}
+.hero-title .name{display:block;font-size:min(11.6vw,18.4svh,176px);font-weight:600;letter-spacing:.04em;line-height:1}
+.hero-title .name span{display:inline-block;animation:rise 1.1s var(--ease) both}
+.hero-title .name span:nth-child(2){animation-delay:.14s}
+.hero-title .name span:nth-child(3){animation-delay:.28s}
+.hero-tag{font-family:var(--serif);font-weight:300;font-size:28px;line-height:2.15;letter-spacing:.26em;padding-top:calc(min(11.6vw,18.4svh,176px) * 1.04);position:relative}
+.hero-tag::before{content:"";position:absolute;right:-28px;top:0;bottom:0;width:1px;background:var(--hl);transform-origin:top;animation:draw 1.4s .3s var(--ease) both}
+.hero-cta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+.hero-cta .btn{padding:0 8px}
+.sec{position:relative;padding:128px var(--m)}
+.sec.alt{background:var(--paper2)}
+.fold{border-top:1px solid var(--hl)}
+.fold::before{content:"";position:absolute;left:0;right:0;top:0;height:40px;background:linear-gradient(rgba(60,40,10,.045),rgba(60,40,10,0));pointer-events:none}
+.rail{font-family:var(--serif);font-weight:600;font-size:30px;letter-spacing:.14em;line-height:1.3;display:flex;align-items:center;gap:16px;margin-bottom:40px}
+.no{flex:none;display:grid;place-items:center;width:40px;height:40px;background:var(--red);color:#fff;font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:0;line-height:1}
+@media (min-width:1100px){
+  .sec{display:grid;grid-template-columns:minmax(0,1fr) 96px;column-gap:64px;align-items:start}
+  .sec>.rail{grid-column:2;grid-row:1;position:sticky;top:112px;writing-mode:vertical-rl;justify-self:end;font-size:44px;letter-spacing:.22em;gap:24px;margin:0;align-items:center;white-space:nowrap}
+  .sec>.body{grid-column:1;grid-row:1;min-width:0}
+  .no{width:48px;height:48px;font-size:24px}
+  .sec::after{content:"";position:absolute;top:0;bottom:0;right:calc(var(--m) + 96px + 32px);width:1px;background:var(--hl);pointer-events:none}
+}
+.about{padding:128px var(--m)}
+.about-in{display:flex;flex-direction:row-reverse;justify-content:center;align-items:stretch;gap:72px}
+.about .rail{writing-mode:vertical-rl;font-size:44px;letter-spacing:.22em;gap:24px;margin:0;white-space:nowrap;align-items:center}
+.about-v{writing-mode:vertical-rl;font-family:var(--serif);font-size:19px;line-height:2.5;letter-spacing:.06em;white-space:nowrap}
+.about-v p + p{margin-right:2.4em}
+.seals{display:flex;flex-direction:row-reverse;gap:24px;align-items:flex-end}
+.seal{writing-mode:vertical-rl;display:flex;align-items:center;gap:16px;font-family:var(--serif);font-size:18px;letter-spacing:.2em;white-space:nowrap}
+.seal i{font-style:normal;display:grid;place-items:center;width:56px;height:56px;border:1px solid var(--red);color:var(--red);font-weight:600;font-size:28px;letter-spacing:0;box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--red)}
+.feat{background:var(--night);color:#EDEBE6;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr) 112px;column-gap:64px;align-items:center;padding:112px var(--m);position:relative}
+.feat::before,.feat::after{content:"";position:absolute;left:var(--m);right:var(--m);height:1px;background:var(--gold);opacity:.6}
+.feat::before{top:32px}.feat::after{bottom:32px}
+.feat-ph{position:relative;max-width:680px;width:100%;justify-self:start}
+.feat-ph img{width:100%;height:auto}
+.feat-ph::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 56px 40px var(--night);pointer-events:none}
+.feat-head{writing-mode:vertical-rl;display:flex;align-items:flex-start;gap:20px;justify-self:end;grid-column:3;grid-row:1}
+.feat-flag{background:var(--red);color:#fff;font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:.24em;padding:16px 6px 12px;line-height:1.3;white-space:nowrap}
+.feat h2{font-family:var(--serif);font-weight:600;font-size:clamp(64px,6.1vw,88px);letter-spacing:.1em;line-height:1.1;white-space:nowrap}
+.feat-tx{grid-column:2;grid-row:1}
+.feat-tx p{font-size:17px;line-height:2.1}
+.feat-price{margin:32px 0;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding-top:24px;border-top:1px solid rgba(237,235,230,.24)}
+.feat-price s{color:#B5B3B9;font-size:20px}
+.feat-price b{font-family:var(--serif);font-weight:600;font-size:64px;line-height:1;color:var(--gold)}
+.feat-price small{font-size:16px;color:#B5B3B9}
+.feat :focus-visible{outline-color:#fff}
+.brk{height:clamp(240px,36vw,520px);overflow:hidden}
+.brk img{width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+.note{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:32px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:20px 0;margin-bottom:32px}
+.note-main{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.6}
+.note-main strong{color:var(--red);font-size:36px;line-height:1;margin-left:.15em;white-space:nowrap;letter-spacing:.02em}
+.note-sub{color:var(--mut);font-size:16px;line-height:1.75;border-left:1px solid var(--hl);padding-left:32px}
+@media all{
+  .shina{display:block;background:var(--white);border:1px solid var(--ink);box-shadow:0 0 0 4px var(--white),0 0 0 5px var(--ink);margin:5px 5px 45px}
+  .shina ol{display:flex;flex-direction:row-reverse}
+  .shina li{flex:1 1 0;min-width:0;border-left:1px solid var(--hl)}
+  .shina li:last-child{border-left:0}
+  .shina a{display:flex;flex-direction:column;align-items:center;height:312px;padding:20px 0 16px;transition:background .3s}
+  .shina a:hover{background:var(--paper)}
+  .shina a:hover .s-name{color:var(--red)}
+  .s-no{font-family:var(--serif);font-weight:600;font-size:16px;line-height:1;color:var(--red);position:relative}
+  .s-no::after{content:"";position:absolute;left:50%;top:-12px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--red);opacity:0;transform:scale(.2);transition:opacity .3s,transform .4s var(--ease)}
+  .shina li.in .s-no::after{opacity:1;transform:none}
+  .s-name{writing-mode:vertical-rl;font-family:var(--serif);font-weight:600;font-size:23px;letter-spacing:.14em;line-height:1.2;white-space:nowrap;flex:1;margin-top:16px;transition:color .3s}
+  .s-price{font-family:var(--serif);font-weight:600;font-size:17px;line-height:1.2;font-variant-numeric:lining-nums;padding-top:12px;border-top:1px solid var(--hl);width:calc(100% - 24px);text-align:center}
+}
+.items{border-bottom:1px solid var(--hl)}
+.item{scroll-margin-top:72px}
+@media (min-width:768px) and (max-width:1099px){.s-price{font-size:16px;width:100%}.s-name{font-size:21px}}
+.item{display:grid;grid-template-columns:minmax(0,1fr) 56px;grid-template-areas:"ph name" "tx tx" "buy buy";column-gap:16px;padding:32px 0;border-top:1px solid var(--hl)}
+.item:first-child{border-top:0;padding-top:8px}
+.item-name{grid-area:name;writing-mode:vertical-rl;font-family:var(--serif);font-weight:600;font-size:27px;letter-spacing:.12em;line-height:1.2;display:flex;align-items:center;gap:14px;white-space:nowrap;justify-self:center}
+.item-no{font-size:16px;color:var(--red);letter-spacing:0;font-weight:600}
+.item-ph{grid-area:ph;aspect-ratio:1/1;overflow:hidden;background:#111}
+.item-ph img{width:100%;height:100%;object-fit:cover}
+.item-tx{grid-area:tx;margin-top:20px}
+.tag{display:inline-block;font-family:var(--serif);font-size:16px;font-weight:600;line-height:1.5;padding:1px 12px;letter-spacing:.1em;box-shadow:inset 0 0 0 1px var(--ink);white-space:nowrap;margin-bottom:12px}
+.tag-hot{background:var(--red);color:#fff;box-shadow:none}
+.item-desc{font-size:17px;line-height:1.88}
+.alg{margin-top:12px;font-size:16px;line-height:1.75;color:var(--mut)}
+.alg-ics{display:inline-flex;gap:4px;flex-wrap:wrap;margin-right:8px;vertical-align:1px}
+.alg-ic{font-size:16px;font-weight:600;line-height:1.4;padding:0 6px;border:1px solid var(--mut);color:var(--ink);background:var(--white)}
+.alg strong{color:var(--ink);font-weight:600;margin-right:.6em}
+.alg-note{display:block}
+.item-buy{grid-area:buy;margin-top:20px}
+.price{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.price s{color:var(--mut);font-size:18px}
+.price b{font-family:var(--serif);font-weight:600;font-size:40px;line-height:1;color:var(--red);letter-spacing:.01em}
+.price small{font-size:16px;color:var(--mut)}
+.sizes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}
+.sz{min-height:56px;padding:4px 2px;background:var(--white);box-shadow:inset 0 0 0 1px var(--hl);border-radius:2px;font-size:16px;line-height:1.35;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:box-shadow .2s}
+.sz span{display:block;white-space:nowrap}
+.sz em{font-style:normal;color:var(--red);font-weight:600;margin-left:4px}
+.sz.on{box-shadow:inset 0 0 0 2px var(--ink);font-weight:600}
+.adds{display:flex;gap:8px;margin-top:8px}
+.add{flex:1;min-height:56px;border-radius:2px;background:var(--red);color:#fff;font-size:17px;font-weight:600;letter-spacing:.06em;transition:background .2s}
+.add:hover{background:var(--red-d)}
+@media (min-width:768px) and (max-width:1099px){
+  .items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+  .item:nth-child(2){border-top:0;padding-top:8px}
+}
+@media (min-width:1100px){
+  .item{grid-template-columns:72px 288px minmax(0,1fr) 296px;grid-template-areas:"name ph tx buy";column-gap:32px;align-items:start}
+  .item:first-child{padding-top:32px;border-top:0}
+  .item-name{font-size:30px;align-self:start}
+  .item-ph{aspect-ratio:4/3}
+  .item-tx,.item-buy{margin-top:0}
+  .item-buy{align-self:end}
+  .item-tx{align-self:start}
+}
+.o-lead{font-family:var(--serif);font-size:20px;line-height:2;letter-spacing:.06em;margin-bottom:32px}
+.sheet{background:var(--white);border:1px solid var(--ink);box-shadow:0 0 0 4px var(--white),0 0 0 5px var(--ink);margin:5px}
+.sheet ~ .sheet{margin-top:45px}
+.o-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--ink)}
+.o-head>div{padding:24px 32px}
+.o-head>div + div{border-left:1px solid var(--hl)}
+.o-free{font-family:var(--serif);font-weight:600;font-size:19px;line-height:1.6}
+.o-free strong{font-size:28px;letter-spacing:.02em}
+.o-free span{color:var(--red);font-size:28px;letter-spacing:.12em;margin-left:.2em}
+.o-free br{display:none}
+.o-off{font-family:var(--serif);font-weight:600;font-size:19px;line-height:1.6}
+.o-off strong{color:var(--red);font-size:28px}
+.o-headnote{grid-column:1/-1;border-left:0!important;border-top:1px solid var(--hl);padding:12px 32px!important;font-size:16px;color:var(--mut)}
+.o-cap{display:none}
+.orow{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"info info" "size qty";gap:12px 12px;padding:20px 16px;border-bottom:1px solid var(--hl);position:relative;align-items:center}
+.orow.has::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--red)}
+.o-info{grid-area:info;min-width:0}
+.o-name{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.5;letter-spacing:.04em}
+.o-price{font-size:16px;line-height:1.6;color:var(--mut)}
+.o-hint{font-size:16px;line-height:1.6;color:var(--mut);margin-top:4px}
+.o-hint>span{display:block}
+.js .o-hint>span{display:none}
+.js .o-hint>span.on{display:block}
+.o-size{grid-area:size;display:flex;gap:6px}
+.orow[data-kind="tea"]{grid-template-areas:"info info" "size size" "qty qty"}
+.orow[data-kind="tea"] .osz{max-width:none}
+.osz{flex:1 1 0;max-width:72px;min-width:48px;min-height:48px;padding:0 2px;box-shadow:inset 0 0 0 1px var(--hl);border-radius:2px;font-size:16px;white-space:nowrap;background:var(--white)}
+.osz em{font-style:normal;color:var(--red);font-weight:600;margin-left:4px}
+.osz.on{box-shadow:inset 0 0 0 2px var(--ink);font-weight:600}
+.o-qty{grid-area:qty;display:flex;align-items:center;justify-self:end}
+.o-qty button{width:44px;height:48px;box-shadow:inset 0 0 0 1px var(--field);border-radius:2px;font-size:22px;line-height:1;background:var(--white)}
+.o-qty button:hover{background:var(--paper)}
+.o-num{width:36px;text-align:center;font-family:var(--serif);font-weight:600;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
+.o-sub{position:absolute;right:16px;top:20px;font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.4;text-align:right;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.orow.has .o-sub{color:var(--ink)}
+.orow:not(.has) .o-sub{display:none}
+.orow.has .o-name{padding-right:104px}
+.o-total{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 24px;padding:24px 16px;border-top:3px double var(--ink);margin-top:-1px}
+.o-total-label{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.2em}
+.o-total>div{display:contents}
+.o-ship{order:3;flex:1 1 100%;font-size:16px;line-height:1.7;color:var(--mut);margin-top:4px}
+.o-ship.free{color:var(--red);font-weight:600}
+.o-total-price{font-family:var(--serif);font-weight:600;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+@media (min-width:1100px){
+  .o-cap{display:grid;grid-template-columns:minmax(0,1fr) 264px 168px 136px;border-bottom:1px solid var(--ink);font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:.3em;color:var(--mut)}
+  .o-cap span{padding:8px 0;text-align:center}
+  .o-cap span + span{border-left:1px solid var(--hl)}
+  .orow{grid-template-columns:minmax(0,1fr) 264px 168px 136px;grid-template-areas:"info size qty sub";gap:0;padding:0;align-items:stretch}
+  .o-sub{position:static;grid-area:sub}
+  .orow:not(.has) .o-sub{display:flex}
+  .orow.has .o-name{padding-right:0}
+  .o-qty button{width:48px}.o-num{width:44px}
+  .o-total{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end}
+  .o-total>div{display:block}
+  .orow>*{padding:20px 0;display:flex;align-items:center;justify-content:center}
+  .orow>* + *{border-left:1px solid var(--hl)}
+  .o-info{display:block;padding:20px 24px 20px 32px}
+  .o-size{padding:20px 16px}
+  .orow[data-kind="tea"]{grid-template-areas:"info size qty sub"}
+  .osz{flex:0 0 auto;max-width:none}
+  .osz{min-width:64px;padding:0 6px}
+  .o-size{gap:4px}
+  .o-qty{justify-self:stretch}
+  .o-sub{justify-content:flex-end;padding-right:32px}
+  .orow.has::before{width:6px}
+  .o-total{padding:32px}
+  .o-total-price{font-size:56px}
+}
+.f-sec{padding:40px 16px;border-top:1px solid var(--ink)}
+.f-sec:first-child{border-top:0}
+.f-h{font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.16em;line-height:1.4;display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.f-h::before{content:"";width:8px;height:8px;background:var(--red);flex:none}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:24px 32px}
+.fg{grid-column:1/-1;min-width:0}
+.fg label,.lbl{display:block;font-size:17px;font-weight:600;line-height:1.5;margin-bottom:8px}
+.req{color:var(--red);margin-left:.3em}
+.inp{display:block;width:100%;min-height:56px;padding:12px 16px;background:var(--white);border:1px solid var(--field);border-radius:2px;font-size:18px;line-height:1.5}
+select.inp{-webkit-appearance:none;appearance:none;padding-right:48px;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 24px) 50%,calc(100% - 17px) 50%;background-size:7px 7px;background-repeat:no-repeat}
+textarea.inp{min-height:128px;resize:vertical}
+.inp::placeholder{color:#6F685D}
+.inp:hover{border-color:var(--ink)}
+.inp:focus{outline:0;border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+.inp[readonly]{background:var(--paper)}
+.help{display:block;font-size:16px;line-height:1.7;color:var(--mut);margin-top:8px}
+.pbox{border:1px solid var(--hl);background:var(--paper);padding:24px}
+.pbox + .pbox{margin-top:16px}
+.pbox-h{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.08em;line-height:1.5;display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.pbox-h small{font-family:var(--sans);font-weight:400;font-size:16px;color:var(--mut);letter-spacing:0}
+.ptrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.ptrow .inp{width:128px;text-align:right}
+.btn-s{min-height:48px;padding:0 20px;box-shadow:inset 0 0 0 1px var(--ink);border-radius:2px;font-size:16px;font-weight:600;background:var(--white)}
+.btn-s:hover{background:var(--ink);color:#fff}
+.pt-dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;margin-top:12px;font-size:16px;line-height:1.75}
+.pt-dl dt{font-weight:600;color:var(--red)}
+.pt-line{margin-top:16px;padding-top:16px;border-top:1px solid var(--hl);font-size:16px;line-height:1.75}
+.pt-line b{display:block;font-weight:600}
+.pay-amount{font-family:var(--serif);font-weight:600;font-size:19px;margin-bottom:12px}
+.pay-slot{border:1px dashed var(--field);background:var(--white);min-height:168px;display:grid;place-items:center;color:var(--mut);font-size:16px;text-align:center;padding:16px}
+.o-submit{display:flex;width:100%;min-height:72px;align-items:center;justify-content:center;gap:16px;background:var(--red);color:#fff;font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.16em;border-radius:2px;transition:background .25s}
+.o-submit:hover{background:var(--red-d)}
+.o-submit:disabled{background:#E9E2D4;color:#5E5852;cursor:not-allowed}
+.o-err{margin-top:16px;padding:16px 24px;border:2px solid var(--red);color:var(--red-d);font-weight:600;font-size:17px;line-height:1.7;text-align:center}
+.o-note{margin-top:16px;font-size:16px;line-height:1.7;color:var(--mut);text-align:center}
+.pc-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pc-row .inp{flex:1 1 200px;width:auto}
+.pc-row .btn-s{min-height:56px;padding:0 32px;background:var(--ink);color:#fff}
+.pc-res{margin-top:16px;padding:16px 24px;border:1px solid var(--hl);background:var(--paper)}
+.pc-num{font-family:var(--serif);font-weight:600;font-size:40px;line-height:1.2;color:var(--red)}
+.pc-num small{font-size:18px;margin-left:4px}
+@media (min-width:768px){
+  .f-sec{padding:48px 32px}
+  .fgrid{grid-template-columns:repeat(12,minmax(0,1fr))}
+  .fg.s6{grid-column:span 6}.fg.s4{grid-column:span 4}.fg.s8{grid-column:span 8}
+  .orow{padding-left:32px;padding-right:32px}
+  .o-total{padding-left:32px;padding-right:32px}
+}
+@media (min-width:1100px){.orow{padding:0}}
+@media (max-width:767px){
+  .o-head{grid-template-columns:minmax(0,1fr)}
+  .o-head>div{padding:16px}
+  .o-head>div + div{border-left:0;border-top:1px solid var(--hl)}
+  .o-headnote{padding:12px 16px!important}
+  .o-free br{display:inline}
+}
+.rvw{width:min(720px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:0;border:1px solid var(--ink);background:var(--white);color:var(--ink);box-shadow:0 0 0 4px var(--white),0 0 0 5px var(--ink),0 32px 80px rgba(0,0,0,.4);overflow:auto}
+.rvw[open]{animation:lay .45s var(--ease)}
+.rvw::backdrop{background:rgba(13,13,15,.62);animation:dim .3s}
+.rvw-in{padding:40px 40px 0}
+.rvw h2{font-family:var(--serif);font-weight:600;font-size:28px;letter-spacing:.16em;line-height:1.4;display:flex;align-items:center;gap:16px}
+.rvw h2::before{content:"";width:8px;height:8px;background:var(--red);flex:none}
+.rvw h2:focus{outline:0}
+.rvw-intro{margin-top:16px;padding:12px 16px;border-left:4px solid var(--red);background:var(--paper);font-size:17px;font-weight:600;line-height:1.7}
+.rvw-changed{color:var(--red-d);font-weight:600;margin-top:8px}
+.rvw-changed:empty{display:none}
+.rvw h3{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.2em;margin:32px 0 0;padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.rvw ul li{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--hl);font-size:17px;line-height:1.6}
+.rvw ul li b{font-family:var(--serif);font-weight:600;font-size:19px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rvw dl{display:grid;grid-template-columns:auto minmax(0,1fr);font-size:17px;line-height:1.6}
+.rvw dt,.rvw dd{padding:12px 0;border-bottom:1px solid var(--hl)}
+.rvw dt{color:var(--mut);padding-right:24px;display:flex;align-items:center}
+.rvw dd{text-align:right;overflow-wrap:anywhere;display:flex;align-items:center;justify-content:flex-end}
+.rvw dl.tot dd{font-family:var(--serif);font-weight:600;font-size:19px;font-variant-numeric:tabular-nums}
+.rvw dl.tot dt:nth-last-of-type(1),.rvw dl.tot dd:nth-last-of-type(1){border-top:3px double var(--ink);border-bottom:0;padding-top:16px;margin-top:-1px;color:var(--ink);font-weight:600}
+.rvw dl.tot dd:nth-last-of-type(1){font-size:36px;line-height:1.1;color:var(--red)}
+.rvw-act{position:sticky;bottom:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:16px;padding:24px 40px;margin-top:32px;background:var(--white);border-top:1px solid var(--ink)}
+.rvw-act .btn{min-height:64px;padding:0 12px;letter-spacing:.06em;font-size:18px}
+@media (max-width:767px){
+  .rvw-in{padding:24px 20px 0}
+  .rvw h2{font-size:24px;letter-spacing:.08em}
+  .rvw-act{grid-template-columns:minmax(0,1fr);padding:16px 20px}
+  .rvw-act .btn-red{order:-1}
+  .rvw dl.tot dd:nth-last-of-type(1){font-size:32px}
+}
+.cook{display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.ck{padding:32px 0;border-top:1px solid var(--hl)}
+.ck:first-child{border-top:0}
+.ck h3{font-family:var(--serif);font-weight:600;font-size:23px;letter-spacing:.08em;line-height:1.5}
+.ck-for{display:inline-block;margin-top:8px;padding:0 12px;box-shadow:inset 0 0 0 1px var(--mut);font-size:16px;line-height:1.75;color:var(--mut)}
+.ck ol{counter-reset:s;margin-top:20px}
+.ck li{counter-increment:s;position:relative;padding:10px 0 10px 40px;font-size:17px;line-height:1.75;border-top:1px dotted var(--hl)}
+.ck li:first-child{border-top:0}
+.ck li::before{content:counter(s,cjk-ideographic);position:absolute;left:0;top:10px;font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.5;color:var(--red)}
+.ck li strong{font-weight:700}
+.ck-note{margin-top:12px;font-size:16px;line-height:1.75;color:var(--mut)}
+@media (min-width:768px){
+  .cook{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ck{padding:40px 32px}
+  .ck:nth-child(2){border-top:0}
+  .ck:nth-child(odd){padding-left:0;border-right:1px solid var(--hl)}
+  .ck:nth-child(even){padding-right:0}
+}
+@media (min-width:1100px){
+  .cook{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ck,.ck:nth-child(odd),.ck:nth-child(even){padding:40px 32px;border-right:0}
+  .ck:nth-child(3){border-top:0}
+  .ck:nth-child(3n+1){padding-left:0}
+  .ck:nth-child(3n){padding-right:0}
+  .ck:not(:nth-child(3n)){border-right:1px solid var(--hl)}
+}
+.evs{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.ev{display:grid;grid-template-columns:88px minmax(0,1fr) 24px;align-items:center;column-gap:16px;padding:16px 0;border-top:1px solid var(--hl);min-height:88px}
+.ev:first-child{border-top:0}
+.ev-date{display:block;text-align:center;line-height:1.2}
+.ev-m{display:block;font-size:16px;color:var(--mut)}
+.ev-d{display:block;font-family:var(--serif);font-weight:600;font-size:40px;line-height:1.05;font-variant-numeric:lining-nums}
+.ev-r{display:block;font-size:16px;color:var(--mut);white-space:nowrap}
+.ev-venue{display:block;font-family:var(--serif);font-weight:600;font-size:19px;line-height:1.5;letter-spacing:.02em;word-break:auto-phrase}
+.ev-area{display:inline-block;font-size:16px;line-height:1.6;color:var(--mut);margin-top:4px}
+.ev .ar{transition:transform .3s var(--ease)}
+.ev:hover .ar{transform:translateX(4px)}
+.ev:hover .ev-venue{color:var(--red)}
+.evs-more{margin-top:32px}
+@media (min-width:1100px){
+  .evs{display:flex;flex-direction:row-reverse;justify-content:flex-start;align-items:stretch}
+  .ev{flex:1 1 0;display:flex;flex-direction:column;align-items:center;padding:32px 0 24px;border-top:0;border-left:1px solid var(--hl);min-width:0;min-height:0;transition:background .3s}
+  .ev:last-child{border-left:0}
+  .ev-date{width:72px}
+  .ev-d{font-size:48px}
+  .ev-body{display:flex;flex-direction:column;align-items:center;flex:1;margin-top:16px}
+  .ev-area{order:-1;margin:0 0 24px;padding:0 10px;box-shadow:inset 0 0 0 1px var(--mut);white-space:nowrap;line-height:1.75}
+  .ev-venue{writing-mode:vertical-rl;word-break:normal;font-size:22px;letter-spacing:.12em;white-space:nowrap;line-height:1.3;flex:1;padding-top:24px;border-top:1px solid var(--hl);min-width:72px;display:flex;align-items:center}
+  .ev .ar{margin-top:24px}
+  .ev:hover{background:var(--white)}
+}
+@media (max-width:1099px){.evs .ev{--i:0!important}}
+.ways{display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.way{padding:32px 0;border-top:1px solid var(--hl);display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:24px;align-content:start}
+.way:first-child{border-top:0}
+.way svg{width:48px;height:48px;fill:none;stroke:var(--ink);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.way h3{font-family:var(--serif);font-weight:600;font-size:24px;letter-spacing:.1em;line-height:1.5}
+.way p{margin-top:8px;font-size:17px}
+.way p br{display:none}
+.way .btn{margin-top:20px;justify-self:start;grid-column:2}
+.way>div{grid-column:2}
+.way svg{grid-row:1/3}
+@media (min-width:900px){
+  .ways{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .way{padding:40px 32px;border-top:0;border-left:1px solid var(--hl);grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr auto}
+  .way:first-child{border-left:0;padding-left:0}
+  .way:last-child{padding-right:0}
+  .way svg{grid-row:auto;margin-bottom:24px}
+  .way>div,.way .btn{grid-column:1}
+  .way .btn{margin-top:24px}
+}
+.ct{display:grid;grid-template-columns:minmax(0,1fr);gap:48px}
+.ct-h{font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.16em;line-height:1.4;display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.ct-h::before{content:"";width:8px;height:8px;background:var(--red);flex:none}
+.ct-dl{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.ct-dl>div{display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:16px;padding:16px 0;border-top:1px solid var(--hl)}
+.ct-dl>div:first-child{border-top:0}
+.ct-dl dt{font-family:var(--serif);font-weight:600;letter-spacing:.1em;color:var(--mut);font-size:17px}
+.ct-dl dd{font-size:17px}
+.ct-form .f-sec{border-top:0}
+.ct-form .btn{width:100%;min-height:64px;margin-top:24px;font-size:20px}
+@media (min-width:1100px){.ct{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;align-items:start}}
+.ft{position:relative;background:var(--paper2);border-top:1px solid var(--ink);padding:96px var(--m) 160px;display:flex;flex-direction:column;align-items:center;gap:40px;text-align:center}
+.ft-v{writing-mode:vertical-rl;text-align:left}
+.ft-brand{font-family:var(--serif);font-weight:600;font-size:56px;letter-spacing:.1em;line-height:1.1;white-space:nowrap}
+.ft-brand small{display:block;font-size:18px;letter-spacing:.5em;color:var(--red);font-weight:600;line-height:1.4;margin-left:8px}
+.ft-tag{font-family:var(--serif);font-size:19px;letter-spacing:.3em;line-height:1.6;white-space:nowrap;padding-top:64px;margin-right:24px}
+.ft-links a{display:inline-flex;align-items:center;min-height:48px;font-size:16px;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+.ft-links a:hover{color:var(--red)}
+.ft-copy{font-size:16px;color:var(--mut)}
+.ft::before{content:"";width:8px;height:8px;background:var(--red)}
+.cart{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--white);border-top:1px solid var(--ink);box-shadow:0 -4px 0 var(--white),0 -5px 0 var(--ink);transform:translateY(calc(100% + 6px));transition:transform .5s var(--ease);visibility:hidden}
+.cart.show{transform:none;visibility:visible}
+.cart-in{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 16px;padding:12px var(--m);max-width:1440px;margin:0 auto}
+.cart-sum{min-width:0;line-height:1.5}
+.cart-info{display:block;font-family:var(--serif);font-weight:600;font-size:20px;font-variant-numeric:tabular-nums}
+.cart-info b{font-size:26px;font-weight:600}
+.cart-ship{display:block;font-size:16px;color:var(--red-d);font-weight:600}
+.cart-shipnote{display:block;font-size:16px;color:var(--mut);line-height:1.5}
+.cart-btn{min-height:56px;padding:0 24px;background:var(--red);color:#fff;font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:.1em;border-radius:2px;display:inline-flex;align-items:center;gap:12px;white-space:nowrap}
+.cart-btn:hover{background:var(--red-d)}
+.floats{position:fixed;right:16px;bottom:24px;z-index:55;flex-direction:column;gap:8px;transition:transform .5s var(--ease)}
+.floats{display:none}
+.flt{writing-mode:vertical-rl;display:flex;align-items:center;gap:8px;width:48px;padding:12px 0 16px;background:var(--white);box-shadow:inset 0 0 0 1px var(--ink);border-radius:2px;font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:.14em;line-height:1;white-space:nowrap;transition:background .25s,color .25s}
+.flt svg{width:24px;height:24px;fill:none;stroke:var(--ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.flt:hover{background:var(--ink);color:#fff}
+.flt:hover svg{stroke:#fff}
+@media (min-width:1100px){
+  .cart-in{display:flex;align-items:center;gap:32px;padding:12px var(--m)}
+  .cart-sum{display:flex;align-items:baseline;gap:32px;flex:1}
+  .cart-shipnote{order:2}
+  .cart-btn{order:3}
+  .floats{display:flex}
+  .cart.show ~ .floats{transform:translateY(-88px)}
+}
+@media (max-width:767px){
+  .cart-in{grid-template-columns:minmax(0,1fr) auto;padding:10px 16px}
+  .cart-info{font-size:17px}.cart-info b{font-size:22px}
+  .cart-btn{padding:0 16px;font-size:17px}
+  .cart-shipnote{grid-column:1/-1}
+}
+@media (max-width:1099px){
+  .sec,.about{padding:88px var(--m)}
+  .feat{grid-template-columns:minmax(0,1fr);row-gap:32px;padding:80px var(--m) 88px}
+  .feat-head{grid-column:1;grid-row:auto;writing-mode:horizontal-tb;justify-self:start;flex-direction:column;gap:16px}
+  .feat-flag{padding:4px 16px}
+  .feat h2{font-size:56px}
+  .feat-tx{grid-column:1;grid-row:auto}
+  .feat-ph{order:-1;margin:0 calc(-1 * var(--m));width:auto;max-width:none}
+  .feat .btn{width:100%}
+  .about-in{flex-direction:column;gap:0;align-items:stretch}
+  .about .rail{writing-mode:horizontal-tb;font-size:30px;letter-spacing:.14em;gap:16px;margin-bottom:32px;white-space:normal}
+  .about-v{writing-mode:horizontal-tb;font-size:19px;line-height:2.1;letter-spacing:.04em;white-space:normal}
+  .about-v p + p{margin:24px 0 0}
+  .about-v br{display:none}
+  .seals{flex-direction:row;flex-wrap:wrap;justify-content:flex-start;margin-top:40px;gap:16px 32px}
+  .seal{writing-mode:horizontal-tb;letter-spacing:.1em}
+  .note{grid-template-columns:minmax(0,1fr);row-gap:8px}
+  .note-sub{border-left:0;padding-left:0}
+}
+@media (max-width:899px){
+  .hero{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-rows:auto auto;column-gap:16px;padding:0 24px 40px 0;height:auto}
+  .hero-ph{grid-column:1;grid-row:1;height:min(48svh,440px);min-height:336px}
+  .hero-tx{display:contents}
+  .hero-v{display:contents}
+  .hero-title{grid-column:2;grid-row:1;writing-mode:vertical-rl;justify-self:end;align-self:start;padding-top:24px;margin:0}
+  .hero-title .pre{font-size:16px;letter-spacing:.5em;padding-top:.3em;margin-left:8px}
+  .hero-title .name{font-size:76px;letter-spacing:.06em}
+  .hero-tag{grid-column:2;grid-row:2;writing-mode:vertical-rl;justify-self:end;font-size:22px;line-height:2;letter-spacing:.22em;padding-top:32px;white-space:nowrap}
+  .hero-tag::before{display:none}
+  .hero-cta{grid-column:1;grid-row:2;grid-template-columns:minmax(0,1fr);align-self:end;margin:32px 0 0 24px;gap:12px}
+}
+@media (min-width:600px) and (max-width:899px){
+  .hero{grid-template-columns:minmax(0,1fr) 128px;padding-right:var(--m)}
+  .hero-ph{height:min(60svh,560px)}
+  .hero-title .name{font-size:104px}
+  .hero-cta{margin-left:var(--m);max-width:320px}
+}
+html.has-cart{scroll-padding-bottom:136px}
+.shina a{scroll-margin-bottom:24px}
+.skip + .skip:focus{top:8px}
+.prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--red);transform:scaleX(0);transform-origin:right;pointer-events:none}
+.hd-links{display:none}
+.hl{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px 0 8px;background:var(--white);box-shadow:inset 0 0 0 1px var(--ink);border-radius:2px;font-size:16px;font-weight:600;line-height:1;white-space:nowrap}
+.hl svg,.mnav-sns svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mnav-sns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:24px}
+.mnav-sns .btn{padding:0 8px;font-size:17px;letter-spacing:.04em;gap:8px}
+@media (max-width:1099px){
+  .hd-links{display:flex;gap:8px;margin-left:auto;margin-right:8px}
+  .mnav summary{padding-left:8px}
+}
+@media (max-width:599px){
+  .hl-ig{display:none}
+  .brand{letter-spacing:.2em;gap:8px}
+  .mnav summary{gap:8px}
+}
+.spine{display:none}
+@media (max-width:1099px){
+  .js .spine{display:flex;position:fixed;z-index:40;top:88px;right:calc((var(--m) - 16px) / 2);width:16px;writing-mode:vertical-rl;align-items:center;font-family:var(--serif);font-weight:600;font-size:16px;line-height:1;letter-spacing:.12em;white-space:nowrap;opacity:0;transform:translateY(-8px);transition:opacity .4s,transform .5s var(--ease);pointer-events:none}
+  .js .spine.on{opacity:1;transform:none}
+  .spine-no{color:var(--red);font-weight:600;margin-bottom:8px}
+  .spine-dots{display:flex;align-items:center;gap:6px;margin-top:8px}
+  .spine-dots i{display:block;width:4px;height:4px;box-shadow:inset 0 0 0 1px var(--field)}
+  .spine-dots i.past{background:var(--ink);box-shadow:none}
+  .spine-dots i.now{background:var(--red);box-shadow:none;height:12px}
+}
+@media (max-width:767px){
+  .shina{margin-bottom:37px}
+  .shina ol{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));direction:rtl}
+  .shina li{direction:ltr}
+  .shina li:nth-child(5n){border-left:0}
+  .shina li:nth-child(n+6){border-top:1px solid var(--hl)}
+  .shina a{height:248px;padding:16px 0 12px}
+  .s-name{font-size:19px;letter-spacing:.06em;margin-top:12px}
+  .s-price{font-size:16px;width:100%;padding-top:8px;letter-spacing:0}
+}
+.item-ph img.crop-chimaki{transform:translate(-8.8%,.4%) scale(1.62)}
+.item-ph img.crop-charshu{transform:translate(1.5%,9.4%) scale(1.5)}
+@media (max-width:1099px){
+  .item-ph img.crop-chimaki{transform:translate(-9%,2%) scale(1.42)}
+  .item-ph img.crop-charshu{transform:translate(2%,6%) scale(1.3)}
+}
+.ck summary{display:block;position:relative}
+.ck-pm{display:none}
+@media (min-width:768px){.ck summary{cursor:default}}
+@media (max-width:767px){
+  .js .ck{padding:0}
+  .js .ck summary{padding:20px 60px 20px 0;min-height:88px}
+  .js .ck-pm{display:block;position:absolute;right:0;top:50%;width:44px;height:44px;margin-top:-22px;box-shadow:inset 0 0 0 1px var(--field);border-radius:2px;background:var(--white)}
+  .ck-pm::before,.ck-pm::after{content:"";position:absolute;left:50%;top:50%;width:16px;height:1px;margin:-.5px 0 0 -8px;background:var(--ink);transition:transform .3s var(--ease)}
+  .ck-pm::after{transform:rotate(90deg)}
+  .ck[open] .ck-pm::after{transform:none}
+  .js .ck ol{margin-top:0}
+  .js .ck-in{padding-bottom:24px}
+}
+.flow{width:min(640px,calc(100vw - 32px))}
+.flow-send{padding:88px 32px;text-align:center}
+.flow-ink{display:flex;flex-direction:row-reverse;justify-content:center;gap:16px;margin-bottom:32px}
+.flow-ink i{display:block;width:8px;height:8px;background:var(--red);animation:ink 1.2s var(--ease) infinite both}
+.flow-ink i:nth-child(2){animation-delay:.2s}
+.flow-ink i:nth-child(3){animation-delay:.4s}
+@keyframes ink{0%,100%{opacity:.2;transform:scale(.5)}40%{opacity:1;transform:none}}
+.flow-msg{font-family:var(--serif);font-weight:600;font-size:22px;line-height:2;letter-spacing:.1em}
+.done-top{padding:40px 40px 48px}
+.done-msg{margin-top:16px;font-size:17px;line-height:1.9}
+.done-slip{position:relative;background:var(--paper);border-top:3px double var(--ink);padding:0 40px 8px}
+.wari{position:absolute;right:40px;top:-38px;width:72px;height:72px;display:grid;place-items:center;border:2px solid var(--red);color:var(--red);font-family:var(--serif);font-weight:600;font-size:26px;line-height:1;transform:rotate(-5deg);opacity:.92}
+.wari::after{content:"";position:absolute;inset:3px;border:1px solid var(--red)}
+.wari span{writing-mode:vertical-rl;letter-spacing:.1em;padding-top:.1em}
+.is-done .wari{animation:press .5s .35s var(--ease) both}
+@keyframes press{from{opacity:0;transform:rotate(-5deg) scale(1.35)}to{opacity:.92;transform:rotate(-5deg)}}
+.done-to{font-size:17px;line-height:1.7;margin-top:12px}
+.done-to + .done-to{margin-top:0;padding-bottom:12px;border-bottom:1px solid var(--hl)}
+.done-wait{margin-top:16px;font-size:16px;line-height:1.75;color:var(--mut)}
+.done-slip .pbox{background:var(--white);margin-top:24px;font-size:16px;line-height:1.75}
+.done-ptn{font-size:17px}
+.done-ptn b{font-family:var(--serif);font-weight:600;font-size:40px;line-height:1.2;color:var(--red);margin-right:4px}
+.done-line .btn-s{display:block;width:100%;min-height:56px;margin-top:12px}
+.rvw-act.one{grid-template-columns:minmax(0,1fr);margin-top:0;border-top:1px solid var(--ink)}
+.done-slip{padding-bottom:32px}
+@media (max-width:767px){
+  .flow-send{padding:72px 20px}
+  .flow-msg{font-size:20px;letter-spacing:.06em}
+  .done-top{padding:24px 20px 48px}
+  .done-top h2{font-size:22px;letter-spacing:0;display:block}
+  .done-top h2::before{display:none}
+  .done-slip{padding:0 20px 24px}
+  .wari{right:20px}
+}
+@media (prefers-reduced-motion:reduce){.flow-ink i{opacity:1}}
+#orderform:focus{outline:none}
+.rvw[open]{animation:unfold .55s var(--ease)}
+@keyframes unfold{from{clip-path:inset(-120px -120px -120px 100%)}to{clip-path:inset(-120px)}}
+@media (min-width:1100px){.ev-venue{text-orientation:upright}}
+.nb{display:inline-block;white-space:nowrap}
+.ck h3{text-wrap:balance}
+@media (min-width:1600px){
+  :root{--m:calc((100vw - 1568px) / 2)}
+  .hero{max-width:none}
+  .item{grid-template-columns:72px 360px minmax(0,1fr) 296px;column-gap:40px}
+}
+.howl{display:flex;flex-wrap:wrap;gap:0 24px;margin-top:4px}
+.howl a{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:16px;line-height:1.4;color:var(--ink);text-decoration:underline;text-decoration-color:var(--field);text-underline-offset:5px;text-decoration-thickness:1px}
+.howl a:hover{color:var(--red);text-decoration-color:var(--red)}
+.howl .ar{transition:transform .3s var(--ease)}
+.howl a:hover .ar{transform:translateX(4px)}
+.ck{scroll-margin-top:80px}
+.ck:target h3::before{content:"";display:inline-block;width:8px;height:8px;background:var(--red);margin-right:12px;vertical-align:.25em}
+@media (min-width:1100px) and (max-width:1399px){
+  .item{grid-template-columns:72px 288px minmax(0,1fr);grid-template-areas:"name ph tx" "name ph buy"}
+  .item-buy{margin-top:16px;align-self:start;max-width:440px}
+}
+.brand,.mnav summary{white-space:nowrap}
+@media (max-width:359px){
+  .brand{font-size:20px;letter-spacing:.12em;gap:6px}
+  .rail{font-size:26px;letter-spacing:.06em;gap:12px}
+  .hl{padding:0 8px 0 6px}
+  .hd-links{margin-right:0}
+  .mnav summary{padding-left:6px;gap:6px}
+  .orow{grid-template-areas:"info info" "size size" "qty qty"}
+  .osz{max-width:none}
+}
+.items{border-bottom-color:var(--ink)}
+.ck li{border-top-style:solid;padding:12px 0 12px 40px}
+.ck li::before{top:12px}
+.wari{border-width:1px}
+.rvw-intro{border-left:0;padding-left:40px;position:relative}
+.rvw-intro::before{content:"";position:absolute;left:16px;top:23px;width:8px;height:8px;background:var(--red)}
+dialog:not([open]){display:none}
+.item-name{gap:16px}
+.feat-head{gap:24px}
+.o-size{gap:8px}
+.hl{gap:8px}
+.ck ol{margin-top:24px}
+.way .btn{margin-top:24px}
+@media (max-width:1099px){.item-tx,.item-buy{margin-top:24px}}
+p,li,dd,.help,.o-ship,.alg,.o-note,.note-sub,.o-hint{text-wrap-style:pretty}
+.f-h,.ct-h,.fg label,.pbox-h,.ck-for,.ev-venue,.rvw h2,.way h3{text-wrap-style:balance}
+.ck li strong,.pt-line strong,.o-free strong,.note-main strong{white-space:nowrap}
+@media (max-width:767px){
+  .f-h,.ct-h{letter-spacing:.08em}
+  .ct-dl>div{grid-template-columns:80px minmax(0,1fr)}
+}
+@media (max-width:389px){
+  .rail,.about .rail{font-size:26px;letter-spacing:.06em;gap:12px}
+  .o-submit{font-size:20px;letter-spacing:.08em;gap:12px}
+}
+@media (max-width:339px){.rail,.about .rail{font-size:24px;letter-spacing:.02em}}
+@media (min-width:360px) and (max-width:389px){
+  .osz{min-width:44px}
+  .o-size{gap:4px}
+  .o-num{width:28px}
+}
+@media (min-width:1100px) and (max-width:1279px){.o-info{padding-right:12px}}
+@media (min-width:1600px){:root{--m:max(96px,calc((100vw - 1568px) / 2))}}
+@media (min-width:900px){
+  .hero{height:clamp(520px,calc(100svh - 64px),864px)}
+}
+@media (min-width:900px) and (max-height:680px){.hero-tx{padding-top:32px}.hero-cta{margin-top:24px}}
+@media (max-width:899px) and (max-height:620px){.hero-ph{min-height:280px}.hero-cta{margin-top:24px;gap:8px}}
+.item-no{position:relative}
+.item-no::after,.o-no::after{content:"";position:absolute;left:50%;top:-12px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--red);opacity:0;transform:scale(.2);transition:opacity .3s,transform .4s var(--ease)}
+.item.in .item-no::after,.orow.has .o-no::after{opacity:1;transform:none}
+.o-no{position:relative;display:inline-block;font-family:var(--serif);font-style:normal;font-weight:600;font-size:16px;line-height:1;letter-spacing:0;color:var(--red);margin-right:8px}
+.orow.has::before{display:none}
+.orow{transition:background .3s}
+.orow.has{background:#FDFBF6}
+.rvw .o-no::after{display:none}
+.rvw .o-no{margin-right:12px}
+@media (min-width:1100px){
+  .o-info{position:relative}
+  .o-name .o-no{position:absolute;left:8px;top:28px;margin:0}
+}
+.sec::after{transform-origin:top;transition:transform 1.4s var(--ease)}
+.sec.turn::after{transform:scaleY(0)}
+.fold::before{transition:opacity 1.2s var(--ease)}
+.fold.turn::before{opacity:0}
+.rail .stamp{transition-delay:.4s}
+@keyframes flip{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.spine.flip .spine-no,.spine.flip .spine-t{animation:flip .45s var(--ease) both}
+@media (prefers-reduced-motion:reduce){.sec.turn::after{transform:none}.fold.turn::before{opacity:1}}
+.ft-tag{border-right:1px solid var(--hl);padding-right:24px}
+.ft-nav{width:100%;max-width:560px}
+.ft-nav ol{display:flex;flex-direction:row-reverse;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.ft-nav li{flex:1 1 0;min-width:0;border-left:1px solid var(--hl)}
+.ft-nav li:last-child{border-left:0}
+.ft-nav a{display:flex;flex-direction:column;align-items:center;gap:12px;height:216px;padding:16px 0;transition:background .3s}
+.ft-nav b{font-family:var(--serif);font-weight:600;font-size:16px;line-height:1;color:var(--red)}
+.ft-nav span{writing-mode:vertical-rl;font-family:var(--serif);font-size:17px;letter-spacing:.12em;line-height:1.2;white-space:nowrap;text-align:left;transition:color .3s}
+.ft-nav a:hover{background:var(--white)}
+.ft-nav a:hover span{color:var(--red)}
+@media (max-width:359px){
+  .ft-nav ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));direction:rtl}
+  .ft-nav li{direction:ltr}
+  .ft-nav li:nth-child(4n){border-left:0}
+  .ft-nav li:nth-child(n+5){border-top:1px solid var(--hl)}
+}
+@media (min-width:414px) and (max-width:599px){
+  .hl-ig{display:inline-flex;width:44px;padding:0;justify-content:center}
+  .hl-ig span{display:none}
+}
+@media (max-width:767px){
+  .cart-in{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"sum btn" "note note";gap:0 12px;padding:8px 16px}
+  .cart-sum{grid-area:sum;line-height:1.4}
+  .cart-info{white-space:nowrap;word-spacing:-.12em;line-height:1.4}
+  .cart-ship{line-height:1.4}
+  .cart-btn{grid-area:btn;min-height:48px}
+  .cart-shipnote{grid-area:note;line-height:1.4;margin-top:4px}
+  html.has-cart{scroll-padding-bottom:112px}
+}
+@media (max-width:413px){.cart-btn .ar{display:none}.cart-btn{padding:0 16px}}
+@media (max-width:359px){.cart-info{white-space:normal}}
+.item-sm .item-ph{width:56%;aspect-ratio:3/4;justify-self:start}
+@media (min-width:1100px){.item-sm .item-ph{width:144px}}
+.veil{position:fixed;inset:0;z-index:89;background:rgba(13,13,15,.62);animation:dim .3s}
+.nodlg dialog.rvw[open]{display:block;position:fixed;z-index:90;left:50%;top:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);margin:0}
+@media print{
+  @page{size:A4;margin:14mm}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  body{background:#fff;font-size:11pt}
+  .hd{position:static}
+  .prog,.cart,.floats,.spine,.skip,.mnav,.hd-links,.nav-pc,.veil,.fold::before,.sec::after{display:none!important}
+  .rv.wait,.wait .stamp,.stamp.wait,.shina.wait li,.evs.wait .ev,.about-v.wait p{opacity:1!important;transform:none!important}
+  .item,.orow,.ck,.ev,.way,.f-sec,.pbox,.shina{break-inside:avoid}
+  .sec,.about{padding-top:48px;padding-bottom:48px}
+  .sec.alt,.ft{background:none}
+  .feat{background:none;color:var(--ink)}
+  .feat::before,.feat::after{background:var(--ink)}
+  .feat-ph::after{display:none}
+  .feat-price b{color:var(--red)}
+  .feat-price s,.feat-price small{color:var(--mut)}
+  .btn-red,.add,.o-submit,.cart-btn{background:none!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1px var(--ink)}
+  .no,.tag-hot,.feat-flag{background:none!important;color:var(--red)!important;box-shadow:inset 0 0 0 1px var(--red)}
+  html.dlg-on body>*:not(main),html.dlg-on main>*:not(#orderform),html.dlg-on #orderform>.rail,html.dlg-on #orderform>.body>*:not(dialog){display:none!important}
+  html.dlg-on #orderform{display:block;padding:0;border:0;background:none}
+  html.dlg-on dialog.rvw[open]{position:absolute;left:0;right:0;top:0;transform:none;width:auto;max-width:none;max-height:none;margin:0;overflow:visible;box-shadow:none;border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:4px;clip-path:none}
+  html.dlg-on .rvw-act{display:none}
+  html.dlg-on .rvw-in{padding:24px 32px 24px}
+  html.dlg-on .rvw h2{font-size:20pt}
+  html.dlg-on .rvw h3{margin-top:20px}
+  html.dlg-on .rvw ul li,html.dlg-on .rvw dt,html.dlg-on .rvw dd{padding:7px 0;font-size:11pt}
+  html.dlg-on .done-top{padding:24px 32px 32px}
+  html.dlg-on .done-slip{padding:0 32px 16px;background:none}
+  html.dlg-on .done-line .btn-s{display:none}
+  html.dlg-on .rvw-intro{background:none}
+}
+.help,.o-ship,.o-note,.o-hint,.ck-note,.cart-ship,.cart-shipnote,.note-sub,.pt-line,.done-wait{word-break:auto-phrase}
+.ck li{text-wrap-style:balance}
+.ev-venue{text-wrap-style:pretty}
+@media (max-width:389px){
+  .ev{grid-template-columns:80px minmax(0,1fr) 24px;column-gap:12px}
+  .ev-venue{font-size:18px;letter-spacing:0}
+}
+@media (max-width:359px){
+  .orow{grid-template-areas:"info info" "size size" "sub qty"}
+  .o-sub{position:static;grid-area:sub;justify-self:start}
+  .orow.has .o-name{padding-right:0}
+}
+@media (max-width:339px){.o-submit{font-size:19px;letter-spacing:.04em}}
+.ck li{word-break:normal}
+@media (max-width:359px){
+  .ev-venue{word-break:normal;text-wrap-style:balance}
+  .orow[data-kind="tea"]{grid-template-areas:"info info" "size size" "sub qty"}
+  .o-size{gap:4px}
+  .osz em{margin-left:2px}
+}
+.ck li{word-break:auto-phrase;text-wrap-style:balance}
+.rvw dd,.rvw li span{word-break:auto-phrase}
+@media (min-width:414px) and (max-width:599px){.hl{gap:6px;padding:0 8px 0 6px}.hl-ig{padding:0}}
+@media print{
+  html.dlg-on .done-line{display:none!important}
+  html.dlg-on dialog.rvw[open]{border:4px double var(--ink);outline:0;height:auto;min-height:0}
+  html.dlg-on dialog.rvw[open] .rvw-in,html.dlg-on dialog.rvw[open] .done-slip{overflow:visible;max-height:none;height:auto}
+}
+.cart-nos{display:none}
+@media (min-width:1280px){
+  .cart-nos{display:flex;flex-direction:row-reverse;align-items:flex-end;gap:12px;height:36px;padding:0 16px;border-left:1px solid var(--hl);border-right:1px solid var(--hl);order:1}
+  .cart-nos:empty{display:none}
+  .cart-nos i{position:relative;font-family:var(--serif);font-style:normal;font-weight:600;font-size:16px;line-height:1;color:var(--red);animation:flip .45s var(--ease) both}
+  .cart-nos i::before{content:"";position:absolute;left:50%;top:-12px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--red)}
+}
+@media (prefers-reduced-motion:reduce){.cart-nos i{animation:none}}
+@media (min-width:1280px){
+  .o-info{padding-left:48px}
+  .o-name .o-no{left:16px}
+}
+.rvw dl.tot{grid-template-columns:minmax(0,1fr) auto}
+.rvw dl.tot dd{white-space:nowrap;overflow-wrap:normal}
+.rvw dl.tot dt{padding-right:16px}
+.rvw dl:not(.tot) dd{display:block;overflow-wrap:break-word}
+@media (max-width:413px){.rvw dl:not(.tot) dt{padding-right:12px}}
+.ck h3,.ck-for{word-break:auto-phrase}
+.rvw dt{word-break:auto-phrase}
+.nw,x-ph{white-space:nowrap}
+body{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.cart{padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.rvw{width:min(720px,calc(100vw - 32px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)))}
+.flow{width:min(640px,calc(100vw - 32px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)))}
+.cart.show.low{transform:translateY(calc(100% + 6px));visibility:hidden}
+.rvw dl:not(.tot) dd{text-wrap-style:balance}
+.ad-zip,.ad-main,.ad-bld{display:inline-block;max-width:100%;vertical-align:top}
+.rvw ul li span{min-width:0}
+@media (max-width:479px){
+  .rvw dl:not(.tot){display:block}
+  .rvw dl:not(.tot) dt{display:block;border-bottom:0;padding:12px 0 0;font-size:16px;line-height:1.5}
+  .rvw dl:not(.tot) dd{text-align:left;padding:2px 0 12px}
+  .ad-zip{display:block}
+}
+@media (max-height:700px){
+  .rvw-act{padding-top:10px;padding-bottom:10px;gap:8px 16px;margin-top:20px}
+  .rvw-act .btn{min-height:48px;font-size:17px}
+}
+@media (max-height:500px) and (min-width:560px){
+  .rvw-act{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:12px}
+  .rvw-act.one{grid-template-columns:minmax(0,1fr)}
+  .rvw-act .btn-red{order:0}
+  .rvw-in{padding-top:16px}
+  .rvw h2{font-size:21px}
+  .rvw-intro{margin-top:8px;padding-top:8px;padding-bottom:8px}
+  .rvw-intro::before{top:19px}
+  .rvw h3{margin-top:20px}
+  .done-top{padding:16px 20px 28px}
+  .flow-send{padding:40px 20px}
+}
+@media (max-width:359px){
+  .cart-in{grid-template-areas:"info info" "ship btn" "note note";gap:2px 12px}
+  .cart-sum{display:contents}
+  .cart-info{grid-area:info;white-space:nowrap}
+  .cart-ship{grid-area:ship;align-self:center}
+}
+.ev-none{border-top:1px solid var(--ink);border-bottom:1px solid var(--hl);padding:56px 0;text-align:center}
+.ev-none h3{font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.1em;line-height:1.6}
+.ev-none p{margin-top:12px;color:var(--mut);font-size:17px}
+.ev-load{font-family:var(--serif);color:var(--mut);letter-spacing:.2em}
+@keyframes hiraku{from{clip-path:inset(0 0 0 36%)}to{clip-path:inset(0)}}
+@keyframes tatamu{from{clip-path:inset(0)}to{clip-path:inset(0 0 0 28%)}}
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .item-ph{animation:hiraku linear both;animation-timeline:view();animation-range:entry 0% entry 90%}
+    .hero-ph{animation:tatamu linear both;animation-timeline:view();animation-range:exit 5% exit 95%}
+  }
+}
+::selection{background:var(--red);color:#fff}
+input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
+.inp:focus-within{outline:0;border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+@media print{
+  .rail,.f-h,.ct-h,.ck summary{break-after:avoid;page-break-after:avoid}
+  .items{display:block;zoom:.78}   
+  .item{display:grid;grid-template-columns:48px 34% minmax(0,1fr);grid-template-areas:"name ph tx" "name ph buy";column-gap:20px;align-items:start;padding:20px 0}
+  .item-ph{aspect-ratio:4/3;clip-path:none!important}
+  .item-tx{margin-top:0}
+  .item-buy{margin-top:12px}
+  .hero-ph{clip-path:none!important}
+}
+
+/* ---- ここから共有用のコピーにだけ足した表示（見本です／入口へ戻る） ---- */
+.mihon-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0 16px;min-height:44px;padding:0 12px;
+  background:#FBF7EE;color:#1A1A1A;border-bottom:1px solid #1A1A1A;font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  font-size:16px;font-weight:600;line-height:1.5;letter-spacing:0;text-align:center}
+.mihon-bar a{display:inline-flex;align-items:center;min-height:44px;padding:0 8px;color:#B02A26;font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.mihon-bar a:focus-visible{outline:2px solid #B02A26;outline-offset:-2px}
+.mihon-dlg{display:block;margin:16px 0 0;padding:6px 12px;border:1px dashed currentColor;font-size:16px;font-weight:600;line-height:1.6;letter-spacing:0;text-align:center}
+.mihon-dlg span{display:inline-block}
+.mihon-dlg.in{margin-left:clamp(20px,5vw,40px);margin-right:clamp(20px,5vw,40px)}
+@media print{.mihon-bar,.mihon-dlg{display:none!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#menu">メニューへ進む</a>
+<a class="skip" href="#orderform">ご注文フォームへ進む</a>
+<div class="mihon-bar" role="note"><span>見本です。注文は送られません</span><a href="index.html">入口へ戻る</a></div>
+<header class="hd">
+  <div class="hd-in">
+    <a href="#top" class="brand">愛華楼</a>
+    <!-- スマホ・タブレットでは Instagram・LINE をここに置く（浮かせない＝本文やボタンに重ならない） -->
+    <div class="hd-links">
+      <a href="https://www.instagram.com/aika_rou/" class="hl hl-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="3.500" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".600"/></svg><span>Instagram</span></a>
+      <a href="https://lin.ee/wbAZif6" class="hl" target="_blank" rel="noopener" aria-label="LINEで注文"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4c5 0 9 3.200 9 7.200s-4 7.200-9 7.200c-.800 0-1.600-.100-2.400-.300L5.500 20.500l.900-3.600C4.300 15.600 3 13.500 3 11.200 3 7.200 7 4 12 4z"/></svg><span>LINE</span></a>
+    </div>
+    <nav aria-label="メインメニュー">
+      <ul class="nav-pc"><li><a href="#about">愛華楼について</a></li><li><a href="#menu">メニュー</a></li><li><a href="#orderform">注文する</a></li><li><a href="#cooking">温め方</a></li><li><a href="#schedule">催事スケジュール</a></li><li><a href="#order">ご注文方法</a></li><li><a href="#contact">お問い合わせ</a></li></ul>
+      <details class="mnav">
+        <summary>メニュー<i aria-hidden="true"></i></summary>
+        <div class="mnav-in">
+          <ul><li><a href="#about"><b aria-hidden="true">一</b>愛華楼について</a></li><li><a href="#menu"><b aria-hidden="true">二</b>メニュー</a></li><li><a href="#orderform"><b aria-hidden="true">三</b>注文する</a></li><li><a href="#cooking"><b aria-hidden="true">四</b>温め方</a></li><li><a href="#schedule"><b aria-hidden="true">五</b>催事スケジュール</a></li><li><a href="#order"><b aria-hidden="true">六</b>ご注文方法</a></li><li><a href="#contact"><b aria-hidden="true">七</b>お問い合わせ</a></li></ul>
+          <div class="mnav-sns">
+            <a href="https://lin.ee/wbAZif6" class="btn btn-line" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4c5 0 9 3.200 9 7.200s-4 7.200-9 7.200c-.800 0-1.600-.100-2.400-.300L5.500 20.500l.900-3.600C4.300 15.600 3 13.500 3 11.200 3 7.200 7 4 12 4z"/></svg>LINEで注文</a>
+            <a href="https://www.instagram.com/aika_rou/" class="btn btn-line" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="3.500" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".600"/></svg>Instagram</a>
+          </div>
+        </div>
+      </details>
+    </nav>
+  </div>
+  <i class="prog" aria-hidden="true"></i>
+</header>
+<!-- スマホ・タブレットの柱：右の余白に、いま読んでいる章の番号と題を縦書きで。下の七つの点が「いまどこ・あとどれだけ」（飾り。同じ案内は上の「メニュー」にある） -->
+<div class="spine" aria-hidden="true"><b class="spine-no"></b><span class="spine-t"></span><span class="spine-dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+
+<main>
+<!-- ============ 表紙 ============ -->
+<section class="hero" id="top">
+  <div class="hero-ph"><picture><source type="image/webp" srcset="images/yakishoronpo-480.webp 480w, images/yakishoronpo-800.webp 800w, images/yakishoronpo-960.webp 960w, images/yakishoronpo-1300.webp 1300w" sizes="(max-width:899px) 75vw, 60vw"><img src="images/yakishoronpo.jpg" alt="愛華楼の焼き小籠包" width="1300" height="870" fetchpriority="high" decoding="async"></picture></div>
+  <div class="hero-tx">
+    <div class="hero-v">
+      <h1 class="hero-title"><span class="pre">本格中華</span><span class="name"><span>愛</span><span>華</span><span>楼</span></span></h1>
+      <p class="hero-tag">本格的な中華を<br>ご家庭でも</p>
+    </div>
+    <div class="hero-cta">
+      <a href="#menu" class="btn btn-red">メニューを見る</a>
+      <a href="#orderform" class="btn btn-line">ご注文はこちら</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 一 愛華楼について ============ -->
+<section class="about fold" id="about" style="position:relative">
+  <div class="about-in">
+    <h2 class="rail rv" data-no="一" data-t="愛華楼について"><span class="no stamp" aria-hidden="true">一</span>愛華楼について</h2>
+    <div class="about-v rv">
+      <p>愛華楼は、横浜中華街で培われた伝統の技と厳選素材を用いた<br>本格中華点心の専門店です。</p>
+      <p style="--i:4">おうちで、湯気の立つ熱々を楽しんでいただけるよう、<br>海老焼売をはじめとする自慢の点心をお届けしています。<br>使っている材料は、各商品ページの「原材料名」でご覧いただけます。</p>
+    </div>
+    <div class="seals rv">
+      <div class="seal"><i class="stamp" aria-hidden="true">福</i><span>福岡の点心屋</span></div>
+      <div class="seal"><i class="stamp" aria-hidden="true">凍</i><span>冷凍注文可</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 看板：海老焼売 ============ -->
+<section class="feat" id="featured">
+  <div class="feat-ph rv"><picture><source type="image/webp" srcset="images/ebi-shumai-400.webp 400w, images/ebi-shumai-640.webp 640w, images/ebi-shumai-850.webp 850w" sizes="(max-width:1099px) 100vw, 680px"><img src="images/ebi-shumai.jpg" alt="海老焼売" width="850" height="567" loading="lazy" decoding="async"></picture></div>
+  <div class="feat-head rv"><div class="feat-flag">店長イチオシ</div><h2>海老焼売</h2></div>
+  <div class="feat-tx rv">
+    <p>海老をふんだんに使った、プリプリ食感がやみつきになる新感覚の焼売。一口噛めば広がる海老の旨みと、ジューシーな肉汁のハーモニー。一度食べたら忘れられない、愛華楼自慢の逸品です。</p>
+    <div class="feat-price"><s>¥800</s><b>¥760</b><small>/ 4個（税込）</small></div>
+    <a href="#order" class="btn btn-red">注文する</a>
+  </div>
+</section>
+
+<div class="brk"><picture><source type="image/webp" srcset="images/yakishoronpo2-400.webp 400w, images/yakishoronpo2-640.webp 640w, images/yakishoronpo2-800.webp 800w, images/yakishoronpo2-1200.webp 1200w, images/yakishoronpo2-1800.webp 1800w" sizes="100vw"><img src="images/yakishoronpo2.jpg" alt="愛華楼の焼き小籠包" width="1800" height="1205" loading="lazy" decoding="async"></picture></div>
+
+<!-- ============ 二 メニュー ============ -->
+<section class="sec" id="menu">
+  <h2 class="rail rv" data-no="二" data-t="メニュー"><span class="no stamp" aria-hidden="true">二</span>メニュー</h2>
+  <div class="body">
+    <div class="note rv">
+      <p class="note-main">催事でお買い上げのお客様へ — HPからのご注文で <strong>5%OFF</strong></p>
+      <p class="note-sub">催事会場でお気に召した商品を、ご自宅からお得にリピート注文いただけます</p>
+    </div>
+    <nav class="shina rv" aria-label="お品書き"><ol><li data-p="焼き小籠包" style="--i:0"><a href="#p1"><span class="s-no" aria-hidden="true">一</span><span class="s-name">焼き小籠包</span><span class="s-price">¥855</span></a></li><li data-p="肉焼売" style="--i:1"><a href="#p2"><span class="s-no" aria-hidden="true">二</span><span class="s-name">肉焼売</span><span class="s-price">¥760</span></a></li><li data-p="海老焼売" style="--i:2"><a href="#p3"><span class="s-no" aria-hidden="true">三</span><span class="s-name">海老焼売</span><span class="s-price">¥760</span></a></li><li data-p="肉にら饅頭" style="--i:3"><a href="#p4"><span class="s-no" aria-hidden="true">四</span><span class="s-name">肉にら饅頭</span><span class="s-price">¥760</span></a></li><li data-p="ちまき" style="--i:4"><a href="#p5"><span class="s-no" aria-hidden="true">五</span><span class="s-name">ちまき</span><span class="s-price">¥744</span></a></li><li data-p="肉まん" style="--i:5"><a href="#p6"><span class="s-no" aria-hidden="true">六</span><span class="s-name">肉まん</span><span class="s-price">¥513</span></a></li><li data-p="角煮バーガー" style="--i:6"><a href="#p7"><span class="s-no" aria-hidden="true">七</span><span class="s-name">角煮バーガー</span><span class="s-price">¥513</span></a></li><li data-p="チャーシューまん" style="--i:7"><a href="#p8"><span class="s-no" aria-hidden="true">八</span><span class="s-name">チャーシューまん</span><span class="s-price">¥744</span></a></li><li data-p="ザーサイ" style="--i:8"><a href="#p9"><span class="s-no" aria-hidden="true">九</span><span class="s-name">ザーサイ</span><span class="s-price">¥760</span></a></li><li data-p="モンゴル茶" style="--i:9"><a href="#p10"><span class="s-no" aria-hidden="true">十</span><span class="s-name">モンゴル茶</span><span class="s-price">¥4,000</span></a></li></ol></nav>
+    <div class="items">
+    <article class="item rv" id="p1" data-p="焼き小籠包">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">一</span>焼き小籠包</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/yakishoronpo2-400.webp 400w, images/yakishoronpo2-640.webp 640w, images/yakishoronpo2-800.webp 800w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/yakishoronpo2.jpg" alt="焼き小籠包" width="1800" height="1205" loading="lazy" decoding="async" style="object-position:50% 50%"></picture></div>
+      <div class="item-tx">
+        <span class="tag tag-hot">人気No.1</span>
+        <p class="item-desc">外カリッ！中ジュワ〜！1度は食べてみたい一品！コラーゲンスープが美味しい焼き小籠包。</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">小麦</span></span><strong>アレルゲン</strong>小麦・大豆・豚肉・鶏肉・ゼラチン・ごま</p><p class="howl"><a href="#ck4">焼き小籠包の温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥900</s> <b>¥855</b> <small>/ 4個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="焼き小籠包のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥855</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,710</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,565</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="焼き小籠包" aria-label="焼き小籠包をカートに追加">＋ カートに追加</button></div>
+      </div>
+    </article>
+    <article class="item rv" id="p2" data-p="肉焼売">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">二</span>肉焼売</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/nikushyumai-400.webp 400w, images/nikushyumai-640.webp 640w, images/nikushyumai-850.webp 850w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/nikushyumai.jpg" alt="肉焼売" width="850" height="567" loading="lazy" decoding="async" style="object-position:50% 55%"></picture></div>
+      <div class="item-tx">
+        <span class="tag">定番</span>
+        <p class="item-desc">国産豚肉をふんだんに使った、タレの要らないにくにくジューシーで箸が止まらない一品。</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></span><strong>アレルゲン</strong>小麦・卵・ごま・大豆・豚肉</p><p class="howl"><a href="#ck3">肉焼売・海老焼売の蒸し方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a href="#ck1">調理済商品の温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="肉焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,520</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,280</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="肉焼売【生冷凍】" aria-label="肉焼売【生冷凍】をカートに追加">＋ 生冷凍</button><button type="button" class="add" data-add="肉焼売【調理済み冷凍】" aria-label="肉焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div>
+      </div>
+    </article>
+    <article class="item rv" id="p3" data-p="海老焼売">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">三</span>海老焼売</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/ebi-shumai-400.webp 400w, images/ebi-shumai-640.webp 640w, images/ebi-shumai-850.webp 850w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/ebi-shumai.jpg" alt="海老焼売" width="850" height="567" loading="lazy" decoding="async" style="object-position:50% 50%"></picture></div>
+      <div class="item-tx">
+        <span class="tag">おすすめ</span>
+        <p class="item-desc">海老をふんだんに使ったプリプリ感がやみつき新食感！これぞ海老焼売！</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">えび</span><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></span><strong>アレルゲン</strong>えび・小麦・卵・ごま・大豆・豚肉</p><p class="howl"><a href="#ck3">肉焼売・海老焼売の蒸し方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a href="#ck1">調理済商品の温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="海老焼売のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,520</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,280</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="海老焼売【生冷凍】" aria-label="海老焼売【生冷凍】をカートに追加">＋ 生冷凍</button><button type="button" class="add" data-add="海老焼売【調理済み冷凍】" aria-label="海老焼売【調理済み冷凍】をカートに追加">＋ 調理済み</button></div>
+      </div>
+    </article>
+    <article class="item rv" id="p4" data-p="肉にら饅頭">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">四</span>肉にら饅頭</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/niraniku-400.webp 400w, images/niraniku-640.webp 640w, images/niraniku-800.webp 800w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/niraniku.jpg" alt="肉にら饅頭" width="1300" height="867" loading="lazy" decoding="async" style="object-position:50% 55%"></picture></div>
+      <div class="item-tx">
+        <span class="tag">定番</span>
+        <p class="item-desc">餃子の一種、お酒の肴、ご飯のお供！肉とニラの相性が堪らない肉たっぷりなニラ饅頭。</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></span><strong>アレルゲン</strong>小麦・卵・ごま・大豆・豚肉</p><p class="howl"><a href="#ck2">肉にら饅頭の焼き方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a href="#ck1">調理済商品の温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 4個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="肉にら饅頭のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>4個</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>8個</span><span>¥1,520</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>12個</span><span>¥2,280</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="肉にら饅頭【生冷凍】" aria-label="肉にら饅頭【生冷凍】をカートに追加">＋ 生冷凍</button><button type="button" class="add" data-add="肉にら饅頭【調理済み冷凍】" aria-label="肉にら饅頭【調理済み冷凍】をカートに追加">＋ 調理済み</button></div>
+      </div>
+    </article>
+    <article class="item rv" id="p5" data-p="ちまき">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">五</span>ちまき</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="c-kenjitsu_assets/photos/chimaki-560.webp 560w, c-kenjitsu_assets/photos/chimaki-876.webp 876w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/chimaki.jpg" alt="ちまき" width="876" height="583" loading="lazy" decoding="async" class="crop-chimaki"></picture></div>
+      <div class="item-tx">
+        <span class="tag">人気</span>
+        <p class="item-desc">豚肉角煮が入ったモッチモチなちまき！何個でも食べてしまう飽きの来ない一品。</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">小麦</span><span class="alg-ic">えび</span><span class="alg-ic">かに</span></span><strong>アレルゲン</strong>小麦・えび・かに・豚肉・大豆・鶏肉・りんご・ゼラチン・ごま</p><p class="howl"><a href="#ck6">ちまきの温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="ちまきのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>2個</span><span>¥744</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>4個</span><span>¥1,488</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>6個</span><span>¥2,232</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="ちまき" aria-label="ちまきをカートに追加">＋ カートに追加</button></div>
+      </div>
+    </article>
+    <article class="item rv" id="p6" data-p="肉まん">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">六</span>肉まん</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/nikuman-400.webp 400w, images/nikuman-611.webp 611w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/nikuman.jpg" alt="肉まん" width="611" height="427" loading="lazy" decoding="async" style="object-position:50% 50%"></picture></div>
+      <div class="item-tx">
+        <span class="tag">定番</span>
+        <p class="item-desc">手作りの皮にこだわったふっくら生地に合う餡が絶妙な肉まん。具がぎっしり入ってボリューム感たっぷり！1度食べると味が忘れられない一品。</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">小麦</span><span class="alg-ic">乳</span></span><strong>アレルゲン</strong>小麦・大豆・乳・豚肉・ごま・ゼラチン</p><p class="howl"><a href="#ck5">肉まん・角煮まん・叉焼まんの温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="肉まんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>1個</span><span>¥513</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>2個</span><span>¥1,026</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>3個</span><span>¥1,539</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="肉まん" aria-label="肉まんをカートに追加">＋ カートに追加</button></div>
+      </div>
+    </article>
+    <article class="item rv" id="p7" data-p="角煮バーガー">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">七</span>角煮バーガー</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/kakuni-burger-400.webp 400w, images/kakuni-burger-640.webp 640w, images/kakuni-burger-800.webp 800w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/kakuni-burger.jpg" alt="角煮バーガー" width="1300" height="866" loading="lazy" decoding="async" style="object-position:50% 50%"></picture></div>
+      <div class="item-tx">
+        <span class="tag">おすすめ</span>
+        <p class="item-desc">じっくりコトコトに煮込んだ甘だれの角煮を割りパンに挟んだ堪らない一品。</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span><span class="alg-ic">かに</span></span><strong>アレルゲン</strong>小麦・卵・かに・豚肉・大豆・ゼラチン</p><p class="howl"><a href="#ck5">肉まん・角煮まん・叉焼まんの温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥540</s> <b>¥513</b> <small>/ 1個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="角煮バーガーのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>1個</span><span>¥513</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>2個</span><span>¥1,026</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>3個</span><span>¥1,539</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="角煮バーガー" aria-label="角煮バーガーをカートに追加">＋ カートに追加</button></div>
+      </div>
+    </article>
+    <article class="item rv" id="p8" data-p="チャーシューまん">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">八</span>チャーシューまん</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="c-kenjitsu_assets/photos/charshuman-560.webp 560w, c-kenjitsu_assets/photos/charshuman-876.webp 876w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/charshuman.jpg" alt="チャーシューまん" width="876" height="583" loading="lazy" decoding="async" class="crop-charshu"></picture></div>
+      <div class="item-tx">
+        <span class="tag">お手頃</span>
+        <p class="item-desc">ミルクを練りこんだキメの細かい生地！チャーシュー餡を包んだ飲茶！おやつなど小腹の空いた時にぴったり！</p>
+        <p class="alg"><span class="alg-ics"><span class="alg-ic">小麦</span><span class="alg-ic">卵</span></span><strong>アレルゲン</strong>小麦・卵・豚肉・大豆・ごま</p><p class="howl"><a href="#ck5">肉まん・角煮まん・叉焼まんの温め方<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥784</s> <b>¥744</b> <small>/ 2個（税込）</small></div>
+        <div class="sizes" role="group" aria-label="チャーシューまんのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>2個</span><span>¥744</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>4個</span><span>¥1,488</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>6個</span><span>¥2,232</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="チャーシューまん" aria-label="チャーシューまんをカートに追加">＋ カートに追加</button></div>
+      </div>
+    </article>
+    <article class="item rv item-sm" id="p9" data-p="ザーサイ">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">九</span>ザーサイ</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/zasai-400.webp 400w, images/zasai-704.webp 704w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/zasai.jpg" alt="ザーサイ" width="704" height="1524" loading="lazy" decoding="async" style="object-position:50% 74%"></picture></div>
+      <div class="item-tx">
+        <span class="tag">要冷蔵</span>
+        <p class="item-desc">中華のお漬物、食物繊維が豊富でお酒の肴に！ご飯のお供！1度食べるとやみつきになる事間違いなし！ラーメンにも相性抜群！</p>
+        <p class="alg"><strong>アレルゲン</strong>大豆・ごま<span class="alg-note">※特定原材料8品目には該当なし</span></p>
+      </div>
+      <div class="item-buy">
+        <div class="price"><s>¥800</s> <b>¥760</b> <small>/ 140g（税込）</small></div>
+        <div class="sizes" role="group" aria-label="ザーサイのサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>140g</span><span>¥760</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>280g</span><span>¥1,520</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="ザーサイ" aria-label="ザーサイをカートに追加">＋ カートに追加</button></div>
+      </div>
+    </article>
+    <article class="item rv item-sm" id="p10" data-p="モンゴル茶">
+      <h3 class="item-name"><span class="item-no" aria-hidden="true">十</span>モンゴル茶</h3>
+      <div class="item-ph"><picture><source type="image/webp" srcset="images/mongol-tea-400.webp 400w, images/mongol-tea-704.webp 704w" sizes="(min-width:1100px) 288px, (min-width:768px) 40vw, 72vw"><img src="images/mongol-tea.jpg" alt="モンゴル茶" width="704" height="1524" loading="lazy" decoding="async" style="object-position:50% 56%"></picture></div>
+      <div class="item-tx">
+        <span class="tag">新商品</span>
+        <p class="item-desc">モンゴル伝統のお茶。1袋30個入り。まとめ買いがお得です。</p>
+        
+      </div>
+      <div class="item-buy">
+        <div class="price"><b>¥4,000</b> <small>/ 1袋30個入（税込）</small></div>
+        <div class="sizes" role="group" aria-label="モンゴル茶のサイズ"><button type="button" class="sz on" aria-pressed="true" data-i="0"><span>1袋</span><span>¥4,000</span></button><button type="button" class="sz" aria-pressed="false" data-i="1"><span>2袋<em>お得</em></span><span>¥7,500</span></button><button type="button" class="sz" aria-pressed="false" data-i="2"><span>3袋<em>最安</em></span><span>¥10,800</span></button></div>
+        <div class="adds"><button type="button" class="add" data-add="モンゴル茶" aria-label="モンゴル茶をカートに追加">＋ カートに追加</button></div>
+      </div>
+    </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 三 ご注文フォーム（注文票） ============ -->
+<section class="sec alt fold" id="orderform">
+  <h2 class="rail rv" data-no="三" data-t="ご注文フォーム"><span class="no stamp" aria-hidden="true">三</span>ご注文フォーム</h2>
+  <div class="body">
+    <p class="o-lead rv">催事会場で気に入った商品をご自宅でもう一度。<br>商品と数量を選んで、お客様情報をご入力ください。</p>
+
+    <div class="sheet rv">
+      <div class="o-head">
+        <div><p class="o-free">商品小計（税込）<strong>8,000円以上</strong>で<br><span>送料無料</span></p></div>
+        <div><p class="o-off">HPからのご注文は全点心商品 <strong>5%OFF</strong></p></div>
+        <div class="o-headnote">※北海道・沖縄・離島は送料を別途ご案内します。</div>
+      </div>
+      <div class="o-cap" aria-hidden="true"><span>商品</span><span>入数</span><span>数量</span><span>小計</span></div>
+      <div class="o-list">
+        <div class="orow" role="group" aria-label="焼き小籠包" data-name="焼き小籠包" data-kind="size" data-price="855" data-orig="900" data-base="4">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">一</span>焼き小籠包</div><div class="o-price"><s>¥900</s> → ¥855 / <span class="nb">4個入（税込）</span></div></div>
+          <div class="o-size" role="group" aria-label="焼き小籠包の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="焼き小籠包を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="焼き小籠包を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="肉焼売【生冷凍】" data-name="肉焼売【生冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">二</span>肉焼売<wbr><span class="nb">【生冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
+          <div class="o-size" role="group" aria-label="肉焼売【生冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉焼売【生冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉焼売【生冷凍】を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="肉焼売【調理済み冷凍】" data-name="肉焼売【調理済み冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">二</span>肉焼売<wbr><span class="nb">【調理済み冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
+          <div class="o-size" role="group" aria-label="肉焼売【調理済み冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉焼売【調理済み冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉焼売【調理済み冷凍】を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="海老焼売【生冷凍】" data-name="海老焼売【生冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">三</span>海老焼売<wbr><span class="nb">【生冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
+          <div class="o-size" role="group" aria-label="海老焼売【生冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="海老焼売【生冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="海老焼売【生冷凍】を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="海老焼売【調理済み冷凍】" data-name="海老焼売【調理済み冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">三</span>海老焼売<wbr><span class="nb">【調理済み冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
+          <div class="o-size" role="group" aria-label="海老焼売【調理済み冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="海老焼売【調理済み冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="海老焼売【調理済み冷凍】を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="肉にら饅頭【生冷凍】" data-name="肉にら饅頭【生冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">四</span>肉にら饅頭<wbr><span class="nb">【生冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
+          <div class="o-size" role="group" aria-label="肉にら饅頭【生冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉にら饅頭【生冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉にら饅頭【生冷凍】を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="肉にら饅頭【調理済み冷凍】" data-name="肉にら饅頭【調理済み冷凍】" data-kind="size" data-price="760" data-orig="800" data-base="4">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">四</span>肉にら饅頭<wbr><span class="nb">【調理済み冷凍】</span></div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">4個入（税込）</span></div><div class="o-hint"><span class="on">4個入：<span class="nb">お弁当に・1人前の目安</span></span><span>8個入：<span class="nb">ふたりの食卓に・</span><span class="nb">2人前の目安</span></span><span>12個入：<span class="nb">家族で・3人前の目安</span></span></div></div>
+          <div class="o-size" role="group" aria-label="肉にら饅頭【調理済み冷凍】の入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">4個</button><button type="button" class="osz" aria-pressed="false" data-m="2">8個</button><button type="button" class="osz" aria-pressed="false" data-m="3">12個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉にら饅頭【調理済み冷凍】を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉にら饅頭【調理済み冷凍】を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="ちまき" data-name="ちまき" data-kind="size" data-price="744" data-orig="784" data-base="2">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">五</span>ちまき</div><div class="o-price"><s>¥784</s> → ¥744 / <span class="nb">2個入（税込）</span></div></div>
+          <div class="o-size" role="group" aria-label="ちまきの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">2個</button><button type="button" class="osz" aria-pressed="false" data-m="2">4個</button><button type="button" class="osz" aria-pressed="false" data-m="3">6個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="ちまきを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="ちまきを1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="肉まん" data-name="肉まん" data-kind="size" data-price="513" data-orig="540" data-base="1">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">六</span>肉まん</div><div class="o-price"><s>¥540</s> → ¥513 / <span class="nb">1個入（税込）</span></div></div>
+          <div class="o-size" role="group" aria-label="肉まんの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">1個</button><button type="button" class="osz" aria-pressed="false" data-m="2">2個</button><button type="button" class="osz" aria-pressed="false" data-m="3">3個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="肉まんを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="肉まんを1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="角煮バーガー" data-name="角煮バーガー" data-kind="size" data-price="513" data-orig="540" data-base="1">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">七</span>角煮バーガー</div><div class="o-price"><s>¥540</s> → ¥513 / <span class="nb">1個入（税込）</span></div></div>
+          <div class="o-size" role="group" aria-label="角煮バーガーの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">1個</button><button type="button" class="osz" aria-pressed="false" data-m="2">2個</button><button type="button" class="osz" aria-pressed="false" data-m="3">3個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="角煮バーガーを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="角煮バーガーを1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="チャーシューまん" data-name="チャーシューまん" data-kind="size" data-price="744" data-orig="784" data-base="2">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">八</span>チャーシューまん</div><div class="o-price"><s>¥784</s> → ¥744 / <span class="nb">2個入（税込）</span></div></div>
+          <div class="o-size" role="group" aria-label="チャーシューまんの入数"><button type="button" class="osz on" aria-pressed="true" data-m="1">2個</button><button type="button" class="osz" aria-pressed="false" data-m="2">4個</button><button type="button" class="osz" aria-pressed="false" data-m="3">6個</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="チャーシューまんを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="チャーシューまんを1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="ザーサイ" data-name="ザーサイ" data-kind="unit" data-price="760" data-orig="800" data-unit="140g">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">九</span>ザーサイ</div><div class="o-price"><s>¥800</s> → ¥760 / <span class="nb">140g（税込）</span></div></div>
+          <div class="o-size" role="group" aria-label="ザーサイの入数"><button type="button" class="osz on" aria-pressed="true" data-uprice="760" data-uorig="800" data-ulabel="140g">140g</button><button type="button" class="osz" aria-pressed="false" data-uprice="1520" data-uorig="1600" data-ulabel="280g">280g</button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="ザーサイを1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="ザーサイを1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+        <div class="orow" role="group" aria-label="モンゴル茶" data-name="モンゴル茶" data-kind="tea" data-price="4000" data-bags="1">
+          <div class="o-info"><div class="o-name"><span class="o-no" aria-hidden="true">十</span>モンゴル茶</div><div class="o-price">¥4,000 / <span class="nb">1袋30個入（税込）</span></div><div class="o-hint" data-teahint></div></div>
+          <div class="o-size" role="group" aria-label="モンゴル茶の入数"><button type="button" class="osz on" aria-pressed="true" data-tprice="4000" data-bags="1">1袋</button><button type="button" class="osz" aria-pressed="false" data-tprice="7500" data-bags="2">2袋<em>お得</em></button><button type="button" class="osz" aria-pressed="false" data-tprice="10800" data-bags="3">3袋<em>最安</em></button></div>
+          <div class="o-qty"><button type="button" data-d="-1" aria-label="モンゴル茶を1つ減らす">−</button><span class="o-num">0</span><button type="button" data-d="1" aria-label="モンゴル茶を1つ増やす">＋</button></div>
+          <div class="o-sub">-</div>
+        </div>
+      </div>
+      <div class="o-total" id="orderTotalBox" tabindex="-1">
+        <div>
+          <span class="o-total-label">合計金額</span>
+          <div class="o-ship" id="orderShipping">※ 送料 全国一律¥1,200（税込・冷凍便／常温便とも）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から</div>
+          <div class="o-ship" id="orderCodFee" hidden></div>
+        </div>
+        <span class="o-total-price" id="orderTotal">¥0</span>
+      </div>
+    </div>
+
+    <form id="orderForm" class="sheet rv" novalidate onsubmit="return false">
+      <div class="f-sec">
+        <h3 class="f-h">お客様情報</h3>
+        <div class="fgrid">
+          <div class="fg s6"><label for="orderName">お名前<span class="req">*</span></label><input class="inp" type="text" id="orderName" required placeholder="山田 太郎" autocomplete="name"></div>
+          <div class="fg s6"><label for="orderPhone">電話番号<span class="req">*</span></label><input class="inp" type="tel" id="orderPhone" required placeholder="090-1234-5678" autocomplete="tel"></div>
+          <div class="fg"><label for="orderEmail">メールアドレス</label><input class="inp" type="email" id="orderEmail" placeholder="example@email.com" autocomplete="email">
+            <small class="help">※ お持ちでない方は空欄で大丈夫です。LINE登録済みのお客様にはLINEで発送のご連絡をいたします。</small></div>
+          <div class="fg s4"><label for="orderZip">郵便番号<span class="req">*</span></label><input class="inp" type="text" id="orderZip" required placeholder="000-0000" maxlength="8" inputmode="numeric" autocomplete="postal-code"></div>
+          <div class="fg s8"><label for="orderAddress">住所（自動入力）<span class="req">*</span></label><input class="inp" type="text" id="orderAddress" required placeholder="郵便番号を入力すると自動入力されます" readonly></div>
+          <div class="fg" style="margin-top:-16px"><small class="help">※ 送料は冷凍便・常温便とも全国一律¥1,200（税込）。住所の入力後、合計金額に自動で加算されます。北海道・沖縄・離島へのお届けは、実費送料を別途ご案内いたします。</small></div>
+          <div class="fg s6"><label for="orderBanchi">番地<span class="req">*</span></label><input class="inp" type="text" id="orderBanchi" required placeholder="例: 1-2-3"></div>
+          <div class="fg s6"><label for="orderBuilding">建物名・部屋番号</label><input class="inp" type="text" id="orderBuilding" placeholder="例: ○○マンション 101号室"></div>
+          <div class="fg s6"><label for="orderDelivery">配送方法</label>
+            <select class="inp" id="orderDelivery">
+              <option value="sagawa">佐川急便（冷凍便）</option>
+              <option value="yamato">クロネコヤマト（冷凍便）</option>
+              <option value="sagawa_ambient">佐川急便（常温便）</option>
+              <option value="yamato_ambient">クロネコヤマト（常温便）</option>
+            </select></div>
+          <div class="fg s6"><label for="orderPayment">お支払い方法</label>
+            <!-- 見本では、下の「お支払い情報の入力」の枠が見えるように「クレジットカード・PayPay」を選んだ状態にしてある（本番の最初は銀行振込） -->
+            <select class="inp" id="orderPayment">
+              <option value="bank">銀行振込</option>
+              <option value="credit" selected>クレジットカード・PayPay</option>
+              <option value="cod" id="codOption" hidden>代金引換（クロネコヤマト）</option>
+            </select>
+            <small class="help">※ 代金引換はクロネコヤマトのみ対応しております。</small></div>
+          <div class="fg s6"><label for="orderDate">希望日（目安）</label><input class="inp" type="date" id="orderDate">
+            <small class="help">※ 九州からの発送のため、地域により日数が異なります。ご希望に添えない場合がございます。</small></div>
+          <div class="fg s6"><label for="orderMemberId">ポイント会員番号（お持ちの方）</label><input class="inp" type="text" id="orderMemberId" placeholder="例: 0001" maxlength="6" inputmode="numeric" style="max-width:200px">
+            <small class="help">会員番号がなくてもお電話番号でポイントが自動付与されます</small></div>
+        </div>
+      </div>
+
+      <div class="f-sec">
+        <!-- ポイント利用の枠：本番ではポイントをお持ちの方だけに出る。見本では見た目が分かるよう出したまま（残高は見本の数字） -->
+        <div class="pbox" id="pointUseBox">
+          <div class="pbox-h"><span>ポイントを使う</span><small id="pointAvailable">残高: 120pt</small></div>
+          <div class="ptrow">
+            <label class="vh" for="pointUseAmount">利用するポイント</label>
+            <input class="inp" type="number" id="pointUseAmount" min="0" step="1" value="0" placeholder="0" inputmode="numeric">
+            <span>pt 利用（1pt = ¥1）</span>
+            <button type="button" class="btn-s" id="useAllPoints">全額使う</button>
+          </div>
+          <small class="help">※ 50pt以上からご利用いただけます</small>
+          <p class="pay-amount" id="pointDiscountText" style="margin:8px 0 0;color:var(--red)" hidden></p>
+        </div>
+        <div class="pbox">
+          <div class="pbox-h"><span>愛華楼ポイントカード</span></div>
+          <p style="margin-top:4px">催事会場でもHPでも、ポイントが貯まる・使える！</p>
+          <dl class="pt-dl">
+            <dt>貯める</dt><dd>¥200ごとに1pt（催事・HP共通）</dd>
+            <dt>使う</dt><dd>1pt = ¥1割引（50pt〜）</dd>
+            <dt>共通</dt><dd>催事で貯めたポイントもHPで使えます</dd>
+          </dl>
+          <div class="pt-line">
+            <b>LINE友達のお客様へ</b>
+            LINEで貯めたポイントもこちらで使えます。<br>
+            LINEで「<strong>電話 090-1234-5678</strong>」のように<strong>ご自身のお電話番号</strong>を送信して登録すると、ポイントが統合されHPでもご利用いただけます。
+          </div>
+        </div>
+        <div class="fg" style="margin-top:32px"><label for="orderNote">備考</label><textarea class="inp" id="orderNote" placeholder="ご要望がございましたらご記入ください"></textarea></div>
+      </div>
+
+      <div class="f-sec" id="cardPaymentBox">
+        <h3 class="f-h">お支払い情報の入力</h3>
+        <p class="pay-amount" id="cardChargeAmount" hidden></p>
+        <!-- 本番ではここに決済会社（Stripe）の入力欄が入る。見本は枠だけ -->
+        <div class="pay-slot" id="payment-element" aria-hidden="true">カード／PayPay の入力欄（見本では枠のみ）</div>
+        <p class="o-err" id="cardPaymentError" hidden></p>
+        <small class="help">※ カード情報はStripe（決済代行会社）に直接送信され、当店のサーバーには保存されません。<br>※ PayPayをお選びの場合は、PayPayのお支払い画面に移動し、お支払い後この画面に戻ります。</small>
+      </div>
+
+      <div class="f-sec">
+        <button type="submit" class="o-submit" id="orderSubmitBtn">注文内容を確認する<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></button>
+        <div class="o-err" id="orderErrorBox" hidden>送信できませんでした。お手数ですが、時間をおいて再度お試しいただくか、LINEでご注文ください。</div>
+        <div class="o-note">※ 次の画面で注文内容をご確認いただけます。最終確定まで注文は送信されません。</div>
+      </div>
+    </form>
+
+    <dialog class="rvw" id="orderReviewDialog" aria-labelledby="orderReviewTitle" aria-describedby="orderReviewIntro">
+      <div class="rvw-in">
+        <h2 id="orderReviewTitle" tabindex="-1">ご注文内容の確認</h2>
+        <p class="rvw-intro" id="orderReviewIntro">まだ注文・お支払いは確定していません。内容をご確認ください。</p>
+        <p class="mihon-dlg"><span>見本です。</span><span>この先へ進んでも</span><span>注文は送られません・</span><span>お金はかかりません。</span></p>
+        <p class="rvw-changed" id="orderReviewChanged" role="alert"></p>
+        <div id="orderReviewSummary"></div>
+      </div>
+      <div class="rvw-act">
+        <button type="button" class="btn btn-line" id="orderReviewBack">戻って修正する</button>
+        <button type="button" class="btn btn-red" id="orderConfirmBtn">この内容で注文を確定する</button>
+      </div>
+    </dialog>
+
+    <!-- 送信中 → 注文完了。帳面の作法で：清書（お客様の控え）と店の帳面の継ぎ目に、受付の割印を押す。
+         見本では送信しない（約1.5秒「送信中」を見せてから「完了」に替わる）。ポイントの数字・LINE連携の枠は見本用に出したまま -->
+    <dialog class="rvw flow" id="orderFlowDialog" aria-labelledby="orderCompleteTitle">
+      <div class="flow-send" id="orderProcessingOverlay" role="status">
+        <span class="flow-ink" aria-hidden="true"><i></i><i></i><i></i></span>
+        <p class="flow-msg">ご注文を送信しています…<br>そのままお待ちください</p>
+      </div>
+      <div class="flow-done" id="orderCompleteOverlay" hidden>
+        <div class="done-top">
+          <h2 id="orderCompleteTitle" tabindex="-1">ご注文ありがとうございます！</h2>
+          <p class="done-msg">ご注文を受け付けました。<br>確認のご連絡をさせていただきます。</p>
+        </div>
+        <div class="done-slip">
+          <span class="wari" aria-hidden="true"><span>受付</span></span>
+          <div id="orderCompleteSummary"></div>
+          <div class="pbox done-pt" id="orderCompletePoint">
+            <div class="pbox-h"><span>ポイント付与</span></div>
+            <p class="done-ptn"><b id="orderPointEarned">0</b> pt 獲得</p>
+            <p id="orderPointBalance"></p>
+          </div>
+          <div class="pbox done-line" id="orderCompleteLineLink">
+            <div class="pbox-h"><span>LINEでもポイント残高を確認できます</span></div>
+            <p>追加後、トークに貼り付けて送るだけで連携完了します。<br>後からでも連携できます。</p>
+            <button type="button" class="btn-s" id="orderLineLinkBtn">LINEで連携する</button>
+          </div>
+        </div>
+        <p class="mihon-dlg in">見本です。注文は送られていません。</p>
+        <div class="rvw-act one">
+          <button type="button" class="btn btn-line" id="orderCompleteClose">閉じる</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="sheet rv">
+      <div class="f-sec">
+        <h3 class="f-h">ポイント残高を確認する</h3>
+        <p>催事・HPで貯めたポイントをまとめて確認できます。</p>
+        <div class="pc-row">
+          <label class="vh" for="pointCheckPhone">電話番号</label>
+          <input class="inp" type="tel" id="pointCheckPhone" placeholder="電話番号を入力" maxlength="13">
+          <button type="button" class="btn-s" id="pointCheckBtn">確認</button>
+        </div>
+        <!-- 確認を押すと出る結果（見本の数字） -->
+        <div class="pc-res" id="pointResult" hidden>
+          <div class="pc-num" id="pointBalanceNum">120<small>pt</small></div>
+          <div id="pointBalanceLabel">山田様（会員#0001）</div>
+          <div class="pt-line" id="pointLineLinkBox">
+            <b>LINEでも残高確認できます</b>
+            LINE友だち追加後、トークに貼り付けて送るだけでポイントが統合されます。
+            <button type="button" class="btn-s" style="display:block;width:100%;margin-top:12px;min-height:56px">LINEで連携する</button>
+          </div>
+        </div>
+        <small class="help" style="margin-top:16px">※ LINE友達登録のみでポイントをお持ちの方は、LINEで「電話 090-1234-5678」のようにご自身のお電話番号を送信して登録すると、こちらからも確認・ご利用いただけます。</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四 温め方 ============ -->
+<section class="sec fold" id="cooking">
+  <h2 class="rail rv" data-no="四" data-t="温め方"><span class="no stamp" aria-hidden="true">四</span>温め方</h2>
+  <div class="body">
+    <div class="cook"><details class="ck rv" id="ck1" open><summary><h3>調理済商品の温め方</h3><span class="ck-for">焼き小籠包・焼売・にら饅頭など</span><i class="ck-pm" aria-hidden="true"></i></summary><div class="ck-in"><ol><li><strong>電子レンジの場合</strong>：500Wで<strong>1分</strong>温める</li><li><strong>オーブントースターの場合</strong>：レンジ加熱後、180度で<strong>2〜3分</strong>加熱</li><li><strong>フライパンの場合</strong>：中火で<strong>5〜6分</strong>加熱</li></ol><p class="ck-note">※ トースター・フライパンは加熱しすぎると焼き色がつく場合があります</p></div></details><details class="ck rv" id="ck2" open><summary><h3>肉にら饅頭の焼き方</h3><span class="ck-for">冷凍商品</span><i class="ck-pm" aria-hidden="true"></i></summary><div class="ck-in"><ol><li>フライパンに油を引き、にら饅頭を<strong>凍ったまま</strong>並べる</li><li>差し水を少量入れ、<strong>フタをして蒸し焼き</strong>にする</li><li>皮が<strong>半透明</strong>になったらフタを取る</li><li>両面を<strong>カリッと焼き上げて</strong>出来上がり</li></ol></div></details><details class="ck rv" id="ck3" open><summary><h3>肉焼売・海老焼売の蒸し方</h3><span class="ck-for">冷凍商品</span><i class="ck-pm" aria-hidden="true"></i></summary><div class="ck-in"><ol><li>蒸し器もしくは鍋に水を入れ、<strong>沸騰</strong>させておく</li><li>沸騰したら焼売を<strong>凍ったまま</strong>並べる</li><li>フタをして<strong>15分</strong>蒸して出来上がり</li></ol></div></details><details class="ck rv" id="ck4" open><summary><h3>焼き小籠包の温め方</h3><span class="ck-for">冷凍商品 ／ 電子レンジ（ラップ不要）</span><i class="ck-pm" aria-hidden="true"></i></summary><div class="ck-in"><ol><li>お皿に移し、<strong>ラップをかけずに</strong>温める</li><li>2個：<strong>1分10秒</strong> ／ 4個：<strong>2分</strong> が目安</li><li>温め中に<strong>ふくらんできたら</strong>出来上がりのサイン</li></ol><p class="ck-note">※ ふくらみすぎると皮が破れてスープが出る場合があります。様子を見ながら温めてください</p></div></details><details class="ck rv" id="ck5" open><summary><h3>肉まん・角煮まん・叉焼まんの温め方</h3><span class="ck-for">冷凍商品 ／ 電子レンジ</span><i class="ck-pm" aria-hidden="true"></i></summary><div class="ck-in"><ol><li>皮を軽く<strong>水で濡らす</strong></li><li><strong>ラップをせずに</strong>電子レンジで<strong>1分</strong>温める（1個あたり）</li></ol><p class="ck-note">※ 蒸したようにふっくらと仕上がります</p></div></details><details class="ck rv" id="ck6" open><summary><h3>ちまきの温め方</h3><span class="ck-for">冷凍商品 ／ 電子レンジ</span><i class="ck-pm" aria-hidden="true"></i></summary><div class="ck-in"><ol><li>軽く<strong>水にくぐらせて</strong><span class="nb">お皿に移す</span></li><li>電子レンジで<strong>1分30秒</strong>温めて出来上がり（1個あたり）</li></ol></div></details></div>
+  </div>
+</section>
+
+<!-- ============ 五 催事スケジュール ============ -->
+<!-- 中身は本番ではAPIから届く。見本は 2026-11-17 時点の公開中の催事と同じ形（月・開始日・「〜終了日」・会場・エリア・各催事ページへのリンク）で8件。
+     予定が無い時：「現在予定されている催事はありません／最新情報はLINEでお知らせいたします。」
+     取得できない時：「催事スケジュール／スケジュール情報を取得できませんでした。最新情報はLINEでお知らせいたします。」 -->
+<section class="sec alt fold" id="schedule">
+  <h2 class="rail rv" data-no="五" data-t="催事スケジュール"><span class="no stamp" aria-hidden="true">五</span>催事スケジュール</h2>
+  <div class="body" id="scheduleContainer">
+    <div class="evs rv"><a class="ev" style="--i:0" href="https://aikaro.jp/events/175/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">11月</span><span class="ev-d">12</span><span class="ev-r">〜17日</span></span><span class="ev-body"><span class="ev-venue">西鉄ソラリアステージ</span><span class="ev-area">九州</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a class="ev" style="--i:1" href="https://aikaro.jp/events/169/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">11月</span><span class="ev-d">19</span><span class="ev-r">〜24日</span></span><span class="ev-body"><span class="ev-venue">イオン小牧</span><span class="ev-area">中部2</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a class="ev" style="--i:2" href="https://aikaro.jp/events/171/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">11月</span><span class="ev-d">19</span><span class="ev-r">〜24日</span></span><span class="ev-body"><span class="ev-venue">みらい長崎ココウォーク</span><span class="ev-area">九州</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a class="ev" style="--i:3" href="https://aikaro.jp/events/172/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">11月</span><span class="ev-d">25</span><span class="ev-r">〜30日</span></span><span class="ev-body"><span class="ev-venue">イオンモール鹿児島</span><span class="ev-area">九州</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a class="ev" style="--i:4" href="https://aikaro.jp/events/170/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">11月</span><span class="ev-d">26</span><span class="ev-r">〜12/1日</span></span><span class="ev-body"><span class="ev-venue">MEGAドン・キホーテUNY岐阜</span><span class="ev-area">中部2</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a class="ev" style="--i:5" href="https://aikaro.jp/events/176/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">11月</span><span class="ev-d">26</span><span class="ev-r">〜12/1日</span></span><span class="ev-body"><span class="ev-venue">イオンスタイル出雲</span><span class="ev-area">中四国</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a class="ev" style="--i:6" href="https://aikaro.jp/events/177/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">12月</span><span class="ev-d">3</span><span class="ev-r">〜7日</span></span><span class="ev-body"><span class="ev-venue">ハローズ防府新田</span><span class="ev-area">中四国</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a><a class="ev" style="--i:7" href="https://aikaro.jp/events/178/" target="_blank" rel="noopener"><span class="ev-date"><span class="ev-m">12月</span><span class="ev-d">9</span><span class="ev-r">〜14日</span></span><span class="ev-body"><span class="ev-venue">天満屋ハッピーズ西大寺モール</span><span class="ev-area">中四国</span></span><svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></div>
+    <p class="evs-more rv"><a href="https://aikaro.jp/events/" target="_blank" rel="noopener" class="btn btn-line">催事一覧を見る<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a></p>
+  </div>
+</section>
+
+<!-- ============ 六 ご注文方法 ============ -->
+<section class="sec fold" id="order">
+  <h2 class="rail rv" data-no="六" data-t="ご注文方法"><span class="no stamp" aria-hidden="true">六</span>ご注文方法</h2>
+  <div class="body">
+    <div class="ways rv">
+      <div class="way">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 6h18l8 8v28H12z"/><path d="M30 6v8h8M18 22h14M18 28h14M18 34h9"/></svg>
+        <div><h3>ご注文フォーム</h3><p>このページのご注文フォームから、<br>24時間いつでも<br>ご注文いただけます。</p></div>
+        <a href="#orderform" class="btn btn-line">ご注文フォームへ</a>
+      </div>
+      <div class="way">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8c10 0 18 6.3 18 14.2 0 7.8-8 14.2-18 14.2-1.6 0-3.200-.2-4.700-.5L11 41l1.800-7.200C8.600 31.200 6 27 6 22.200 6 14.300 14 8 24 8z"/><path d="M16 22.500h16"/></svg>
+        <div><h3>LINEで注文</h3><p>LINEのトークから<br>お気軽にご注文ください。</p></div>
+        <a href="https://lin.ee/wbAZif6" class="btn btn-line" target="_blank" rel="noopener">LINEを開く</a>
+      </div>
+      <div class="way">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="8" width="32" height="32" rx="9"/><circle cx="24" cy="24" r="7.500"/><circle cx="33" cy="15" r="1"/></svg>
+        <div><h3>Instagram</h3><p>最新情報や催事の様子を<br>発信しています。<br>メッセージでのご注文も可能です。</p></div>
+        <a href="https://www.instagram.com/aika_rou/" class="btn btn-line" target="_blank" rel="noopener">フォローする</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 七 お問い合わせ ============ -->
+<section class="sec alt fold" id="contact">
+  <h2 class="rail rv" data-no="七" data-t="お問い合わせ"><span class="no stamp" aria-hidden="true">七</span>お問い合わせ</h2>
+  <div class="body ct">
+    <div class="rv">
+      <h3 class="ct-h">店舗情報</h3>
+      <dl class="ct-dl">
+        <div><dt>店舗名</dt><dd>本格中華 愛華楼</dd></div>
+        <div><dt>店舗</dt><dd>〒811-3209<br>福岡県福津市<span class="nb">花見ヶ丘3-22-20</span></dd></div>
+        <div><dt>営業時間</dt><dd>火曜〜土曜 12:00 〜 17:00<br>日曜・月曜 定休日</dd></div>
+        <div><dt>事務所</dt><dd>〒811-3114<br>福岡県古賀市<span class="nb">舞の里2丁目16番10号</span><br>（株式会社今津屋）</dd></div>
+      </dl>
+    </div>
+    <form id="contactForm" class="sheet ct-form rv" onsubmit="return false">
+      <div class="f-sec">
+        <h3 class="f-h">お問い合わせフォーム</h3>
+        <div class="fgrid">
+          <div class="fg s6"><label for="name">お名前</label><input class="inp" type="text" id="name" required placeholder="山田 太郎"></div>
+          <div class="fg s6"><label for="email">メールアドレス</label><input class="inp" type="email" id="email" required placeholder="example@email.com"></div>
+          <div class="fg"><label for="subject">お問い合わせ種別</label>
+            <select class="inp" id="subject"><option value="order">ご注文について</option><option value="event">催事出店について</option><option value="other">その他</option></select></div>
+          <div class="fg"><label for="message">お問い合わせ内容</label><textarea class="inp" id="message" required placeholder="お気軽にお問い合わせください"></textarea></div>
+        </div>
+        <button type="submit" class="btn btn-red">送信する</button>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<!-- ============ 奥付 ============ -->
+<footer class="ft">
+  <div class="ft-v">
+    <div class="ft-brand"><small>本格中華</small>愛華楼</div>
+    <p class="ft-tag">本格点心をご家庭でも</p>
+  </div>
+  <nav class="ft-nav" aria-label="フッターメニュー"><ol><li><a href="#about"><b aria-hidden="true">一</b><span>愛華楼について</span></a></li><li><a href="#menu"><b aria-hidden="true">二</b><span>メニュー</span></a></li><li><a href="#orderform"><b aria-hidden="true">三</b><span>注文する</span></a></li><li><a href="#cooking"><b aria-hidden="true">四</b><span>温め方</span></a></li><li><a href="#schedule"><b aria-hidden="true">五</b><span>催事スケジュール</span></a></li><li><a href="#order"><b aria-hidden="true">六</b><span>ご注文方法</span></a></li><li><a href="#contact"><b aria-hidden="true">七</b><span>お問い合わせ</span></a></li></ol></nav>
+  <p class="ft-links"><a href="https://aikaro.jp/tokushoho.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a></p>
+  <p class="ft-copy">&copy; <span id="copyrightYear">2026</span> 愛華楼 All Rights Reserved.</p>
+</footer>
+
+<!-- ============ 張り付くカートの帯 ============ -->
+<div class="cart" id="floatingCart" role="region" aria-label="カート">
+  <div class="cart-in">
+    <span class="cart-sum">
+      <span class="cart-info"><span id="floatingCartCount">0</span>点 ・ 商品小計 <b id="floatingCartTotal">¥0</b></span>
+      <span class="cart-ship" id="floatingCartShipping"></span>
+    </span>
+    <span class="cart-nos" id="cartNos" aria-hidden="true"></span>
+    <a class="cart-btn" href="#orderForm" id="cartGo">注文へ進む<svg class="ar" viewBox="0 0 24 8" aria-hidden="true"><path d="M0 7h23l-6-6"/></svg></a>
+    <span class="cart-shipnote">※北海道・沖縄・離島は別途送料</span>
+  </div>
+</div>
+
+<!-- 読み上げ用：注文票が変わったら、ここ1か所でまとめて知らせる（画面には出ない） -->
+<p class="vh" id="srLive" role="status" aria-live="polite" aria-atomic="true"></p>
+
+<!-- ============ Instagram・LINE のボタン ============ -->
+<div class="floats" role="region" aria-label="Instagram・LINE">
+  <a href="https://www.instagram.com/aika_rou/" class="flt" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="3.500" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".600"/></svg><span>Instagram</span></a>
+  <a href="https://lin.ee/wbAZif6" class="flt" id="lineFloat" target="_blank" rel="noopener" aria-label="LINEで注文する"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4c5 0 9 3.200 9 7.200s-4 7.200-9 7.200c-.800 0-1.600-.100-2.400-.300L5.500 20.500l.900-3.600C4.300 15.600 3 13.500 3 11.200 3 7.200 7 4 12 4z"/></svg><span>注文する</span></a>
+</div>
+
+<script>
+
+(function(){
+  var d=document, $=function(s,r){return (r||d).querySelector(s)}, $$=function(s,r){return [].slice.call((r||d).querySelectorAll(s))};
+  d.documentElement.classList.add('js');
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var yen=function(n){return '¥'+n.toLocaleString('ja-JP')};
+  var SEG=!(window.CSS&&CSS.supports&&CSS.supports('word-break','auto-phrase'))&&window.Intl&&Intl.Segmenter ? new Intl.Segmenter('ja',{granularity:'word'}) : null;
+  var PH_SEL='main p,main li,main dd,main dt,main h3,.help,.o-ship,.o-note,.o-hint,.ck-note,.ck-for,.note-sub,.pt-line,.ev-venue,.f-h,.ct-h,.pbox-h,.cart-ship,.cart-shipnote,.rvw h2,.rvw p,.rvw dt,.rvw dd,.rvw li span,.ft-links';
+  function chunks(t){
+    var out=[], cur='', lead='';
+    var it=SEG.segment(t)[Symbol.iterator](), x;
+    while(!(x=it.next()).done){
+      var w=x.value.segment;
+      if(/^\s+$/.test(w)){ if(cur) out.push(cur); out.push(w); cur=''; continue; }
+      if(!cur){ cur=w; continue; }
+      var glue = /[（「『【［(〔〒¥￥#]$/.test(cur)                                  
+        || /^[、。，．・：；！？!?）」』】］)〕…‥〜～ー／\/%]+$/.test(w)               
+        || (/^[ぁ-ゖ]{1,2}$/.test(w) && !/^[おご]$/.test(w))                          
+        || (/[0-9,.\-:]$/.test(cur) && /^[0-9,.\-:a-zA-Z個袋点円分秒枚日月年時歳本回品目度]/.test(w))  
+        || (/^[おご]$/.test(cur))
+        || (/[ァ-ヶー]$/.test(cur) && /^[ァ-ヶー]/.test(w));                           
+      if(glue) cur+=w; else { out.push(cur); cur=w; }
+    }
+    if(cur) out.push(cur);
+    return out;
+  }
+  function phrase(root){
+    if(!SEG) return;
+    $$(PH_SEL,root||d).forEach(function(el){
+      if(el.closest('.nw,.nb,x-ph,button,select,textarea,.hero,.shina,.spine,.vh')) return;
+      if(getComputedStyle(el).writingMode.indexOf('vertical')===0) return;
+      var tw=d.createTreeWalker(el,NodeFilter.SHOW_TEXT), n, list=[];
+      while((n=tw.nextNode())) list.push(n);
+      list.forEach(function(n){
+        var t=n.nodeValue, pe=n.parentElement;
+        if(t.trim().length<5 || pe.closest('.nw,.nb,x-ph,button,a,s,script,style')) return;
+        var cs=getComputedStyle(pe);
+        if(cs.writingMode.indexOf('vertical')===0 || /flex|grid/.test(cs.display)) return;
+        var f=d.createDocumentFragment();
+        chunks(t).forEach(function(c,i){
+          if(/^\s+$/.test(c) || c.length<2 || c.length>10 || (i===0 && /^[、。・）」』】］)〕]/.test(c))) f.appendChild(d.createTextNode(c));
+          else { var sp=d.createElement('x-ph'); sp.textContent=c; f.appendChild(sp); }   
+        });
+        pe.replaceChild(f,n);
+      });
+    });
+  }
+  function nws(parent,arr){ arr.forEach(function(t,i){ if(!t) return;  if(i && !/^[【（]/.test(t) && !/・$/.test(arr[i-1])) parent.appendChild(d.createTextNode(' ')); var sp=d.createElement('span'); sp.className='nw'; sp.textContent=t; parent.appendChild(sp); }); return parent; }
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('wait');io.unobserve(e.target);}})},{rootMargin:'0px 0px -6% 0px'});
+    $$('.rv').forEach(function(e){ if(e.getBoundingClientRect().top>innerHeight*0.96){e.classList.add('wait');io.observe(e);} });
+    var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('turn');io2.unobserve(e.target);}})},{rootMargin:'0px 0px -12% 0px'});
+    $$('.sec,.about,.ft').forEach(function(e){ if(e.getBoundingClientRect().top>innerHeight*0.96){e.classList.add('turn');io2.observe(e);} });
+  }
+  var chap=$$('.rail').map(function(h){return {h:h,sec:h.closest('section'),no:h.dataset.no,t:h.dataset.t}});
+  var navs=[$$('.nav-pc a'),$$('.mnav li a')], spine=$('.spine'), prog=$('.prog'), dots=$$('.spine-dots i'), curI=-2, tick=false;
+  var mqSpine=matchMedia('(max-width:1099px)'), cartEl=$('#floatingCart'), heroCta=$('.hero-cta');
+  function place(){
+    tick=false;
+    var max=d.documentElement.scrollHeight-innerHeight, line=innerHeight*0.4, i=-1, r=null;
+    prog.style.transform='scaleX('+(max>0?Math.min(1,Math.max(0,scrollY/max)):0)+')';
+    chap.forEach(function(c,k){ var b=c.sec.getBoundingClientRect(); if(b.top<=line && b.bottom>line){ i=k; r=b; } });
+    if(i!==curI){
+      curI=i;
+      navs.forEach(function(ls){ ls.forEach(function(a,k){ if(k===i) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current'); }); });
+      if(i>=0){ $('.spine-no').textContent=chap[i].no; $('.spine-t').textContent=chap[i].t; dots.forEach(function(x,k){ x.className = k<i?'past':k===i?'now':''; });
+        if(!reduce && spine.classList.contains('on')){ spine.classList.remove('flip'); void spine.offsetWidth; spine.classList.add('flip'); } }
+    }
+    if(cartEl && heroCta){ var hb=heroCta.getBoundingClientRect(); cartEl.classList.toggle('low', hb.bottom>64 && hb.bottom>innerHeight-cartEl.offsetHeight-8); }
+    spine.classList.toggle('on', i>=0 && mqSpine.matches && chap[i].h.getBoundingClientRect().bottom<72 && r.bottom>416);
+  }
+  function ask(){ if(!tick){ tick=true; requestAnimationFrame(place); } }
+  addEventListener('scroll',ask,{passive:true}); addEventListener('resize',ask); place();
+  var mnav=$('.mnav');
+  if(mnav){
+    mnav.addEventListener('click',function(e){ if(e.target.closest('a')) mnav.removeAttribute('open'); });
+    mnav.addEventListener('keydown',function(e){ if(e.key==='Escape' && mnav.open){ mnav.removeAttribute('open'); $('summary',mnav).focus(); } });
+  }
+  d.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('.howl a'); if(!a) return;
+    var t=$(a.getAttribute('href')); if(t) t.setAttribute('open','');
+  });
+  var mqS=matchMedia('(max-width:767px)');
+  $$('details.ck').forEach(function(x){
+    var sm=$('summary',x);
+    if(mqS.matches) x.removeAttribute('open'); else sm.tabIndex=-1;
+    sm.addEventListener('click',function(e){ if(!mqS.matches) e.preventDefault(); });
+  });
+  var FREE=8000, MIN=2000, SHIP=1200, TEA=30, SEP=['北海道','沖縄県'];
+  var NOTE='※ 送料 全国一律¥1,200（税込・冷凍便／常温便とも）／税込¥8,000以上で送料無料／北海道・沖縄・離島は送料を別途ご案内／ご注文は税込¥2,000から';
+  var rows=$$('.orow');
+  function qty(r){return parseInt($('.o-num',r).textContent,10)||0}
+  function mult(r){return r.dataset.kind==='size' ? (parseInt(r.dataset.m||'1',10)) : 1}
+  function price(r){return parseInt(r.dataset.price,10)*mult(r)}
+  function subtotal(){return rows.reduce(function(s,r){return s+price(r)*qty(r)},0)}
+  function count(){return rows.reduce(function(s,r){return s+qty(r)},0)}
+  function pref(){var a=$('#orderAddress').value; var m=a.match(/^(北海道|東京都|(?:京都|大阪)府|.{2,3}県)/); return m?m[1]:null}
+  function ship(sub){var p=pref(); if(!p) return {pref:null,fee:null,separate:false}; if(SEP.indexOf(p)>=0) return {pref:p,fee:null,separate:true}; return {pref:p,fee:sub>=FREE?0:SHIP,separate:false}}
+  function renderRow(r){
+    var k=r.dataset.kind, el=$('.o-price',r), q=qty(r);
+    if(k==='size'){
+      var m=mult(r), base=parseInt(r.dataset.base,10);
+      el.innerHTML='<s>'+yen(parseInt(r.dataset.orig,10)*m)+'</s> → '+yen(price(r))+' / <span class="nb">'+(base*m)+'個入（税込）</span>';
+      $$('.o-hint span',r).forEach(function(s,i){s.classList.toggle('on',i===m-1)});
+    }else if(k==='unit'){
+      el.innerHTML='<s>'+yen(parseInt(r.dataset.orig,10))+'</s> → '+yen(price(r))+' / <span class="nb">'+r.dataset.unit+'（税込）</span>';
+    }else{
+      var b=parseInt(r.dataset.bags,10)||1, p=price(r);
+      el.innerHTML=yen(p)+' / <span class="nb">'+(b>1 ? b+'袋（計'+(b*TEA)+'個）' : '1袋30個入')+'（税込）</span>';
+      var h=$('[data-teahint]',r);
+      if(h) h.innerHTML = b>1 ? '<span class="on">1袋あたり'+yen(p/b)+'（'+Math.round((1-p/b/4000)*100)+'%お得）</span>' : '';
+    }
+    var sub=$('.o-sub',r);
+    sub.textContent = q>0 ? yen(price(r)*q) : '-';
+    r.classList.toggle('has',q>0);
+  }
+  function pick(r,btn){
+    $$('.osz',r).forEach(function(b){b.classList.remove('on');b.setAttribute('aria-pressed','false')});
+    btn.classList.add('on'); btn.setAttribute('aria-pressed','true');
+    if(btn.dataset.m) r.dataset.m=btn.dataset.m;
+    if(btn.dataset.uprice){ r.dataset.price=btn.dataset.uprice; r.dataset.orig=btn.dataset.uorig; r.dataset.unit=btn.dataset.ulabel; }
+    if(btn.dataset.tprice){ r.dataset.price=btn.dataset.tprice; r.dataset.bags=btn.dataset.bags; }
+    renderRow(r);
+  }
+  function update(){
+    var sub=subtotal(), s=ship(sub), total=sub>0?sub+(s.fee||0):0, el=$('#orderShipping'), lab='商品小計 '+yen(sub);
+    $('#orderTotal').textContent=yen(total);
+    $('#orderSubmitBtn').disabled = sub<MIN;
+    el.classList.remove('free');
+    if(sub===0) el.textContent=NOTE;
+    else if(sub<MIN) el.textContent=lab+' ／ ご注文は税込¥2,000から承っております（あと'+yen(MIN-sub)+'）';
+    else if(s.separate) el.textContent=lab+' ／ '+s.pref+'宛の送料は別途ご案内いたします（ご注文確認後にご連絡します）';
+    else if(s.fee===null) el.textContent = sub>=FREE
+      ? lab+' ／ 送料は郵便番号のご入力後に自動計算されます（¥8,000以上は送料無料。※北海道・沖縄・離島は送料を別途ご案内します）'
+      : lab+' ／ あと'+yen(FREE-sub)+'で送料無料（北海道・沖縄・離島を除く）／ 送料は郵便番号のご入力後に自動計算されます';
+    else if(s.fee===0){ el.textContent=lab+' ＋ 送料無料（¥8,000以上）'; el.classList.add('free'); }
+    else el.textContent=lab+' ＋ 送料 '+yen(s.fee)+'（'+s.pref+'宛）／ あと'+yen(FREE-sub)+'で送料無料';
+    var c=count();
+    $('#floatingCartCount').textContent=c;
+    $('#floatingCartTotal').textContent=yen(sub);
+    $('#floatingCartShipping').textContent = sub<MIN ? 'ご注文は税込¥2,000から（あと'+yen(MIN-sub)+'）'
+      : s.separate ? '送料は別途ご案内します'
+      : sub<FREE ? '送料無料まで あと'+yen(FREE-sub)
+      : s.fee===0 ? '送料無料になりました' : '対象地域は送料無料です';
+    $('#floatingCart').classList.toggle('show',c>0);
+    d.documentElement.classList.toggle('has-cart',c>0);
+    $$('.shina li,.item').forEach(function(li){
+      var n=li.dataset.p;
+      li.classList.toggle('in', rows.some(function(r){return qty(r)>0 && r.dataset.name.replace(/【[^】]+】/g,'')===n}));
+    });
+    var nos=[]; rows.forEach(function(r){ var k=$('.o-no',r).textContent; if(qty(r)>0 && nos.indexOf(k)<0) nos.push(k); });
+    var box=$('#cartNos'), key=nos.join('');
+    if(box.dataset.k!==key){ box.dataset.k=key; box.textContent=''; nos.forEach(function(k){ box.appendChild(d.createElement('i')).textContent=k; }); }
+    payBox();
+    phrase($('#orderTotalBox')); phrase(cartEl); ask();
+  }
+  var sayT=0;
+  function say(r){
+    clearTimeout(sayT);
+    sayT=setTimeout(function(){
+      var q=qty(r), on=$('.osz.on',r), c=count(), t=r.dataset.name+' '+(on?on.firstChild.textContent+' ':'')+(q>0? q+'点、小計'+yen(price(r)*q) : '0点')+'。';
+      t+= c>0 ? '合計 '+c+'点、商品小計 '+yen(subtotal())+'。'+$('#floatingCartShipping').textContent : 'カートは空です';
+      $('#srLive').textContent=t;
+    },250);
+  }
+  function payBox(){
+    var on=$('#orderPayment').value==='credit', box=$('#cardPaymentBox'), amt=$('#cardChargeAmount'), sub=subtotal();
+    box.hidden=!on;
+    if(on && sub>=MIN){ var s=ship(sub); amt.hidden=false; amt.textContent='お支払い金額 '+yen(Math.max(sub+(s.fee||0)-points(),0))+'（税込）'; } else amt.hidden=true;
+  }
+  function points(){ var v=parseInt($('#pointUseAmount').value,10)||0; return v>=50 ? Math.min(v,120,subtotal()) : 0 }
+  d.addEventListener('click',function(ev){
+    var t=ev.target, b;
+    if((b=t.closest('.sz'))){
+      $$('.sz',b.parentNode).forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false')});
+      b.classList.add('on'); b.setAttribute('aria-pressed','true'); return;
+    }
+    if((b=t.closest('.add'))){
+      var r=rows.filter(function(x){return x.dataset.name===b.dataset.add})[0]; if(!r) return;
+      var on=$('.sz.on',b.closest('.item')), i=on?parseInt(on.dataset.i,10):0, sb=$$('.osz',r)[i];
+      if(sb) pick(r,sb);
+      $('.o-num',r).textContent=qty(r)+1; renderRow(r); update(); say(r);
+      var br=b.getBoundingClientRect(), over=br.bottom+12-(innerHeight-cartEl.offsetHeight);
+      if(over>0 && over<cartEl.offsetHeight+40) scrollBy({top:over,behavior:reduce?'auto':'smooth'});
+      return;
+    }
+    if((b=t.closest('.osz'))){ pick(b.closest('.orow'),b); update(); say(b.closest('.orow')); return; }
+    if((b=t.closest('.o-qty button'))){
+      var row=b.closest('.orow'), n=Math.max(0,Math.min(99,qty(row)+parseInt(b.dataset.d,10)));
+      $('.o-num',row).textContent=n; renderRow(row); update(); say(row); return;
+    }
+  });
+  $('#orderPayment').addEventListener('change',update);
+  $('#pointUseAmount').addEventListener('input',function(){
+    var p=points(), el=$('#pointDiscountText'); el.hidden=!p; el.textContent=p? p.toLocaleString()+'pt 利用（−'+yen(p)+'）':''; payBox();
+  });
+  $('#useAllPoints').addEventListener('click',function(){ $('#pointUseAmount').value=Math.min(120,subtotal()); $('#pointUseAmount').dispatchEvent(new Event('input')); });
+  $('#orderZip').addEventListener('input',function(){
+    var v=this.value.replace(/[^0-9]/g,'');
+    $('#orderAddress').value = v.length===7 ? '福岡県福津市花見ヶ丘' : '';
+    update();
+  });
+  function goal(){
+    if(subtotal()<MIN) return $('#orderTotalBox');
+    var fs=$$('input,select,textarea',$('#orderForm'));
+    for(var i=0;i<fs.length;i++){ var f=fs[i];
+      if(f.id==='orderAddress' && !f.value.trim()) return $('#orderZip');
+      if(f.willValidate && !f.validity.valid) return f; }
+    return $('#orderSubmitBtn');
+  }
+  function bring(t){
+    var w=t.closest('.wait'); if(w) w.classList.remove('wait');
+    if(t.focus && t.id!=='orderTotalBox') t.focus({preventScroll:true});
+    t.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+    setTimeout(function(){ var r=t.getBoundingClientRect(); if(r.top<64||r.bottom>innerHeight-(cartEl.classList.contains('show')?cartEl.offsetHeight:0)) t.scrollIntoView({behavior:'auto',block:'center'}); },1000);
+  }
+  $('#cartGo').addEventListener('click',function(e){ e.preventDefault(); bring(goal()); });
+  d.addEventListener('focusin',function(e){
+    var t=e.target; if(!t.getBoundingClientRect || t.closest('dialog,.cart,.hd,.floats,.skip')) return;
+    var r=t.getBoundingClientRect(), bot=innerHeight-(cartEl.classList.contains('show')&&!cartEl.classList.contains('low')?cartEl.offsetHeight+8:0);
+    if(r.bottom>bot && r.height<bot-80) scrollBy({top:r.bottom-bot+16,behavior:'auto'});
+    else if(r.top<68 && r.top>-r.height) scrollBy({top:r.top-80,behavior:'auto'});
+  });
+  $('#pointCheckBtn').addEventListener('click',function(){ $('#pointResult').hidden=false; });
+  $('#contactForm').addEventListener('submit',function(e){e.preventDefault()});
+  var dlg=$('#orderReviewDialog'), flow=$('#orderFlowDialog'), last=null, sending=false;
+  var OLD=!dlg.showModal || /nodialog/.test(location.search), root=d.documentElement, veil=null;
+  function isOpen(x){ return x.hasAttribute('open'); }
+  if(OLD){
+    root.classList.add('nodlg');
+    [dlg,flow].forEach(function(x){ x.setAttribute('role','dialog'); x.setAttribute('aria-modal','true'); });
+    veil=d.createElement('div'); veil.className='veil'; veil.hidden=true; d.body.appendChild(veil);
+    d.addEventListener('keydown',function(e){
+      var x=isOpen(flow)?flow:isOpen(dlg)?dlg:null; if(!x) return;
+      if(e.key==='Escape'){ e.preventDefault(); if(x===dlg){ closeDlg(dlg); $('#orderSubmitBtn').focus(); } else if(!sending) finish(); return; }
+      if(e.key!=='Tab') return;
+      var f=$$('button',x).filter(function(el){return el.offsetParent!==null});
+      if(!f.length){ e.preventDefault(); return; }
+      var a=d.activeElement, first=f[0], lastB=f[f.length-1];
+      if(f.indexOf(a)<0){ e.preventDefault(); (e.shiftKey?lastB:first).focus(); }
+      else if(e.shiftKey && a===first){ e.preventDefault(); lastB.focus(); }
+      else if(!e.shiftKey && a===lastB){ e.preventDefault(); first.focus(); }
+    });
+  }
+  function mark(){ var on=isOpen(dlg)||isOpen(flow); root.classList.toggle('dlg-on',on); if(veil) veil.hidden=!on; }
+  function openDlg(x){ if(!OLD){ if(!x.open) x.showModal(); } else x.setAttribute('open',''); mark(); }
+  function closeDlg(x){ if(!OLD){ if(x.open) x.close(); } else x.removeAttribute('open'); mark(); }
+  [dlg,flow].forEach(function(x){ x.addEventListener('close',mark); x.addEventListener('cancel',function(){ setTimeout(mark,0); }); });
+  function val(id,fb){var v=$('#'+id).value.trim(); return v||fb}
+  function brk(t){ return t.replace(/（/g,'\u0001（').replace(/・/g,'・\u0001').split('\u0001'); }
+  function addrParts(zip,town,banchi,bld){
+    var tie = banchi.length<=12 && town.length>4, head=tie?town.slice(0,-2):town, tail=(tie?town.slice(-2):'')+banchi;
+    return {zip:'〒'+zip, head:head, tail:tail, bld:bld};
+  }
+  function addrFill(el,a){
+    var z=d.createElement('span'); z.className='ad-zip'; z.textContent=a.zip; el.appendChild(z); el.appendChild(d.createTextNode(' '));
+    var m=d.createElement('span'); m.className='ad-main'; m.appendChild(d.createTextNode(a.head)); var t=d.createElement('span'); t.className='nw'; t.textContent=a.tail; m.appendChild(t); el.appendChild(m);
+    if(a.bld){ el.appendChild(d.createTextNode(' ')); var b=d.createElement('span'); b.className='ad-bld'; b.textContent=a.bld; el.appendChild(b); }
+  }
+  function review(){
+    var S=$('#orderReviewSummary'); S.textContent='';
+    var add=function(tag,text,parent,cls){var el=d.createElement(tag); if(text!=null) el.textContent=text; if(cls) el.className=cls; (parent||S).appendChild(el); return el};
+    var sub=subtotal();
+    if(!$('#orderAddress').value) $('#orderAddress').value='福岡県福津市花見ヶ丘';
+    var s=ship(sub), p=points(), total=sub+(s.fee||0), amount=Math.max(total-p,0), online=$('#orderPayment').value==='credit';
+    add('h3','ご注文の明細');
+    var ul=add('ul'), items=[];
+    var line=function(name,amt,no){var li=add('li',null,ul), sp=add('span',null,li); if(no) add('i',no,sp,'o-no').setAttribute('aria-hidden','true'); nws(sp,[].concat(name)); add('b',amt,li); items.push([name,amt,no])};
+    var nm2=function(n){var m=n.match(/^([^【]+)(【.+】)$/); return m?[m[1],m[2]]:[n]};
+    rows.forEach(function(r){
+      var q=qty(r); if(!q) return; var k=r.dataset.kind, nm=r.dataset.name, a=yen(price(r)*q), no=$('.o-no',r).textContent;
+      if(k==='tea'){var b=parseInt(r.dataset.bags,10)||1; line([nm,b+'袋セット','（計'+(b*TEA)+'個）'+(q>1?' × '+q:'')],a,no);}
+      else if(k==='unit') line([nm,r.dataset.unit+' × '+q],a,no);
+      else {var pc=parseInt(r.dataset.base,10)*mult(r); line(nm2(nm).concat([pc+'個入 × '+q+'袋','（計'+(pc*q)+'個）']),a,no);}
+    });
+    var goods=items.slice();
+    if(s.separate) line(['送料 別途ご案内','（'+s.pref+'宛・','実費送料を','後日ご連絡）'],'');
+    else if(s.fee>0) line(['送料','（'+s.pref+'宛）'],yen(s.fee));
+    else line(['送料 無料','（税込¥8,000以上）'],'');
+    var tot=add('dl',null,S,'tot'), row=function(dl,k,v){add('dt',k,dl); var dd=add('dd',null,dl); if(typeof v==='string') dd.textContent=v; else nws(dd,v); return dd};
+    row(tot,'商品小計（税込）',yen(sub));
+    row(tot,'送料',s.separate?'別途ご案内':yen(s.fee));
+    row(tot,'ポイント利用',p>0? p.toLocaleString()+'pt（−'+yen(p)+'）':'利用なし');
+    row(tot,s.separate?'現時点の金額（税込）':'お支払い金額（税込）',yen(amount));
+    add('h3','お届け先・お支払い');
+    var info=add('dl');
+    row(info,'お名前',val('orderName','山田 太郎'));
+    row(info,'電話番号',val('orderPhone','090-1234-5678'));
+    row(info,'メールアドレス',val('orderEmail','未入力'));
+    var adr=addrParts(val('orderZip','811-3209'),$('#orderAddress').value,val('orderBanchi','1-2-3'),val('orderBuilding',''));
+    addrFill(row(info,'お届け先',''),adr);
+    var del=$('#orderDelivery'); row(info,'配送方法',brk(del.options[del.selectedIndex].text));
+    var pay=$('#orderPayment'); row(info,'お支払い方法',brk(online?'クレジットカード・PayPay':pay.options[pay.selectedIndex].text));
+    row(info,'希望日（目安）',val('orderDate','指定なし'));
+    if($('#orderMemberId').value) row(info,'会員番号',$('#orderMemberId').value);
+    row(info,'備考',val('orderNote','なし'));
+    $('#orderConfirmBtn').textContent = online ? yen(amount)+'を支払う' : s.separate ? '送料別途で注文を確定する' : 'この内容で注文を確定する';
+    last={items:goods,total:total,p:p,amount:amount,online:online,sep:s.separate,name:val('orderName','山田 太郎'),
+      addr:adr,
+      del:del.options[del.selectedIndex].text,pay:online?'クレジットカード・PayPay':pay.options[pay.selectedIndex].text};
+    openDlg(dlg); phrase(dlg);
+    dlg.scrollTop=0; $('#orderReviewTitle').focus({preventScroll:true});
+    update();
+  }
+  $('#orderForm').addEventListener('submit',function(e){ e.preventDefault(); if(subtotal()>=MIN) review(); });
+  $('#orderReviewBack').addEventListener('click',function(){ closeDlg(dlg); $('#orderSubmitBtn').focus(); });
+  function done(){
+    var o=last, S=$('#orderCompleteSummary'); S.textContent='';
+    var add=function(tag,text,parent,cls){var el=d.createElement(tag); if(text!=null) el.textContent=text; if(cls) el.className=cls; (parent||S).appendChild(el); return el};
+    var row=function(dl,k,v){add('dt',k,dl);add('dd',v,dl)};
+    add('h3',o.online?'ご注文内容':'注文内容');
+    var ul=add('ul'); o.items.forEach(function(x){var li=add('li',null,ul), sp=add('span',null,li); if(x[2]) add('i',x[2],sp,'o-no').setAttribute('aria-hidden','true'); nws(sp,[].concat(x[0])); add('b',x[1],li)});
+    var tot=add('dl',null,S,'tot');
+    row(tot,'合計',yen(o.total));
+    if(o.p>0){ row(tot,'ポイント利用','−'+yen(o.p)); row(tot,o.online?'ご請求額':'お支払い金額',yen(o.amount)); }
+    add('h3','お届け先');
+    add('p',o.name+'様',S,'done-to'); addrFill(add('p',null,S,'done-to'),o.addr);
+    var info=add('dl'); add('dt','配送',info); nws(add('dd',null,info),brk(o.del)); add('dt','お支払い',info); nws(add('dd',null,info),brk(o.pay));
+    if(o.online) add('p','決済を確認しています。確認が取れ次第、メールでご連絡いたします。',S,'done-wait');
+    var earn=Math.floor(o.amount/200);
+    $('#orderPointEarned').textContent=earn;
+    var pb=$('#orderPointBalance'); pb.textContent=''; nws(pb,['残高: '+(120-o.p+earn)+'pt','（会員番号: #0001）']);
+    sending=false;
+    $('#orderProcessingOverlay').hidden=true; $('#orderCompleteOverlay').hidden=false;
+    flow.classList.add('is-done'); flow.scrollTop=0; phrase(flow);
+    $('#orderCompleteTitle').focus({preventScroll:true});
+  }
+  function finish(){
+    closeDlg(flow); flow.classList.remove('is-done');
+    $('#orderProcessingOverlay').hidden=false; $('#orderCompleteOverlay').hidden=true;
+    rows.forEach(function(r){ $('.o-num',r).textContent='0'; renderRow(r); });
+    $('#orderForm').reset(); $('#pointUseAmount').dispatchEvent(new Event('input')); update();
+    var back=$('#orderform'); back.setAttribute('tabindex','-1'); back.focus({preventScroll:true}); back.scrollIntoView();
+  }
+  $('#orderConfirmBtn').addEventListener('click',function(){
+    if(sending||!last) return;
+    sending=true; closeDlg(dlg); openDlg(flow);
+    if(OLD){ flow.setAttribute('tabindex','-1'); flow.focus(); }
+    setTimeout(done, 1500);
+  });
+  flow.addEventListener('cancel',function(e){ e.preventDefault(); if(!sending) finish(); });
+  $('#orderCompleteClose').addEventListener('click',finish);
+  addEventListener('beforeprint',function(){
+    $$('.wait,.turn').forEach(function(e){e.classList.remove('wait','turn')});
+    $$('details.ck').forEach(function(x){ if(!x.open){ x.setAttribute('open',''); x.setAttribute('data-pr','1'); } });
+  });
+  addEventListener('afterprint',function(){ $$('details.ck[data-pr]').forEach(function(x){ x.removeAttribute('open'); x.removeAttribute('data-pr'); }); });
+  $('#copyrightYear').textContent=new Date().getFullYear();
+  rows.forEach(renderRow); update(); phrase();
+  var evm=location.hash.match(/ev=(empty|error|loading)/);
+  if(evm){
+    var box=$('#scheduleContainer');
+    box.innerHTML = evm[1]==='loading' ? '<div class="ev-none ev-load">読み込み中...</div>'
+      : evm[1]==='empty' ? '<div class="ev-none"><h3>現在予定されている催事はありません</h3><p>最新情報はLINEでお知らせいたします。</p></div>'
+      : '<div class="ev-none"><h3>催事スケジュール</h3><p>スケジュール情報を取得できませんでした。<br>最新情報はLINEでお知らせいたします。</p></div>';
+    phrase(box);
+  }
+  if(/demo|review/.test(location.hash)){
+    [['焼き小籠包',1,2],['海老焼売【生冷凍】',0,1],['肉にら饅頭【調理済み冷凍】',0,1],['モンゴル茶',0,1]].forEach(function(x){
+      var r=rows.filter(function(y){return y.dataset.name===x[0]})[0]; pick(r,$$('.osz',r)[x[1]]); $('.o-num',r).textContent=x[2]; renderRow(r);
+    });
+    update();
+  }
+  var m2=location.hash.match(/at=([a-zA-Z]+)(?:\+(\d+))?/);
+  if(/demo|review|at=/.test(location.hash)){
+    d.documentElement.style.scrollBehavior='auto';
+    $$('.wait,.turn').forEach(function(e){e.classList.remove('wait','turn')});
+    if(/nocart/.test(location.hash)) $('#floatingCart').classList.remove('show');
+    if(m2 && $('#'+m2[1])){ $('#'+m2[1]).scrollIntoView(); if(m2[2]) scrollBy(0,parseInt(m2[2],10)); }
+    if(/review/.test(location.hash)) review();
+  }
+})();
+</script>
+</body>
+</html>
