@@ -90,7 +90,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:
 .hero-title .name span:nth-child(3){animation-delay:.28s}
 .hero-tag{font-family:var(--serif);font-weight:300;font-size:28px;line-height:2.15;letter-spacing:.26em;padding-top:calc(min(11.6vw,18.4svh,176px) * 1.04);position:relative}
 .hero-tag::before{content:"";position:absolute;right:-28px;top:0;bottom:0;width:1px;background:var(--hl);transform-origin:top;animation:draw 1.4s .3s var(--ease) both}
-.hero-cta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+.hero-cta{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:40px}
 .hero-cta .btn{padding:0 8px}
 .sec{position:relative;padding:128px var(--m)}
 .sec.alt{background:var(--paper2)}
@@ -463,7 +463,7 @@ textarea.inp{min-height:128px;resize:vertical}
   .feat-flag{padding:4px 16px}
   .feat h2{font-size:56px}
   .feat-tx{grid-column:1;grid-row:auto}
-  .feat-ph{order:-1;margin:0 calc(-1 * var(--m));width:auto;max-width:none}
+  .feat-ph{order:-1;margin:0 calc(-1 * var(--m));width:auto;max-width:none;justify-self:stretch}
   .feat .btn{width:100%}
   .about-in{flex-direction:column;gap:0;align-items:stretch}
   .about .rail{writing-mode:horizontal-tb;font-size:30px;letter-spacing:.14em;gap:16px;margin-bottom:32px;white-space:normal}
@@ -941,8 +941,7 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
       <p class="hero-tag">本格的な中華を<br>ご家庭でも</p>
     </div>
     <div class="hero-cta">
-      <a href="#menu" class="btn btn-red">メニューを見る</a>
-      <a href="#orderform" class="btn btn-line">ご注文はこちら</a>
+      <a href="#orderform" class="btn btn-red">ご注文はこちら</a>
     </div>
   </div>
 </section>
@@ -1636,6 +1635,10 @@ input,textarea,select{accent-color:var(--red);caret-color:var(--red)}
   function points(){ var v=parseInt($('#pointUseAmount').value,10)||0; return v>=50 ? Math.min(v,120,subtotal()) : 0 }
   d.addEventListener('click',function(ev){
     var t=ev.target, b;
+    if((b=t.closest('a[href="#orderform"]'))){ var emp=!count(); if(emp){ var en=b; en.setAttribute('href','#menu'); setTimeout(function(){ en.setAttribute('href','#orderform');},0) }
+      var tg=$(emp?'#menu':'#orderform'), mv=false, um=function(){ mv=true; }; ['touchstart','wheel','keydown'].forEach(function(n){ addEventListener(n,um,{passive:true,once:true}); });
+      setTimeout(function(){ if(mv||!tg) return; var r=tg.getBoundingClientRect(); if(Math.abs(r.top-80)>40) tg.scrollIntoView({behavior:'instant',block:'start'}); },1300);
+      return;}
     if((b=t.closest('.sz'))){
       $$('.sz',b.parentNode).forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false')});
       b.classList.add('on'); b.setAttribute('aria-pressed','true'); renderMenu(); return;
