@@ -319,3 +319,21 @@ test('今のHPのファイルは、新しいページのために書き換えて
   assert.match(old, /<link rel="stylesheet" href="styles\.css/);
   assert.match(old, /<script src="app\.js/);
 });
+
+// ── 書体：見出し・ボタンの字が、自前の書体ファイルを作った時の字の一覧に入っている ──
+// 書体ファイルには画面の字だけが入っている。見出しやボタンの文言を変えて、ここが落ちたら、
+// scripts/fonts_collect.mjs → scripts/fonts_subset.py で書体を作り直す（やり方は fonts_collect.mjs の頭に書いてある）。
+// ※ ここで見ているのは見出し（h1〜h4・legend）とボタンの字だけ。値段や案内文など全部の字は、作り直しの道具が実際の画面から集める。
+test('書体：見出し・ボタンの字は、書体ファイルを作った時の字の一覧（fonts/chars.json）に入っている', () => {
+  const chars = JSON.parse(read('fonts/chars.json'));
+  const have = new Set([...chars['500'], ...chars['800']]);
+  assert(chars['500'].length > 200 && chars['800'].length > 120);
+  const body = html.slice(html.indexOf('<body>')).replace(/<script[\s\S]*?<\/script>/g, '').replace(/<!--[\s\S]*?-->/g, '');
+  const texts = [...body.matchAll(/<(h[1-4]|legend)\b[^>]*>([\s\S]*?)<\/\1>/g)].map(m => strip(m[2]))
+    .concat([...body.matchAll(/<a\b[^>]*class="btn[^"]*"[^>]*>([\s\S]*?)<\/a>/g)].map(m => strip(m[1])))
+    .concat([...body.matchAll(/<button\b[^>]*class="(?:submit|rev-ok|done-close)[^"]*"[^>]*>([\s\S]*?)<\/button>/g)].map(m => strip(m[1])));
+  assert(texts.length > 40, String(texts.length));
+  const missing = new Set();
+  for (const t of texts) for (const c of t) if (!/\s/.test(c) && !have.has(c)) missing.add(c);
+  assert.deepEqual([...missing], [], '書体ファイルに無い字（scripts/fonts_collect.mjs から作り直す）');
+});

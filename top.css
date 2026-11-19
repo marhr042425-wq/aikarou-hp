@@ -1087,8 +1087,9 @@ a,button,summary{-webkit-tap-highlight-color:transparent}
 .order-product-row[hidden]{display:none}
 
 /* お支払い情報の入力：決済会社（Stripe）の入力欄が入る場所。見本の点線の枠は外す */
-.pay-el{display:block;min-height:0;border:0;padding:0;margin-bottom:12px;text-align:left;color:inherit}
-.pay-el:empty{display:none}
+/* place-items を戻すのが要る：見本の「真ん中に置く」が残っていると、新しいブラウザでは入力欄が幅292pxに縮んで真ん中に寄る */
+.pay-el{display:block;place-items:normal;min-height:0;border:0;padding:0;margin-bottom:12px;text-align:left;color:inherit}
+.pay-el:empty{margin-bottom:0}
 /* カード欄の案内・エラー（「郵便番号を入れると…」「北海道・沖縄は…」など） */
 .pay-msg{margin:0 0 12px;padding:12px 14px;border-left:2px solid var(--gold);font-size:16px;line-height:1.7;color:var(--tx)}
 .pay-amt small{display:block;margin-top:2px;font-family:var(--sans);font-size:16px;line-height:1.6;color:var(--mut)}
